@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0E11E2C11AF83D0C00263B9B /* MMX.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = 0EA2020B1AF838E1004018AE /* MMX.xcdatamodeld */; };
+		0E47F4FC1B069EF20089E887 /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E47F4FB1B069EF20089E887 /* Configurations.plist */; };
 		0E54CFC81AFAA1B3000326D7 /* MMXClient.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0EA2022B1AF838E1004018AE /* MMXClient.h */; };
 		0E54CFC91AFAA1C1000326D7 /* MMXDeviceManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0EA202401AF838E1004018AE /* MMXDeviceManager.h */; };
 		0E54CFCA1AFAA1CC000326D7 /* MMXDeviceProfile.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0EA202431AF838E1004018AE /* MMXDeviceProfile.h */; };
@@ -93,7 +94,6 @@
 		21540E5C1A7834B3004E961D /* MathSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 21540E5B1A7834B3004E961D /* MathSpec.m */; };
 		21540E5E1A78359F004E961D /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E5F2D8A1A76B99F00396DF4 /* libresolv.dylib */; };
 		21540E641A799DD4004E961D /* MMXClientDelegateSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 21540E631A799DD4004E961D /* MMXClientDelegateSpy.m */; };
-		21DA55091A944F9C00AC57FF /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 21DA55081A944F9C00AC57FF /* Configurations.plist */; };
 		32A75FE11D7A7B0B0F001BC7 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BC4E4B121CF5E8A98B9E907 /* libPods.a */; };
 		660216A5CA22964263058C72 /* MMXRemoteNotificationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 660210CF931C18F4540212EC /* MMXRemoteNotificationSpec.m */; };
 		9883C47C8B415D9FCA446E6E /* libPods-MMXTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CD8F7441BDCF3041B7EA66D6 /* libPods-MMXTests.a */; };
@@ -154,6 +154,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0E47F4FB1B069EF20089E887 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Configurations.plist; path = Configuration/Configurations.plist; sourceTree = "<group>"; };
 		0E5F2D8A1A76B99F00396DF4 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
 		0E8339341A78480800131CF3 /* MMXClientSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXClientSpec.m; sourceTree = "<group>"; };
 		0E8B4E031A6F2F370000A7C3 /* libMMX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMMX.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -304,7 +305,6 @@
 		21540E721A7ADBD6004E961D /* MMXTests.debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = MMXTests.debug.xcconfig; sourceTree = "<group>"; };
 		21540E731A7ADBD6004E961D /* MMXTests.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = MMXTests.release.xcconfig; sourceTree = "<group>"; };
 		21540E741A7ADBD6004E961D /* MMXTests.shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = MMXTests.shared.xcconfig; sourceTree = "<group>"; };
-		21DA55081A944F9C00AC57FF /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Configurations.plist; sourceTree = "<group>"; };
 		4678D5BADA8D36C8CA1C6E81 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		49888CD5CB090DCBF2015866 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		660210CF931C18F4540212EC /* MMXRemoteNotificationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXRemoteNotificationSpec.m; sourceTree = "<group>"; };
@@ -390,8 +390,8 @@
 		0E8B4E131A6F2F370000A7C3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				0E47F4FB1B069EF20089E887 /* Configurations.plist */,
 				0E8B4E141A6F2F370000A7C3 /* Info.plist */,
-				21DA55081A944F9C00AC57FF /* Configurations.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -842,7 +842,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				214A0D1F1A8D3C9500E6939A /* MMX.bundle in Resources */,
-				21DA55091A944F9C00AC57FF /* Configurations.plist in Resources */,
+				0E47F4FC1B069EF20089E887 /* Configurations.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
