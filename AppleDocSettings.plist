@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
+	"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>--output</key>
+	<string>./tempheaders</string>
+	<key>--create-html</key>
+	<true/>
+    <key>--input</key>
+    <array>
+        <string>./tempheaders</string>
+    </array>
+    <key>--exit-threshold</key>
+	<integer>2</integer>
+    <key>--ignore</key>
+	<array>
+		<string>.m</string>
+		<string>Build</string>
+		<string>MMX</string>
+		<string>MMX.bundle</string>
+		<string>MMX.xcodeproj</string>
+		<string>MMX.xcworkspace</string>
+		<string>MMXBundle</string>
+		<string>MMXTests</string>
+		<string>Podfile</string>
+		<string>Podfile.lock</string>
+		<string>Pods</string>
+		<string>Rakefile</string>
+		<string>Xcode Build Configuration</string>
+		<string>build-arm</string>
+		<string>build-arm64</string>
+		<string>build-i386</string>
+		<string>build-x86_64</string>
+		<string>Source</string>
+	</array>
+    <key>--project-company</key>
+	<string>Magnet Systems, Inc</string>
+	<key>--project-name</key>
+	<string>MagnetMessage</string>
+	<key>--company-id</key>
+	<string>com.magnet.iOS</string>
+	<key>--create-docset</key>
+	<true/>
+	<key>--install-docset</key>
+	<false/>
+	<key>--verbose</key>
+	<string>4</string>
+	<key>--logformat</key>
+	<integer>1</integer>
+</dict>
+</plist>
