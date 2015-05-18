@@ -76,7 +76,7 @@
         }
         return;
     }
-    if (user.userID.username.length > 40 || user.userID.username.length < 5 || password.length > 40 || password.length < 5) {
+    if (user.userID.username.length > kMaxUsernameLength || user.userID.username.length < kMinUsernameLength || password.length > kMaxPasswordLength || password.length < kMinPasswordLength) {
         NSError * error = [MMXClient errorWithTitle:@"Invalid Character Count" message:@"There is an invalid length of characters used in the login information provided." code:400];
         if (failure) {
 			dispatch_async(self.callbackQueue, ^{
