@@ -161,7 +161,7 @@
 		}
 		return NO;
 	}
-	if (![MMXUtils validateAgainstDefaultCharacterSet:self.topicName]) {
+	if (![MMXUtils validateAgainstDefaultCharacterSet:self.topicName allowSpaces:NO]) {
 		if (error != NULL) {
 			*error = [MMXUtils mmxErrorWithTitle:@"Invalid Topic Name" message:@"The topic name contains invalid characters." code:500];
 		}
