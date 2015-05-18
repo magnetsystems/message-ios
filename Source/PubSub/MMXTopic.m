@@ -193,9 +193,9 @@
 		return YES;
 	if (topic == nil)
 		return NO;
-	if (self.topicName != topic.topicName && ![self.topicName isEqualToString:topic.topicName])
+	if (self.topicName != topic.topicName && ![self.topicName.lowercaseString isEqualToString:topic.topicName.lowercaseString])
 		return NO;
-	if (self.nameSpace != topic.nameSpace && ![self.nameSpace isEqualToString:topic.nameSpace])
+	if (self.nameSpace != topic.nameSpace && ![self.nameSpace.lowercaseString isEqualToString:topic.nameSpace.lowercaseString])
 		return NO;
 	return YES;
 }
