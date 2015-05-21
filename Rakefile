@@ -85,6 +85,7 @@ task :doc do
   sh "cp ./Source/PubSub/TopicSubscription/MMXTopicSubscription.h ./tempheaders/MMXTopicSubscription.h"
   sh "cp ./Source/PubSub/TopicSummary/MMXTopicSummary.h ./tempheaders/MMXTopicSummary.h"
   sh "cp ./Source/User/MMXAccountManager.h ./tempheaders/MMXAccountManager.h"
+  sh "cp ./Source/User/MMXUserID.h ./tempheaders/MMXUserID.h"
   sh "cp ./Source/User/MMXUserProfile.h ./tempheaders/MMXUserProfile.h"
   sh "cp ./Source/User/MMXUserQueryFilter.h ./tempheaders/MMXUserQueryFilter.h"
   sh 'appledoc .'
