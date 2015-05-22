@@ -62,7 +62,7 @@
 /**
  *  Query for topics
  *
- *  @param topicQuery - MMXTopicQuery object with the properties set that you wish to query on.
+ *  @param topicQuery - MMXQuery object with the properties set that you wish to query on.
  *  @param success    - Block with an int for the total number of topics that fit your criteria(not the number returned) and a NSArray of MMXTopics.
  *  @param failure    - Block with an NSError with details about the call failure.
  */
