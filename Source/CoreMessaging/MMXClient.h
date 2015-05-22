@@ -279,6 +279,7 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 
 
 /**
+ *	Messages are queued if sent when the user is not connected.
  *  Returns an array of MMXOutboundMessage objects that are currently queued to be sent.
  *  This feature is only available offline as the messages will be sent the next time the user is authenticated
  */
@@ -286,17 +287,18 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 
 /**
  *  Delete queued messages that you no longer want to send.
- *  This feature is only available offline as the messages will be sent the next time the user is authenticated
+ *  This feature is only available offline as the messages will be sent the next time the user is authenticated.
  *
- *  @param messages - An array of the messages you wish to delete
+ *  @param messages - An array of the messages you wish to delete.
  *
- *  @return - An array of any messages that failed to be deleted
+ *  @return - An array of any messages that failed to be deleted.
  */
 - (NSArray *)deleteQueuedMessages:(NSArray *)messages;
 
 /**
- *  Get a list of MMXPubSubMessages that are queued to be sent the next time the user connects
- *  This feature is only available offline as the messages will be sent the next time the user is authenticated
+ *	Messages are queued if sent when the user is not connected.
+ *  Get a list of MMXPubSubMessages that are queued to be sent the next time the user connects.
+ *  This feature is only available offline as the messages will be sent the next time the user is authenticated.
  *
  *  @return - An array of MMXPubSubMessage objects that are currently queued to be sent.
  */
@@ -304,11 +306,11 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 
 /**
  *  Delete queued messages that you no longer want to send.
- *  This feature is only available offline as the messages will be sent the next time the user is authenticated
+ *  This feature is only available offline as the messages will be sent the next time the user is authenticated.
  *
- *  @param messages - An array of the messages you wish to delete
+ *  @param messages - An array of the messages you wish to delete.
  *
- *  @return - An array of any messages that failed to be deleted
+ *  @return - An array of any messages that failed to be deleted.
  */
 - (NSArray *)deleteQueuedPubSubMessages:(NSArray *)messages;
 
