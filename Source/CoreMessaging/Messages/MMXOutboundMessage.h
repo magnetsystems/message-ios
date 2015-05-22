@@ -22,7 +22,7 @@
 @interface MMXOutboundMessage : NSObject
 
 /**
- *  NSArray of MMXAddressable objects to whom you want to send the message.
+ *  MMXAddressable object to whom you want to send the message.
  */
 @property (nonatomic, readonly) id<MMXAddressable> recipient;
 
