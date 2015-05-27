@@ -31,6 +31,9 @@
 @class MMXConfiguration;
 @class CLLocation;
 
+/**
+ *  Values representing the connection status of the MMXClient.
+ */
 typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 	/**
 	 *  Not yet connected or authenticated.
@@ -59,6 +62,11 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 };
 
 #pragma mark - MMXClientDelegate Protocol
+/**
+ *  The MMXClientDelegate protocol defines the methods that a delegate of a MMXClient object can adopt. 
+ *	The methods of the protocol allow the delegate to monitor the connection lifecycle, user registration, incoming messages, message failures and errors. 
+ *	All methods are optional.
+ */
 @protocol MMXClientDelegate <NSObject>
 
 @optional
@@ -131,6 +139,11 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 @end
 
 #pragma mark - MMXClient Interface
+/**
+ *  MMXClient is the primary class for using Magnet Message. 
+ *	MMXClient has properties for accessing the manager classes that expose advanced functionality, configuration, connection status and important settings. 
+ *	It also contains the majority of the core methods for task like; connection lifecycle, sending messages, message state and queued messages.
+ */
 @interface MMXClient : NSObject
 
 #pragma mark - MMXClient Properties
