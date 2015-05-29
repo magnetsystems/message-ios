@@ -58,7 +58,7 @@ describe(@"MMXAccountManager", ^{
 					case MMXConnectionStatusDisconnected:
 						break;
 					case MMXConnectionStatusAuthenticated:{
-						[mmxClient.accountManager currentUserProfileWithSuccess:^(MMXUserProfile *user) {
+						[mmxClient.accountManager userProfileWithSuccess:^(MMXUserProfile *user) {
 							if (user.userID.username && [user.userID.username isEqualToString:mmxClient.configuration.credential.user]) {
 								_result = YES;
 								_testFinished = YES;
@@ -99,7 +99,7 @@ describe(@"MMXAccountManager", ^{
 						break;
 					case MMXConnectionStatusAuthenticated:{
 						[mmxClient.accountManager updateEmail:_randomEmail success:^(BOOL success) {
-							[mmxClient.accountManager currentUserProfileWithSuccess:^(MMXUserProfile *user) {
+							[mmxClient.accountManager userProfileWithSuccess:^(MMXUserProfile *user) {
 								if (user && user.email && [user.email isEqualToString:_randomEmail]) {
 									_result = YES;
 									_testFinished = YES;
@@ -147,7 +147,7 @@ describe(@"MMXAccountManager", ^{
 						break;
 					case MMXConnectionStatusAuthenticated:{
 						[mmxClient.accountManager updateDisplayName:_randomName success:^(BOOL success) {
-							[mmxClient.accountManager currentUserProfileWithSuccess:^(MMXUserProfile *user) {
+							[mmxClient.accountManager userProfileWithSuccess:^(MMXUserProfile *user) {
 								if (user && user.displayName && [user.displayName isEqualToString:_randomName]) {
 									_result = YES;
 									_testFinished = YES;
@@ -195,7 +195,7 @@ describe(@"MMXAccountManager", ^{
 					case MMXConnectionStatusDisconnected:
 						break;
 					case MMXConnectionStatusAuthenticated:{
-						[mmxClient.accountManager tagsForCurrentUserWithSuccess:^(NSDate *lastModified, NSArray *tags) {
+						[mmxClient.accountManager tagsWithSuccess:^(NSArray *tags) {
 							if (tags) {
 								_result = YES;
 								_testFinished = YES;
@@ -235,8 +235,8 @@ describe(@"MMXAccountManager", ^{
 					case MMXConnectionStatusDisconnected:
 						break;
 					case MMXConnectionStatusAuthenticated:{
-						[mmxClient.accountManager addTagsForCurrentUser:@[_randomTag] success:^(BOOL success) {
-							[mmxClient.accountManager tagsForCurrentUserWithSuccess:^(NSDate *lastModified, NSArray *tags) {
+						[mmxClient.accountManager addTags:@[_randomTag] success:^(BOOL success) {
+							[mmxClient.accountManager tagsWithSuccess:^(NSArray *tags) {
 								if (tags && tags.count && [tags indexOfObject:_randomTag] != NSNotFound) {
 									_result = YES;
 									_testFinished = YES;
