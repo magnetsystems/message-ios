@@ -25,7 +25,7 @@
 /**
  *  MMXAccountManager is the primary class interacting with users.
  *	It has many methods for getting and updating the current user's information.
- *	It also contains a mothod for discovering/querying for other users.
+ *	It also contains a method for discovering/querying for other users.
  */
 @interface MMXAccountManager : NSObject
 

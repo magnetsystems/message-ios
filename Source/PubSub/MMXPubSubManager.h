@@ -225,7 +225,7 @@
 		failure:(void (^)(NSError * error))failure;
 
 /**
- *  ERemove tags from a specific topic.
+ *  Remove tags from a specific topic.
  *
  *  @param tags    - NSArray of tags(NSStrings).
  *  @param topic   - MMXTopic object for the topic you want to remove the tags from. Cannot be nil.
