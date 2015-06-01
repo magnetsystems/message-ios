@@ -656,7 +656,6 @@
 }
 
 - (void)retractItemsFromTopic:(MMXTopic *)topic
-                        owner:(MMXUserID *)user
                       itemIDs:(NSArray *)itemIDs
                       success:(void (^)(BOOL success))success
                       failure:(void (^)(NSError * error))failure {
@@ -672,7 +671,7 @@
     
     NSError * parsingError;
     NSMutableDictionary * topicDictionary = @{@"topicName":topic.topicName,
-                                              @"userID":(user && user.username) ? user.username : [NSNull null]
+                                              @"userID":(topic.topicCreator && topic.topicCreator.username) ? topic.topicCreator.username : [NSNull null]
                                               }.mutableCopy;
     BOOL all = YES;
     if (itemIDs && itemIDs.count) {
