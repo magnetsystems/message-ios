@@ -16,6 +16,10 @@
  */
 
 #pragma mark - MMXAddressable Protocol
+/**
+ *  A protocol used internally for properly addressing messages.
+ *	You should NOT create your own objects that implement this protocol.
+ */
 @protocol MMXAddressable <NSObject>
 
 @required
