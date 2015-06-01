@@ -17,7 +17,9 @@
 
 #import <Foundation/Foundation.h>
 
-
+/**
+ *  MMXConfiguration is a class used to contain configuration setting in order to set up your connection to the messaging server.
+ */
 @interface MMXConfiguration : NSObject <NSCopying>
 
 /**
