@@ -74,9 +74,9 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 /**
  *  This method is called whenever the connection status changes
  *
- *  @param client          - The client providing the status change
- *  @param connectionEvent - The value of the new status
- *  @param error           - The error will typically be nil unless the status is MMXConnectionStatusAuthenticationFailure or MMXConnectionStatusFailed
+ *  @param client			- The client providing the status change
+ *  @param connectionStatus - The value of the new status
+ *  @param error			- The error will typically be nil unless the status is MMXConnectionStatusAuthenticationFailure or MMXConnectionStatusFailed
  */
 - (void)client:(MMXClient *)client didReceiveConnectionStatusChange:(MMXConnectionStatus)connectionStatus error:(NSError*)error;
 
@@ -262,8 +262,8 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 /**
  *  Sends a message to a desired user.
  *
- *  @param message           - The MMXMessage to send.
- *  @param withOptions       - MMXMessageOptions object that sets the value for requesting a delivery receipt and performance optimization
+ *  @param message	- The MMXMessage to send.
+ *  @param options	- MMXMessageOptions object that sets the value for requesting a delivery receipt and performance optimization
  *
  *  @return - The UUID of the message for use in tracking.
  */
