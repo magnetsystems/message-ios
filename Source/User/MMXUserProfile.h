@@ -18,6 +18,9 @@
 #import <Foundation/Foundation.h>
 @class MMXUserID;
 
+/**
+ *  MMXUserProfile is used to hold additional information about a user.
+ */
 @interface MMXUserProfile : NSObject <NSCoding>
 
 /**

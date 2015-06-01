@@ -26,6 +26,11 @@
 @class MMXPubSubFetchRequest;
 @class CLLocation;
 
+/**
+ *  MMXPubSubManager is the primary class interacting with MMXTopic and MMXPubSubMessage.
+ *	It has many methods for getting topics, messages, subscription, etc.
+ *	It also contains methods for discovering/querying for topics.
+ */
 @interface MMXPubSubManager : NSObject
 
 #pragma mark - Topics
