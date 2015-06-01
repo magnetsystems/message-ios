@@ -17,6 +17,11 @@
 
 #import <Foundation/Foundation.h>
 @class MMXDeviceProfile;
+
+/**
+ *  MMXDeviceManager is the primary class interacting with devices.
+ *	It has many methods for getting and updating the current device's information.
+ */
 @interface MMXDeviceManager : NSObject
 
 /**
