@@ -3,8 +3,6 @@
 	"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>--output</key>
-	<string>./tempheaders</string>
 	<key>--create-html</key>
 	<true/>
     <key>--input</key>
@@ -21,6 +19,7 @@
 		<string>MMX.bundle</string>
 		<string>MMX.xcodeproj</string>
 		<string>MMX.xcworkspace</string>
+		<string>MMX.framework</string>
 		<string>MMXBundle</string>
 		<string>MMXTests</string>
 		<string>Podfile</string>
