@@ -115,6 +115,19 @@
            failure:(void (^)(NSError * error))failure;
 
 /**
+ *  Fetch published items from a topic with specific message IDs.
+ *
+ *  @param topic		- MMXTopic object for the topic you want to subscribe to.
+ *  @param messageIDs	- An Array of message IDs of the posts you are intereted in fetching.
+ *  @param success		- Block with a NSArray of MMXPubSubMessages
+ *  @param failure		- Block with an NSError with details about the call failure.
+ */
+- (void)fetchItemsFromTopic:(MMXTopic *)topic
+			  forMessageIDs:(NSArray *)messageIDs
+					success:(void (^)(NSArray * messages))success
+					failure:(void (^)(NSError * error))failure;
+
+/**
  *  Method to request the most recent post for all topics the user is subscribed to.
  *
  *  @param maxItems - Max number of items you want to receive. The messages are delivered via the client:didReceivePubSubMessage: delegate callback.
