@@ -1193,9 +1193,9 @@
     NSXMLElement *mmxElement = [[NSXMLElement alloc] initWithName:MXmmxElement xmlns:MXnsDataPayload];
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-        NSLog(@"Finding address");
+        [[MMXLogger sharedLogger] verbose:@"Finding address"];
         if (error) {
-            NSLog(@"Error %@", error.description);
+            [[MMXLogger sharedLogger] error:@"Error %@", error.description];
         } else {
             CLPlacemark *placemark = [placemarks lastObject];
             NSXMLElement *payload = [self payloadFromlocation:location placemark:placemark];
