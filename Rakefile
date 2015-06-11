@@ -112,4 +112,4 @@ task :test do
   sh "xcodebuild -workspace 'MMX.xcworkspace' -scheme 'MMX' -sdk 'iphonesimulator' test | xcpretty --test --color --report junit; exit ${PIPESTATUS[0]}"
 end
 
-task :default => [:distclean, :build_fat, :doc]
+task :default => [:distclean, :build_fat]
