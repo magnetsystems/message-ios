@@ -36,6 +36,9 @@
 	if (endpointDict[@"DomainName"] && ![endpointDict[@"DomainName"] isEqualToString:@""]) {
 		controllerConfiguration.domain = endpointDict[@"DomainName"];
 	}
+	if (endpointDict[@"PublicAPIPort"]) {
+		controllerConfiguration.publicAPIPort = [endpointDict[@"PublicAPIPort"] integerValue];;
+	}
 	MMXAssert(controllerConfiguration.appID != nil,@"MMXConfiguration appID cannot be nil");
 	MMXAssert(controllerConfiguration.apiKey != nil,@"MMXConfiguration apiKey cannot be nil");
 	MMXAssert(controllerConfiguration.anonymousSecret != nil,@"MMXConfiguration anonymousSecret cannot be nil");
@@ -52,6 +55,7 @@
     if (self) {
 		self.baseURL = baseURL;
 		self.domain = @"mmx";
+		self.publicAPIPort = 5220;
         self.shouldForceTLS = YES;
         self.allowInvalidCertificates = NO;
     }
@@ -84,8 +88,10 @@
         return NO;
     if (self.shouldUseCredentialStorage != configuration.shouldUseCredentialStorage)
         return NO;
-    if (self.credential != configuration.credential && ![self.credential isEqual:configuration.credential])
-        return NO;
+	if (self.credential != configuration.credential && ![self.credential isEqual:configuration.credential])
+		return NO;
+	if (self.publicAPIPort != configuration.publicAPIPort)
+		return NO;
     if (self.allowInvalidCertificates != configuration.allowInvalidCertificates)
         return NO;
 	if (self.shouldForceTLS != configuration.shouldForceTLS)
@@ -102,7 +108,8 @@
     hash = hash * 31u + [self.baseURL hash];
     hash = hash * 31u + self.shouldUseCredentialStorage;
     hash = hash * 31u + [self.credential hash];
-    hash = hash * 31u + self.allowInvalidCertificates;
+	hash = hash * 31u + self.allowInvalidCertificates;
+	hash = hash * 31u + self.publicAPIPort;
 	hash = hash * 31u + self.shouldForceTLS;
 	hash = hash * 31u + [self.domain hash];
     return hash;
@@ -121,7 +128,8 @@
         copy.baseURL = self.baseURL;
         copy.shouldUseCredentialStorage = self.shouldUseCredentialStorage;
         copy.credential = self.credential;
-        copy.shouldForceTLS = self.shouldForceTLS;
+		copy.publicAPIPort = self.publicAPIPort;
+		copy.shouldForceTLS = self.shouldForceTLS;
 		copy.allowInvalidCertificates = self.allowInvalidCertificates;
 		copy.domain = self.domain;
     }

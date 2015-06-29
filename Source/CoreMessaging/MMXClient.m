@@ -265,7 +265,6 @@ int const kTempVersionMinor = 0;
 
 - (MMXAccountManager *)accountManager {
     if (!_accountManager) {
-        MMXAssert((self.xmppStream && [self.xmppStream isConnected] && self.iqTracker && self.mmxQueue), @"You must be connected or logged in to use the MMXDeviceManager");
         _accountManager = [[MMXAccountManager alloc] initWithDelegate:self];
     }
     return _accountManager;
