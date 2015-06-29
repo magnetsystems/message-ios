@@ -45,6 +45,7 @@
 #import "XMPP.h"
 #import "XMPPJID+MMX.h"
 #import "MMXConfiguration.h"
+#import "NSString+XEP_0106.h"
 
 #import <AssertMacros.h>
 
@@ -109,7 +110,7 @@ int const kTempVersionMinor = 0;
     [self disconnect];
     self.xmppStream = [[XMPPStream alloc] init];
     self.iqTracker = [[XMPPIDTracker alloc] initWithStream:self.xmppStream dispatchQueue:self.mmxQueue];
-    NSMutableString *userWithAppId = [[NSMutableString alloc] initWithString:self.configuration.credential.user];
+    NSMutableString *userWithAppId = [[NSMutableString alloc] initWithString:[self.configuration.credential.user jidEscapedString]];
     [userWithAppId appendString:@"%"];
     [userWithAppId appendString:self.configuration.appID];
     
