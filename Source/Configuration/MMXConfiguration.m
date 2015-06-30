@@ -39,6 +39,8 @@
 	if (endpointDict[@"PublicAPIPort"]) {
 		controllerConfiguration.publicAPIPort = [endpointDict[@"PublicAPIPort"] integerValue];;
 	}
+	MMXAssert(![controllerConfiguration.appID isEqualToString:@"Invalid"],@"You must have a valid Configurations.plist file. You can download this file on the Settings page of the Magnet Message Web Interface.");
+
 	MMXAssert(controllerConfiguration.appID != nil,@"MMXConfiguration appID cannot be nil");
 	MMXAssert(controllerConfiguration.apiKey != nil,@"MMXConfiguration apiKey cannot be nil");
 	MMXAssert(controllerConfiguration.anonymousSecret != nil,@"MMXConfiguration anonymousSecret cannot be nil");
