@@ -69,7 +69,7 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 //		if (addressesElement) {
 //			_recipients = [self recipientsFromAddresses:addressesElement];
 //		} else {
-//			_recipients = @[[MMXUserID userIDWithUsername:recipient.usernameWithoutAppID]];
+//			_recipients = @[[MMXUserID userIDWithUsername:[recipient.usernameWithoutAppID jidUnescapedString]]];
 //		}
         //payload
         NSArray* payLoadElements = [mmxElement elementsForName:MXpayloadElement];

@@ -797,7 +797,7 @@ int const kTempVersionMinor = 0;
 			[self sendSDKAckMessageId:msgId sourceFrom:from sourceTo:to];
 			if ([self.delegate respondsToSelector:@selector(client:didDeliverMessage:recipient:)]) {
 				dispatch_async(self.callbackQueue, ^{
-					[self.delegate client:self didDeliverMessage:[xmppMessage elementID] recipient:[MMXUserID userIDWithUsername:[from usernameWithoutAppID]]];
+					[self.delegate client:self didDeliverMessage:[xmppMessage elementID] recipient:[MMXUserID userIDWithUsername:[[from usernameWithoutAppID] jidUnescapedString]]];
 				});
 			}
 		}
@@ -907,7 +907,7 @@ int const kTempVersionMinor = 0;
 }
 
 + (BOOL)validateCharacterSet:(NSString *)string {
-    NSCharacterSet *allowedSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-."];
+    NSCharacterSet *allowedSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-.@"];
     NSCharacterSet *invalidSet = [allowedSet invertedSet];
     NSRange r = [string rangeOfCharacterFromSet:invalidSet];
     if (r.location != NSNotFound) {

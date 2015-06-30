@@ -36,6 +36,7 @@
 
 #import "MMXUtils.h"
 #import "MMXConfiguration.h"
+#import "NSString+XEP_0106.h"
 
 #if TARGET_OS_IPHONE
 	#import <UIKit/UIKit.h>
@@ -163,7 +164,7 @@
 	request.HTTPMethod = @"POST";
 		
 	NSError *error;
-	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{ @"username": username,
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{ @"username": [username jidEscapedString],
 																  @"password": password,
 																  @"name": displayName ?: [NSNull null],
 																  @"email": email ?: [NSNull null]}
@@ -285,7 +286,7 @@
 			} else {
 				NSString* iqId = [iq elementID];
 				[self.delegate stopTrackingIQWithID:iqId];
-				MMXUserProfile * user = [MMXUserProfile userFromIQ:iq username:[[self.delegate currentJID] usernameWithoutAppID]];
+				MMXUserProfile * user = [MMXUserProfile userFromIQ:iq username:[[[self.delegate currentJID] usernameWithoutAppID] jidUnescapedString]];
 				if (user) {
 					if (success) {
 						dispatch_async(self.callbackQueue, ^{
