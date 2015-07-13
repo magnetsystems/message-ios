@@ -160,6 +160,7 @@
 	
 	[request setValue:self.delegate.configuration.appID forHTTPHeaderField:@"X-mmx-app-id"];
 	[request setValue:self.delegate.configuration.apiKey forHTTPHeaderField:@"X-mmx-api-key"];
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 	
 	request.HTTPMethod = @"POST";
 		
@@ -173,16 +174,26 @@
 	
 	[request setHTTPBody:jsonData];
 
-	
 	[[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-		if (error) {
-			if (failure) {
-				failure(error);
-			}
-		} else {
+		NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
+		if (httpResponse.statusCode == 201) {
 			if (success) {
 				MMXUserProfile * profile = [MMXUserProfile initWithUsername:username displayName:displayName email:email tags:nil];
 				success(profile);
+			}
+		} else if (error) {
+			if (failure) {
+				failure(error);
+			}
+		} else if (httpResponse.statusCode == 409) {
+			NSError *httpError = [self.delegate errorWithTitle:@"Duplicate entry" message:@"You have tried to create a duplicate entry." code:(int)httpResponse.statusCode];
+			if (failure) {
+				failure(httpError);
+			}
+		} else {
+			NSError *httpError = [self.delegate errorWithTitle:@"Unknown Error" message:@"Unfortunately an unknown error occurred while trying to create your user." code:(int)httpResponse.statusCode];
+			if (failure) {
+				failure(httpError);
 			}
 		}
 	}] resume];
