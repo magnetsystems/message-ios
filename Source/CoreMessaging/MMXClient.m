@@ -412,7 +412,7 @@ int const kTempVersionMinor = 0;
 }
 
 - (NSString *)sendDeliveryConfirmationForMessage:(MMXInboundMessage *)message {
-	NSString *sender = [NSString stringWithFormat:@"%@%%%@@%@", message.senderUserID.username, self.configuration.appID, self.configuration.domain];
+	NSString *sender = [NSString stringWithFormat:@"%@%%%@@%@", [message.senderUserID address], self.configuration.appID, self.configuration.domain];
 	if (message.senderEndpoint.deviceID != nil && ![message.senderEndpoint.deviceID isEqualToString:@""]) {
 		sender = [NSString stringWithFormat:@"%@/%@", sender, message.senderEndpoint.deviceID];
 	}
