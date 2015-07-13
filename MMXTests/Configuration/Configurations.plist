@@ -16,6 +16,8 @@
 		<string></string>
 		<key>ShouldForceTLS</key>
 		<false/>
+		<key>PublicAPIPort</key>
+		<integer>5220</integer>
 	</dict>
 </dict>
 </plist>
