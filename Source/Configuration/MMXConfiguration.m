@@ -41,9 +41,9 @@
 	}
 	MMXAssert(![controllerConfiguration.appID isEqualToString:@"Invalid"],@"You must have a valid Configurations.plist file. You can download this file on the Settings page of the Magnet Message Web Interface.");
 
-	MMXAssert(controllerConfiguration.appID != nil,@"MMXConfiguration appID cannot be nil");
-	MMXAssert(controllerConfiguration.apiKey != nil,@"MMXConfiguration apiKey cannot be nil");
-	MMXAssert(controllerConfiguration.anonymousSecret != nil,@"MMXConfiguration anonymousSecret cannot be nil");
+	MMXAssert(controllerConfiguration.appID != nil && ![controllerConfiguration.appID isEqualToString:@""],@"MMXConfiguration appID cannot be nil");
+	MMXAssert(controllerConfiguration.apiKey != nil && ![controllerConfiguration.apiKey isEqualToString:@""],@"MMXConfiguration apiKey cannot be nil");
+	MMXAssert(controllerConfiguration.anonymousSecret != nil && ![controllerConfiguration.anonymousSecret isEqualToString:@""],@"MMXConfiguration anonymousSecret cannot be nil");
 	MMXAssert(controllerConfiguration.baseURL != nil,@"MMXConfiguration baseURL cannot be nil");
 
     return controllerConfiguration;
