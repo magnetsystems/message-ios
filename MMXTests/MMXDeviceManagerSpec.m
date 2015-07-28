@@ -72,6 +72,7 @@ describe(@"MMXDeviceManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -125,6 +126,7 @@ describe(@"MMXDeviceManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -163,6 +165,7 @@ describe(@"MMXDeviceManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -216,6 +219,7 @@ describe(@"MMXDeviceManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -261,6 +265,7 @@ describe(@"MMXDeviceManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -315,6 +320,7 @@ describe(@"MMXDeviceManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy

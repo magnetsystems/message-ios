@@ -44,6 +44,7 @@
 
 #import "XMPP.h"
 #import "XMPPJID+MMX.h"
+#import "XMPPReconnect.h"
 #import "MMXConfiguration.h"
 #import "NSString+XEP_0106.h"
 
@@ -67,11 +68,12 @@ static BOOL MMXServerTrustIsValid(SecTrustRef serverTrust) {
 int const kTempVersionMajor = 1;
 int const kTempVersionMinor = 0;
 
-@interface MMXClient () <XMPPStreamDelegate, MMXDeviceManagerDelegate, MMXAccountManagerDelegate, MMXPubSubManagerDelegate>
+@interface MMXClient () <XMPPStreamDelegate, XMPPReconnectDelegate, MMXDeviceManagerDelegate, MMXAccountManagerDelegate, MMXPubSubManagerDelegate>
 
 @property (nonatomic, readwrite) MMXDeviceManager * deviceManager;
 @property (nonatomic, readwrite) MMXAccountManager * accountManager;
 @property (nonatomic, readwrite) MMXPubSubManager * pubsubManager;
+@property (nonatomic, strong) XMPPReconnect * xmppReconnect;
 @property (nonatomic, assign) BOOL switchingUser;
 @property (nonatomic, assign) NSUInteger messageNumber;
 
@@ -110,7 +112,12 @@ int const kTempVersionMinor = 0;
     [self disconnect];
     self.xmppStream = [[XMPPStream alloc] init];
     self.iqTracker = [[XMPPIDTracker alloc] initWithStream:self.xmppStream dispatchQueue:self.mmxQueue];
-    NSMutableString *userWithAppId = [[NSMutableString alloc] initWithString:[self.configuration.credential.user jidEscapedString]];
+
+	self.xmppReconnect = [[XMPPReconnect alloc] init];
+	[self.xmppReconnect addDelegate:self delegateQueue:dispatch_get_main_queue()];
+	[self.xmppReconnect activate:self.xmppStream];
+	
+	NSMutableString *userWithAppId = [[NSMutableString alloc] initWithString:[self.configuration.credential.user jidEscapedString]];
     [userWithAppId appendString:@"%"];
     [userWithAppId appendString:self.configuration.appID];
     
@@ -383,14 +390,13 @@ int const kTempVersionMinor = 0;
     }
     
     [xmppMessage addChild:mmxElement];
-    NSString *messageID = [self generateMessageID];
-    [xmppMessage addAttributeWithName:@"id" stringValue:messageID];
+    [xmppMessage addAttributeWithName:@"id" stringValue:outboundMessage.messageID];
     
     [[MMXLogger sharedLogger] verbose:@"About to send the message %@", outboundMessage.messageID];
     
     [self.xmppStream sendElement: xmppMessage];
     
-    return messageID;
+    return outboundMessage.messageID;
 }
 
 //FIXME: Add this back when the server has full support for multiple recipients
@@ -638,6 +644,24 @@ int const kTempVersionMinor = 0;
     }
 }
 
+#pragma mark - XMPPReconnect
+#pragma mark - XMPPReconnectDelegate Callbacks
+
+- (void)xmppReconnect:(XMPPReconnect *)sender didDetectAccidentalDisconnect:(SCNetworkConnectionFlags)connectionFlags {
+	[[MMXLogger sharedLogger] error:@"Received didDetectAccidentalDisconnect callback."];
+}
+
+- (BOOL)xmppReconnect:(XMPPReconnect *)sender shouldAttemptAutoReconnect:(SCNetworkConnectionFlags)connectionFlags {
+	//FIXME: what other cases should we attempt a reconnect
+	if (connectionFlags & kSCNetworkFlagsReachable) {
+		[self updateConnectionStatus:MMXConnectionStatusReconnecting error:nil];
+		return YES;
+	}
+	return NO;
+}
+
+
+
 #pragma mark - XMPPStreamDelegate
 #pragma mark - XMPPStreamDelegate Connection Lifecycle Methods
 
@@ -734,7 +758,10 @@ int const kTempVersionMinor = 0;
 
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error {
 	if (error) {
-		[[MMXLogger sharedLogger] error:@"%@", error.localizedDescription];
+		[[MMXLogger sharedLogger] error:@"%@\ncode=%li", error.localizedDescription,(long)error.code];
+	}
+	if (self.connectionStatus == MMXConnectionStatusReconnecting && error != nil) {
+		[self.xmppReconnect stop];
 	}
     if (!self.switchingUser) {
         [self updateConnectionStatus:MMXConnectionStatusDisconnected error:error];
