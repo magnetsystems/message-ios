@@ -5,40 +5,19 @@
 	<key>default</key>
 	<dict>
 		<key>BaseURL</key>
-		<string>mmx://prod-mmx-001.magnet.com:5222</string>
-		<key>DomainName</key>
-		<string>prod-mmx-001</string>
-		<key>AppId</key>
-		<string>d6diceysp6f</string>
-		<key>ApiKey</key>
-		<string>b2701472-62c2-4f3b-b608-67e3cffbf7bd</string>
-		<key>AnonymousSecret</key>
-		<string>584e29b5-b9bd-4cc6-bba2-946f6f46a257</string>
-		<key>ShouldForceTLS</key>
-		<true/>
-		<key>PublicAPIPort</key>
-		<integer>5220</integer>
-		<key>AllowInvalidCertificates</key>
-		<true/>
-	</dict>
-	<key>jason</key>
-	<dict>
-		<key>BaseURL</key>
-		<string>mmx://192.168.101.78:5222</string>
-		<key>DomainName</key>
+		<string>mmx://:5222</string>
+		<key>Domain</key>
 		<string>mmx</string>
 		<key>AppId</key>
-		<string>8fricny3kxg</string>
+		<string></string>
 		<key>ApiKey</key>
-		<string>9012d83a-e8e6-47c2-8fda-453dd1863318</string>
+		<string></string>
 		<key>AnonymousSecret</key>
-		<string>3329a573-0c75-414b-9b9c-4b3153444f4e</string>
+		<string></string>
 		<key>ShouldForceTLS</key>
-		<true/>
+		<false/>
 		<key>PublicAPIPort</key>
 		<integer>5220</integer>
-		<key>AllowInvalidCertificates</key>
-		<true/>
 	</dict>
 </dict>
 </plist>
