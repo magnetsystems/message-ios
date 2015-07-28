@@ -6,30 +6,33 @@ PODS:
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
   - Kiwi (2.3.1)
-  - Magnet-XMPPFramework (3.6.9):
-    - Magnet-XMPPFramework/Core (= 3.6.9)
-    - Magnet-XMPPFramework/CoreDataStorage (= 3.6.9)
-    - Magnet-XMPPFramework/Roster (= 3.6.9)
-    - Magnet-XMPPFramework/XEP-0060 (= 3.6.9)
-    - Magnet-XMPPFramework/XEP-0082 (= 3.6.9)
-    - Magnet-XMPPFramework/XEP-0106 (= 3.6.9)
-    - Magnet-XMPPFramework/XEP-0203 (= 3.6.9)
-  - Magnet-XMPPFramework/Core (3.6.9):
+  - Magnet-XMPPFramework (3.6.10):
+    - Magnet-XMPPFramework/Core (= 3.6.10)
+    - Magnet-XMPPFramework/CoreDataStorage (= 3.6.10)
+    - Magnet-XMPPFramework/Reconnect (= 3.6.10)
+    - Magnet-XMPPFramework/Roster (= 3.6.10)
+    - Magnet-XMPPFramework/XEP-0060 (= 3.6.10)
+    - Magnet-XMPPFramework/XEP-0082 (= 3.6.10)
+    - Magnet-XMPPFramework/XEP-0106 (= 3.6.10)
+    - Magnet-XMPPFramework/XEP-0203 (= 3.6.10)
+  - Magnet-XMPPFramework/Core (3.6.10):
     - CocoaAsyncSocket (~> 7.4.1)
     - CocoaLumberjack (~> 1.9)
-  - Magnet-XMPPFramework/CoreDataStorage (3.6.9):
+  - Magnet-XMPPFramework/CoreDataStorage (3.6.10):
     - Magnet-XMPPFramework/Core
-  - Magnet-XMPPFramework/Roster (3.6.9):
+  - Magnet-XMPPFramework/Reconnect (3.6.10):
+    - Magnet-XMPPFramework/Core
+  - Magnet-XMPPFramework/Roster (3.6.10):
     - Magnet-XMPPFramework/Core
     - Magnet-XMPPFramework/CoreDataStorage
     - Magnet-XMPPFramework/XEP-0203
-  - Magnet-XMPPFramework/XEP-0060 (3.6.9):
+  - Magnet-XMPPFramework/XEP-0060 (3.6.10):
     - Magnet-XMPPFramework/Core
-  - Magnet-XMPPFramework/XEP-0082 (3.6.9):
+  - Magnet-XMPPFramework/XEP-0082 (3.6.10):
     - Magnet-XMPPFramework/Core
-  - Magnet-XMPPFramework/XEP-0106 (3.6.9):
+  - Magnet-XMPPFramework/XEP-0106 (3.6.10):
     - Magnet-XMPPFramework/Core
-  - Magnet-XMPPFramework/XEP-0203 (3.6.9):
+  - Magnet-XMPPFramework/XEP-0203 (3.6.10):
     - Magnet-XMPPFramework/Core
     - Magnet-XMPPFramework/XEP-0082
   - Mantle (1.5.4):
@@ -41,7 +44,7 @@ PODS:
 
 DEPENDENCIES:
   - Kiwi (~> 2.3.1)
-  - Magnet-XMPPFramework (~> 3.6.9)
+  - Magnet-XMPPFramework (~> 3.6.10)
   - Mantle (~> 1.4)
   - MDMCoreData/MDMPersistenceController (~> 1.4)
 
@@ -49,8 +52,8 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
   CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
   Kiwi: f038a6c61f7a9e4d7766bff5717aa3b3fdb75f55
-  Magnet-XMPPFramework: 4e1a1c52727cd43371ccfd35c3f572777211cb4e
+  Magnet-XMPPFramework: a8baf193185ec648e9815c8d8c8221acbce7fc30
   Mantle: 60acd0cd363e27d945bda0a6b8e90577112d28f3
   MDMCoreData: 402f754cda90865026a209243f1667824e775649
 
-COCOAPODS: 0.37.2
+COCOAPODS: 0.38.2
