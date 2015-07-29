@@ -24,14 +24,25 @@
 @implementation MMXInboundMessage
 
 + (instancetype)initWithMessage:(MMXMessage *)message {
-    MMXInboundMessage * msg = [[MMXInboundMessage alloc] init];
+	MMXInboundMessage * msg = [[MMXInboundMessage alloc] init];
 	msg.messageID		= message.messageID;
 	msg.timestamp		= message.timestamp;
 	msg.metaData		= message.metaData;
 	msg.messageContent	= message.messageContent;
 	msg.senderUserID	= message.senderUserID;
 	msg.senderEndpoint	= message.senderEndpoint;
-    return msg;
+	return msg;
+}
+
++ (instancetype)initWithXMPPMessage:(XMPPMessage *)message {
+	MMXInboundMessage * msg = [[MMXInboundMessage alloc] init];
+	msg.messageID		= nil;//message.messageID;
+	msg.timestamp		= nil;//message.timestamp;
+	msg.metaData		= nil;//message.metaData;
+	msg.messageContent	= nil;//message.messageContent;
+	msg.senderUserID	= nil;//message.senderUserID;
+	msg.senderEndpoint	= nil;//message.senderEndpoint;
+	return msg;
 }
 
 

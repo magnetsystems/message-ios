@@ -314,83 +314,98 @@ int const kTempVersionMinor = 0;
 
 - (NSString *)sendMessage:(MMXOutboundMessage *)outboundMessage
 			  withOptions:(MMXMessageOptions *)options {
-
-	MMXAssert(!(outboundMessage.messageContent == nil && outboundMessage.metaData == nil),@"MMXClient sendMessage: messageContent && metaData cannot both be nil");
-
-	if (outboundMessage == nil) {
-		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipient:error:)]) {
-			NSError * error = [MMXClient errorWithTitle:@"Message cannot be nil" message:@"Message cannot be nil" code:401];
-			[self.delegate client:self didFailToSendMessage:nil recipient:nil error:error];
-		}
-		return nil;
-	}
-	if (outboundMessage.recipient == nil) {
-		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipient:error:)]) {
-			NSError * error = [MMXClient errorWithTitle:@"Recipient not set" message:@"Recipient cannot be nil" code:401];
-			[self.delegate client:self didFailToSendMessage:outboundMessage.messageID recipient:outboundMessage.recipient error:error];
-		}
-		return nil;
-	}
 	
-	if (![MMXMessageUtils isValidMetaData:outboundMessage.metaData]) {
-		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipient:error:)]) {
-			NSError * error = [MMXClient errorWithTitle:@"Meta Data Not Valid" message:@"Meta Data dictionary must be JSON serializable." code:401];
-			[self.delegate client:self didFailToSendMessage:outboundMessage.messageID recipient:outboundMessage.recipient error:error];
-		}
+	if (![self validateAndRespondToErrorsForOutboundMessage:outboundMessage]) {
 		return nil;
 	}
-	if ([MMXMessageUtils sizeOfMessageContent:outboundMessage.messageContent metaData:outboundMessage.metaData] > kMaxMessageSize) {
-		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipient:error:)]) {
-			NSError * error = [MMXClient errorWithTitle:@"Message too large" message:@"Message content and metaData exceed the max size of 200KB" code:401];
-			[self.delegate client:self didFailToSendMessage:outboundMessage.messageID recipient:outboundMessage.recipient error:error];
-		}
-		return nil;
-	}
-	
+
 	if (outboundMessage.messageID == nil) {
 		outboundMessage.messageID = [self generateMessageID];
 	}
 
 	NSString * mType = @"chat";
-	//FIXME: Add back when server supports the optimization(aka no ack)
-//	if (options && options.optimizeForPerformance) {
-//		mType = @"normal";
-//	}
     NSXMLElement *mmxElement = [[NSXMLElement alloc] initWithName:MXmmxElement xmlns:MXnsDataPayload];
+	[mmxElement addChild:[outboundMessage recipientsAsXML]];
 	[mmxElement addChild:[outboundMessage contentAsXMLForType:mType]];
-    
+
     if (outboundMessage.metaData) {
         [mmxElement addChild:[outboundMessage metaDataAsXML]];
     }
 	
 	XMPPMessage *xmppMessage;
-	if ([outboundMessage.recipient respondsToSelector:@selector(address)]) {
-		NSString *fullUsername = [NSString stringWithFormat:@"%@%%%@",[outboundMessage.recipient address],self.configuration.appID];
-		XMPPJID *toAddress = [XMPPJID jidWithUser:fullUsername domain:[[self currentJID] domain] resource:[outboundMessage.recipient subAddress]];
-		xmppMessage = [[XMPPMessage alloc] initWithType:mType to:toAddress];
-		[xmppMessage addAttributeWithName:@"from" stringValue: [[self currentJID] full]];
-	} else {
-		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipient:error:)]) {
-			NSError * error = [MMXClient errorWithTitle:@"Recipient not valid" message:@"Recipient must conform to the MMXAddressable protocol." code:401];
-			[self.delegate client:self didFailToSendMessage:outboundMessage.messageID recipient:outboundMessage.recipient error:error];
+	NSUInteger sentCount = 0;
+	NSMutableArray *failedList = @[].mutableCopy;
+	for (id<MMXAddressable> recipient in outboundMessage.recipients) {
+		if ([recipient respondsToSelector:@selector(address)]) {
+			NSString *fullUsername = [NSString stringWithFormat:@"%@%%%@",[recipient address],self.configuration.appID];
+			XMPPJID *toAddress = [XMPPJID jidWithUser:fullUsername domain:[[self currentJID] domain] resource:[recipient subAddress]];
+			xmppMessage = [[XMPPMessage alloc] initWithType:mType to:toAddress];
+			[xmppMessage addAttributeWithName:@"from" stringValue: [[self currentJID] full]];
+
+			if (options && options.shouldRequestDeliveryReceipt) {
+				NSXMLElement *deliveryReceiptElement = [[NSXMLElement alloc] initWithName:MXrequestElement xmlns:MXnsDeliveryReceipt];
+				[xmppMessage addChild:deliveryReceiptElement];
+			}
+			
+			[xmppMessage addChild:mmxElement];
+			[xmppMessage addAttributeWithName:@"id" stringValue:outboundMessage.messageID];
+			
+			[[MMXLogger sharedLogger] verbose:@"About to send the message %@", outboundMessage.messageID];
+			
+			[self.xmppStream sendElement: xmppMessage];
+			sentCount++;
+		} else {
+			[failedList addObject:recipient];
 		}
-		return nil;
 	}
 	
-	if (options && options.shouldRequestDeliveryReceipt) {
-        NSXMLElement *deliveryReceiptElement = [[NSXMLElement alloc] initWithName:MXrequestElement xmlns:MXnsDeliveryReceipt];
-        [xmppMessage addChild:deliveryReceiptElement];
-    }
-    
-    [xmppMessage addChild:mmxElement];
-    NSString *messageID = [self generateMessageID];
-    [xmppMessage addAttributeWithName:@"id" stringValue:messageID];
-    
-    [[MMXLogger sharedLogger] verbose:@"About to send the message %@", outboundMessage.messageID];
-    
-    [self.xmppStream sendElement: xmppMessage];
-    
-    return messageID;
+	if (failedList.count > 0) {
+		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipients:error:)]) {
+			NSError * error = [MMXClient errorWithTitle:@"Recipient not valid" message:@"Recipient must conform to the MMXAddressable protocol." code:401];
+			[self.delegate client:self didFailToSendMessage:outboundMessage.messageID recipients:failedList.copy error:error];
+		}
+	}
+	
+	if (sentCount > 0) {
+		return outboundMessage.messageID;
+	} else {
+		return nil;
+	}
+}
+
+- (BOOL)validateAndRespondToErrorsForOutboundMessage:(MMXOutboundMessage *)outboundMessage {
+	MMXAssert(!(outboundMessage.messageContent == nil && outboundMessage.metaData == nil),@"MMXClient sendMessage: messageContent && metaData cannot both be nil");
+	
+	if (outboundMessage == nil) {
+		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipients:error:)]) {
+			NSError * error = [MMXClient errorWithTitle:@"Message cannot be nil" message:@"Message cannot be nil" code:401];
+			[self.delegate client:self didFailToSendMessage:nil recipients:nil error:error];
+		}
+		return NO;
+	}
+	if (outboundMessage.recipients == nil || outboundMessage.recipients.count < 1) {
+		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipients:error:)]) {
+			NSError * error = [MMXClient errorWithTitle:@"Recipients not set" message:@"Recipients cannot be nil" code:401];
+			[self.delegate client:self didFailToSendMessage:outboundMessage.messageID recipients:nil error:error];
+		}
+		return NO;
+	}
+	
+	if (![MMXMessageUtils isValidMetaData:outboundMessage.metaData]) {
+		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipients:error:)]) {
+			NSError * error = [MMXClient errorWithTitle:@"Meta Data Not Valid" message:@"Meta Data dictionary must be JSON serializable." code:401];
+			[self.delegate client:self didFailToSendMessage:outboundMessage.messageID recipients:outboundMessage.recipients error:error];
+		}
+		return NO;
+	}
+	if ([MMXMessageUtils sizeOfMessageContent:outboundMessage.messageContent metaData:outboundMessage.metaData] > kMaxMessageSize) {
+		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipients:error:)]) {
+			NSError * error = [MMXClient errorWithTitle:@"Message too large" message:@"Message content and metaData exceed the max size of 200KB" code:401];
+			[self.delegate client:self didFailToSendMessage:outboundMessage.messageID recipients:outboundMessage.recipients error:error];
+		}
+		return NO;
+	}
+	return YES;
 }
 
 //FIXME: Add this back when the server has full support for multiple recipients
@@ -800,8 +815,9 @@ int const kTempVersionMinor = 0;
 					[self.delegate client:self didDeliverMessage:[xmppMessage elementID] recipient:[MMXUserID userIDWithUsername:[[from usernameWithoutAppID] jidUnescapedString]]];
 				});
 			}
+		} else {
+			[[MMXLogger sharedLogger] verbose:@"No mmx element %@", mmxElement];
 		}
-        [[MMXLogger sharedLogger] verbose:@"No mmx element %@", mmxElement];
     }
 }
 
@@ -809,6 +825,7 @@ int const kTempVersionMinor = 0;
 }
 
 - (void)xmppStream:(XMPPStream *)sender didFailToSendMessage:(XMPPMessage *)message error:(NSError *)error {
+	//FIXME: This is not correct behavior
 	if (error) {
 		[[MMXLogger sharedLogger] error:@"%@", error.localizedDescription];
 	}
@@ -818,9 +835,9 @@ int const kTempVersionMinor = 0;
     
     [[MMXDataModel sharedDataModel] addOutboxEntryWithMessage:outboundMessage options:options username:[self currentJID].user];
     
-	if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipient:error:)]) {
+	if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipients:error:)]) {
 		dispatch_async(self.callbackQueue, ^{
-			[self.delegate client:self didFailToSendMessage:outboundMessage.messageID recipient:outboundMessage.recipient error:error];
+//			[self.delegate client:self didFailToSendMessage:outboundMessage.messageID recipients:outboundMessage.recipients error:error];
 		});
     }
 }
