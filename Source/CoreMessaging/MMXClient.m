@@ -760,7 +760,10 @@ int const kTempVersionMinor = 0;
 	if (error) {
 		[[MMXLogger sharedLogger] error:@"%@\ncode=%li", error.localizedDescription,(long)error.code];
 	}
-	if (self.connectionStatus == MMXConnectionStatusReconnecting && error != nil) {
+	if (self.connectionStatus == MMXConnectionStatusReconnecting && error.code == 8) {
+		return;
+	}
+	if (self.connectionStatus == MMXConnectionStatusReconnecting && error.code == 61) {
 		[self.xmppReconnect stop];
 	}
     if (!self.switchingUser) {
