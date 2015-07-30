@@ -67,6 +67,8 @@ static BOOL MMXServerTrustIsValid(SecTrustRef serverTrust) {
 //FIXME: At some point this should be set in a plist or something.
 int const kTempVersionMajor = 1;
 int const kTempVersionMinor = 0;
+int const kMaxReconnectionTries = 4;
+int const kReconnectionTimerInterval = 4;
 
 @interface MMXClient () <XMPPStreamDelegate, XMPPReconnectDelegate, MMXDeviceManagerDelegate, MMXAccountManagerDelegate, MMXPubSubManagerDelegate>
 
@@ -76,6 +78,7 @@ int const kTempVersionMinor = 0;
 @property (nonatomic, strong) XMPPReconnect * xmppReconnect;
 @property (nonatomic, assign) BOOL switchingUser;
 @property (nonatomic, assign) NSUInteger messageNumber;
+@property (nonatomic, assign) NSUInteger reconnectionTryCount;
 
 - (NSString *)sanitizeDeviceToken:(NSData *)deviceToken;
 
@@ -101,6 +104,7 @@ int const kTempVersionMinor = 0;
 		_callbackQueue = dispatch_get_main_queue();
         _connectionStatus = MMXConnectionStatusNotConnected;
 		_messageNumber = 0;
+		_reconnectionTryCount = 0;
 		_configuration = configuration;
 	}
     return self;
@@ -113,9 +117,15 @@ int const kTempVersionMinor = 0;
     self.xmppStream = [[XMPPStream alloc] init];
     self.iqTracker = [[XMPPIDTracker alloc] initWithStream:self.xmppStream dispatchQueue:self.mmxQueue];
 
-	self.xmppReconnect = [[XMPPReconnect alloc] init];
-	[self.xmppReconnect addDelegate:self delegateQueue:dispatch_get_main_queue()];
+	if (self.xmppReconnect != nil) {
+		[self.xmppReconnect removeDelegate:self delegateQueue:self.mmxQueue];
+		[self.xmppReconnect deactivate];
+	} else {
+		self.xmppReconnect = [[XMPPReconnect alloc] init];
+	}
+	[self.xmppReconnect addDelegate:self delegateQueue:self.mmxQueue];
 	[self.xmppReconnect activate:self.xmppStream];
+	self.xmppReconnect.reconnectTimerInterval = kReconnectionTimerInterval;
 	
 	NSMutableString *userWithAppId = [[NSMutableString alloc] initWithString:[self.configuration.credential.user jidEscapedString]];
     [userWithAppId appendString:@"%"];
@@ -652,9 +662,21 @@ int const kTempVersionMinor = 0;
 }
 
 - (BOOL)xmppReconnect:(XMPPReconnect *)sender shouldAttemptAutoReconnect:(SCNetworkConnectionFlags)connectionFlags {
-	//FIXME: what other cases should we attempt a reconnect
-	if (connectionFlags & kSCNetworkFlagsReachable) {
-		[self updateConnectionStatus:MMXConnectionStatusReconnecting error:nil];
+	/*
+		isNetworkReachable logic borrowed from AFNetworking/AFNetworkReachabilityManager
+		https://github.com/AFNetworking/AFNetworking/blob/master/AFNetworking/AFNetworkReachabilityManager.m
+	 */
+	
+	BOOL isReachable = ((connectionFlags & kSCNetworkReachabilityFlagsReachable) != 0);
+	BOOL needsConnection = ((connectionFlags & kSCNetworkReachabilityFlagsConnectionRequired) != 0);
+	BOOL canConnectionAutomatically = (((connectionFlags & kSCNetworkReachabilityFlagsConnectionOnDemand ) != 0) || ((connectionFlags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0));
+	BOOL canConnectWithoutUserInteraction = (canConnectionAutomatically && (connectionFlags & kSCNetworkReachabilityFlagsInterventionRequired) == 0);
+	BOOL isNetworkReachable = (isReachable && (!needsConnection || canConnectWithoutUserInteraction));
+	
+	if (isNetworkReachable) {
+		if (self.connectionStatus != MMXConnectionStatusReconnecting) {
+			[self updateConnectionStatus:MMXConnectionStatusReconnecting error:nil];
+		}
 		return YES;
 	}
 	return NO;
@@ -690,6 +712,7 @@ int const kTempVersionMinor = 0;
 }
 
 - (void)xmppStreamDidConnect:(XMPPStream *)sender {
+	self.reconnectionTryCount = 0;
     [[MMXLogger sharedLogger] verbose:@"Successfully created TCP connection"];
     [self authenticate];
 }
@@ -760,11 +783,14 @@ int const kTempVersionMinor = 0;
 	if (error) {
 		[[MMXLogger sharedLogger] error:@"%@\ncode=%li", error.localizedDescription,(long)error.code];
 	}
-	if (self.connectionStatus == MMXConnectionStatusReconnecting && error.code == 8) {
-		return;
-	}
-	if (self.connectionStatus == MMXConnectionStatusReconnecting && error.code == 61) {
-		[self.xmppReconnect stop];
+	if (self.connectionStatus == MMXConnectionStatusReconnecting) {
+		if (self.reconnectionTryCount >= kMaxReconnectionTries) {
+			self.reconnectionTryCount = 0;
+			[self.xmppReconnect stop];
+		} else {
+			self.reconnectionTryCount++;
+			return;
+		}
 	}
     if (!self.switchingUser) {
         [self updateConnectionStatus:MMXConnectionStatusDisconnected error:error];
