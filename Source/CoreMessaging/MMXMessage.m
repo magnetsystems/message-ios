@@ -76,7 +76,10 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
         //meta
         NSArray* metaElements = [mmxElement elementsForName:MXmetaElement];
         _metaData = [MMXMessage extractMetaData:metaElements];
-        
+		
+		NSArray* mmxMetaElements = [mmxElement elementsForName:MXmmxMetaElement];
+        _recipients = [MMXMessage extractRecipients:mmxMetaElements];
+		
         NSArray* elements = [xmppMessage elementsForXmlns:MXnsDeliveryReceipt];
         BOOL deliveryFlag = NO;
         if ([elements count]) {
@@ -220,6 +223,35 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
         }
     }
     return @{};
+}
+
++ (NSArray *)extractRecipients:(NSArray *)recipientElements {
+	if ([recipientElements count] > 0) {
+		NSXMLElement *recipientElement = recipientElements[0];
+		NSString* metaJSON = [recipientElement stringValue];
+		if (metaJSON && [metaJSON length] > 0) {
+			NSData* jsonData = [metaJSON dataUsingEncoding:NSUTF8StringEncoding];
+			NSError* readError;
+			NSArray * tempRecipientArray = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&readError];
+			NSMutableArray *recipientOutputArray = [NSMutableArray arrayWithCapacity:tempRecipientArray.count];
+			if (!readError) {
+				for (NSDictionary *userDict in tempRecipientArray) {
+					if (userDict[@"userId"] && ![userDict[@"userId"] isEqualToString:@""]) {
+						if (userDict[@"devId"] && ![userDict[@"devId"] isEqualToString:@""]) {
+							MMXEndpoint *end = [MMXEndpoint endpointWithUsername:userDict[@"userId"] deviceID:userDict[@"devId"]];
+							[recipientOutputArray addObject:end];
+						} else {
+							MMXUserID *user = [MMXUserID userIDWithUsername:userDict[@"userId"]];
+							[recipientOutputArray addObject:user];
+						}
+					}
+				}
+				return recipientOutputArray.copy;
+			}
+		}
+	}
+	//NSLog(@"Badly formatted message ?");
+	return @[];
 }
 
 #pragma mark - Helper Methods
