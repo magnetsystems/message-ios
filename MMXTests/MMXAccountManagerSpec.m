@@ -70,6 +70,7 @@ describe(@"MMXAccountManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -118,6 +119,7 @@ describe(@"MMXAccountManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -166,6 +168,7 @@ describe(@"MMXAccountManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -207,6 +210,7 @@ describe(@"MMXAccountManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -255,6 +259,7 @@ describe(@"MMXAccountManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy

@@ -77,7 +77,8 @@ describe(@"MMXPubSubManager", ^{
                         break;
                     }
                     case MMXConnectionStatusAuthenticationFailure:break;
-                    case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
                 };
             };
             [clientDelegateMock addMessageSpy:spy
@@ -118,6 +119,7 @@ describe(@"MMXPubSubManager", ^{
                     }
                     case MMXConnectionStatusAuthenticationFailure:break;
                     case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
                 };
             };
             [clientDelegateMock addMessageSpy:spy
@@ -166,7 +168,8 @@ describe(@"MMXPubSubManager", ^{
                         break;
                     }
                     case MMXConnectionStatusAuthenticationFailure:break;
-                    case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
                 };
             };
             [clientDelegateMock addMessageSpy:spy
@@ -208,6 +211,7 @@ describe(@"MMXPubSubManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -257,6 +261,7 @@ describe(@"MMXPubSubManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -301,6 +306,7 @@ describe(@"MMXPubSubManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -338,6 +344,7 @@ describe(@"MMXPubSubManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
@@ -397,6 +404,7 @@ describe(@"MMXPubSubManager", ^{
 					}
 					case MMXConnectionStatusAuthenticationFailure:break;
 					case MMXConnectionStatusFailed:break;
+					case MMXConnectionStatusReconnecting:break;
 				};
 			};
 			[clientDelegateMock addMessageSpy:spy
