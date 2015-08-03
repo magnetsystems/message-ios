@@ -38,8 +38,8 @@
 
 + (instancetype)initWithMessage:(MMXMessage *)message {
     MMXOutboundMessage * msg = [[MMXOutboundMessage alloc] init];
-	if (message.recipient) {
-		msg.recipients = @[message.recipient];
+	if (message.recipients) {
+		msg.recipients = message.recipients;
 	} else if (message.receiverUsername) {
 		MMXUserID *user = [MMXUserID userIDWithUsername:message.receiverUsername];
 		msg.recipients = @[user];
