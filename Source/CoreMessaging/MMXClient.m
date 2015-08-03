@@ -331,7 +331,16 @@ int const kReconnectionTimerInterval = 4;
 
 - (NSString *)sendMessage:(MMXOutboundMessage *)outboundMessage
 			  withOptions:(MMXMessageOptions *)options {
+	MMXMessage *message = [MMXMessage messageTo:outboundMessage.recipients
+									withContent:outboundMessage.messageContent
+									messageType:nil
+									   metaData:outboundMessage.metaData];
+	return [self sendMMXMessage:message withOptions:options];
+}
+- (NSString *)sendMMXMessage:(MMXMessage *)outboundMessage
+				 withOptions:(MMXMessageOptions *)options {
 	
+
 	if (![self validateAndRespondToErrorsForOutboundMessage:outboundMessage]) {
 		return nil;
 	}
@@ -343,10 +352,10 @@ int const kReconnectionTimerInterval = 4;
 	NSString * mType = @"chat";
     NSXMLElement *mmxElement = [[NSXMLElement alloc] initWithName:MXmmxElement xmlns:MXnsDataPayload];
 	[mmxElement addChild:[outboundMessage recipientsAsXML]];
-	[mmxElement addChild:[outboundMessage contentAsXMLForType:mType]];
+	[mmxElement addChild:[outboundMessage contentToXML]];
 
     if (outboundMessage.metaData) {
-        [mmxElement addChild:[outboundMessage metaDataAsXML]];
+        [mmxElement addChild:[outboundMessage metaDataToXML]];
     }
 	
 	XMPPMessage *xmppMessage;
@@ -390,7 +399,7 @@ int const kReconnectionTimerInterval = 4;
 	}
 }
 
-- (BOOL)validateAndRespondToErrorsForOutboundMessage:(MMXOutboundMessage *)outboundMessage {
+- (BOOL)validateAndRespondToErrorsForOutboundMessage:(MMXMessage *)outboundMessage {
 	MMXAssert(!(outboundMessage.messageContent == nil && outboundMessage.metaData == nil),@"MMXClient sendMessage: messageContent && metaData cannot both be nil");
 	
 	if (outboundMessage == nil) {

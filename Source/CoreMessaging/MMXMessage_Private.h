@@ -56,5 +56,6 @@
 
 - (NSXMLElement *)contentToXML;
 - (NSXMLElement *)metaDataToXML;
+- (NSXMLElement *)recipientsAsXML;
 
 @end

@@ -300,6 +300,34 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
     return nil;
 }
 
+- (NSXMLElement *)recipientsAsXML {
+	if (self.recipients == nil || self.recipients.count < 1) {
+		return nil;
+	}
+	NSXMLElement *metaDataElement = [[NSXMLElement alloc] initWithName:@"mmxmeta"];
+	
+	NSMutableArray *recipientArray = @[].mutableCopy;
+	for (id<MMXAddressable> recipient in self.recipients) {
+		if ([recipient address] && ![[recipient address] isEqualToString:@""]) {
+			[recipientArray addObject:@{@"userId":[recipient address],
+										@"devId":[recipient subAddress] ?: [NSNull null]}];
+		}
+	}
+	NSError *error;
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{@"To":recipientArray}
+													   options:NSJSONWritingPrettyPrinted
+														 error:&error];
+	NSString *json = [[NSString alloc] initWithData:jsonData
+										   encoding:NSUTF8StringEncoding];
+	
+	[metaDataElement setStringValue:json];
+	
+	if (error == nil) {
+		return metaDataElement;
+	}
+	return nil;
+}
+
 +(NSXMLNode*)buildAttributeNodeWith:(NSString *)name
                      attributeValue:(NSString *)attributeValue {
     NSXMLNode* attribute = [NSXMLNode attributeWithName:name stringValue:attributeValue];
