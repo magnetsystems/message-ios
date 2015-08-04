@@ -373,7 +373,7 @@ int const kReconnectionTimerInterval = 4;
 				[xmppMessage addChild:deliveryReceiptElement];
 			}
 			
-			[xmppMessage addChild:mmxElement];
+			[xmppMessage addChild:mmxElement.copy];
 			[xmppMessage addAttributeWithName:@"id" stringValue:outboundMessage.messageID];
 			
 			[[MMXLogger sharedLogger] verbose:@"About to send the message %@", outboundMessage.messageID];

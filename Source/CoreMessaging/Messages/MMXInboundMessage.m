@@ -29,21 +29,10 @@
 	msg.timestamp		= message.timestamp;
 	msg.metaData		= message.metaData;
 	msg.messageContent	= message.messageContent;
+	msg.recipients		= message.recipients;
 	msg.senderUserID	= message.senderUserID;
 	msg.senderEndpoint	= message.senderEndpoint;
 	return msg;
 }
-
-+ (instancetype)initWithXMPPMessage:(XMPPMessage *)message {
-	MMXInboundMessage * msg = [[MMXInboundMessage alloc] init];
-	msg.messageID		= nil;//message.messageID;
-	msg.timestamp		= nil;//message.timestamp;
-	msg.metaData		= nil;//message.metaData;
-	msg.messageContent	= nil;//message.messageContent;
-	msg.senderUserID	= nil;//message.senderUserID;
-	msg.senderEndpoint	= nil;//message.senderEndpoint;
-	return msg;
-}
-
 
 @end

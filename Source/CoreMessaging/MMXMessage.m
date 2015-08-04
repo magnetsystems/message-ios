@@ -232,21 +232,24 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 		if (metaJSON && [metaJSON length] > 0) {
 			NSData* jsonData = [metaJSON dataUsingEncoding:NSUTF8StringEncoding];
 			NSError* readError;
-			NSArray * tempRecipientArray = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&readError];
-			NSMutableArray *recipientOutputArray = [NSMutableArray arrayWithCapacity:tempRecipientArray.count];
+			NSDictionary * recipientDict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&readError];
 			if (!readError) {
-				for (NSDictionary *userDict in tempRecipientArray) {
-					if (userDict[@"userId"] && ![userDict[@"userId"] isEqualToString:@""]) {
-						if (userDict[@"devId"] && ![userDict[@"devId"] isEqualToString:@""]) {
-							MMXEndpoint *end = [MMXEndpoint endpointWithUsername:userDict[@"userId"] deviceID:userDict[@"devId"]];
-							[recipientOutputArray addObject:end];
-						} else {
-							MMXUserID *user = [MMXUserID userIDWithUsername:userDict[@"userId"]];
-							[recipientOutputArray addObject:user];
+				if (recipientDict && recipientDict[@"To"]) {
+					NSArray *tempRecipientArray = recipientDict[@"To"];
+					NSMutableArray *recipientOutputArray = [NSMutableArray arrayWithCapacity:tempRecipientArray.count];
+					for (NSDictionary *userDict in tempRecipientArray) {
+						if (userDict[@"userId"] && userDict[@"userId"] != [NSNull null] && ![userDict[@"userId"] isEqualToString:@""]) {
+							if (userDict[@"devId"] && userDict[@"devId"] != [NSNull null] && ![userDict[@"devId"] isEqualToString:@""]) {
+								MMXEndpoint *end = [MMXEndpoint endpointWithUsername:userDict[@"userId"] deviceID:userDict[@"devId"]];
+								[recipientOutputArray addObject:end];
+							} else {
+								MMXUserID *user = [MMXUserID userIDWithUsername:userDict[@"userId"]];
+								[recipientOutputArray addObject:user];
+							}
 						}
 					}
+					return recipientOutputArray.copy;
 				}
-				return recipientOutputArray.copy;
 			}
 		}
 	}
