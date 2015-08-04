@@ -57,7 +57,7 @@
 		0EA2029F1AF838E1004018AE /* MMXClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA2022C1AF838E1004018AE /* MMXClient.m */; };
 		0EA202A01AF838E1004018AE /* MMXInternalAck.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA2022F1AF838E1004018AE /* MMXInternalAck.m */; };
 		0EA202A11AF838E1004018AE /* MMXIQResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA202311AF838E1004018AE /* MMXIQResponse.m */; };
-		0EA202A21AF838E1004018AE /* MMXMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA202331AF838E1004018AE /* MMXMessage.m */; };
+		0EA202A21AF838E1004018AE /* MMXInternalMessageAdaptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA202331AF838E1004018AE /* MMXInternalMessageAdaptor.m */; };
 		0EA202A31AF838E1004018AE /* MMXMessageStateQueryResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA202361AF838E1004018AE /* MMXMessageStateQueryResponse.m */; };
 		0EA202A41AF838E1004018AE /* MMXQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA2023A1AF838E1004018AE /* MMXQuery.m */; };
 		0EA202A51AF838E1004018AE /* MMXQueryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA2023D1AF838E1004018AE /* MMXQueryFilter.m */; };
@@ -208,9 +208,9 @@
 		0EA2022F1AF838E1004018AE /* MMXInternalAck.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXInternalAck.m; sourceTree = "<group>"; };
 		0EA202301AF838E1004018AE /* MMXIQResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXIQResponse.h; sourceTree = "<group>"; };
 		0EA202311AF838E1004018AE /* MMXIQResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXIQResponse.m; sourceTree = "<group>"; };
-		0EA202321AF838E1004018AE /* MMXMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXMessage.h; sourceTree = "<group>"; };
-		0EA202331AF838E1004018AE /* MMXMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXMessage.m; sourceTree = "<group>"; };
-		0EA202341AF838E1004018AE /* MMXMessage_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXMessage_Private.h; sourceTree = "<group>"; };
+		0EA202321AF838E1004018AE /* MMXInternalMessageAdaptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXInternalMessageAdaptor.h; sourceTree = "<group>"; };
+		0EA202331AF838E1004018AE /* MMXInternalMessageAdaptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXInternalMessageAdaptor.m; sourceTree = "<group>"; };
+		0EA202341AF838E1004018AE /* MMXInternalMessageAdaptor_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXInternalMessageAdaptor_Private.h; sourceTree = "<group>"; };
 		0EA202351AF838E1004018AE /* MMXMessageStateQueryResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXMessageStateQueryResponse.h; sourceTree = "<group>"; };
 		0EA202361AF838E1004018AE /* MMXMessageStateQueryResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXMessageStateQueryResponse.m; sourceTree = "<group>"; };
 		0EA202371AF838E1004018AE /* MMXMessageStateQueryResponse_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXMessageStateQueryResponse_Private.h; sourceTree = "<group>"; };
@@ -478,9 +478,9 @@
 				0EA2022F1AF838E1004018AE /* MMXInternalAck.m */,
 				0EA202301AF838E1004018AE /* MMXIQResponse.h */,
 				0EA202311AF838E1004018AE /* MMXIQResponse.m */,
-				0EA202321AF838E1004018AE /* MMXMessage.h */,
-				0EA202331AF838E1004018AE /* MMXMessage.m */,
-				0EA202341AF838E1004018AE /* MMXMessage_Private.h */,
+				0EA202321AF838E1004018AE /* MMXInternalMessageAdaptor.h */,
+				0EA202331AF838E1004018AE /* MMXInternalMessageAdaptor.m */,
+				0EA202341AF838E1004018AE /* MMXInternalMessageAdaptor_Private.h */,
 				0EA202351AF838E1004018AE /* MMXMessageStateQueryResponse.h */,
 				0EA202361AF838E1004018AE /* MMXMessageStateQueryResponse.m */,
 				0EA202371AF838E1004018AE /* MMXMessageStateQueryResponse_Private.h */,
@@ -922,7 +922,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0EA202A21AF838E1004018AE /* MMXMessage.m in Sources */,
+				0EA202A21AF838E1004018AE /* MMXInternalMessageAdaptor.m in Sources */,
 				0EA202931AF838E1004018AE /* _MMXOutboxEntry.m in Sources */,
 				0EA202A61AF838E1004018AE /* MMXDeviceManager.m in Sources */,
 				0EA202A11AF838E1004018AE /* MMXIQResponse.m in Sources */,
