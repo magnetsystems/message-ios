@@ -9,7 +9,7 @@
 #import "MMXMessage_Private.h"
 #import "MagnetDelegate.h"
 #import "MMXUser.h"
-#import <MMX.h>
+#import "MMX.h"
 
 @implementation MMXMessage
 

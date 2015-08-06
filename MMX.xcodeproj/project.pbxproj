@@ -35,6 +35,12 @@
 		0E54CFDF1AFAA2D1000326D7 /* MMXUserQueryFilter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0EA2027E1AF838E1004018AE /* MMXUserQueryFilter.h */; };
 		0E54CFE01AFAA2D7000326D7 /* MMXTopicQueryFilter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0EA202621AF838E1004018AE /* MMXTopicQueryFilter.h */; };
 		0E57BE5C1AFAA015009BD674 /* MMXTestingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA2028B1AF838E1004018AE /* MMXTestingUtils.m */; };
+		0E7F1EAF1B742373003808B4 /* MagnetConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7F1EA31B742373003808B4 /* MagnetConstants.m */; };
+		0E7F1EB01B742373003808B4 /* MagnetDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7F1EA51B742373003808B4 /* MagnetDelegate.m */; };
+		0E7F1EB11B742373003808B4 /* MagnetMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7F1EA71B742373003808B4 /* MagnetMessage.m */; };
+		0E7F1EB21B742373003808B4 /* MMXChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7F1EA91B742373003808B4 /* MMXChannel.m */; };
+		0E7F1EB31B742373003808B4 /* MMXMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7F1EAB1B742373003808B4 /* MMXMessage.m */; };
+		0E7F1EB41B742373003808B4 /* MMXUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E7F1EAE1B742373003808B4 /* MMXUser.m */; };
 		0E8339351A78480800131CF3 /* MMXClientSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E8339341A78480800131CF3 /* MMXClientSpec.m */; };
 		0E8B4E0F1A6F2F370000A7C3 /* libMMX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E8B4E031A6F2F370000A7C3 /* libMMX.a */; };
 		0E91FF451A8184160055F77F /* MMXDeviceManagerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91FF441A8184160055F77F /* MMXDeviceManagerSpec.m */; };
@@ -155,6 +161,20 @@
 /* Begin PBXFileReference section */
 		0E47F4FB1B069EF20089E887 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Configurations.plist; path = Configuration/Configurations.plist; sourceTree = "<group>"; };
 		0E5F2D8A1A76B99F00396DF4 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
+		0E7F1EA11B742373003808B4 /* MagnetAbstraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetAbstraction.h; sourceTree = "<group>"; };
+		0E7F1EA21B742373003808B4 /* MagnetConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetConstants.h; sourceTree = "<group>"; };
+		0E7F1EA31B742373003808B4 /* MagnetConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagnetConstants.m; sourceTree = "<group>"; };
+		0E7F1EA41B742373003808B4 /* MagnetDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetDelegate.h; sourceTree = "<group>"; };
+		0E7F1EA51B742373003808B4 /* MagnetDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagnetDelegate.m; sourceTree = "<group>"; };
+		0E7F1EA61B742373003808B4 /* MagnetMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetMessage.h; sourceTree = "<group>"; };
+		0E7F1EA71B742373003808B4 /* MagnetMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagnetMessage.m; sourceTree = "<group>"; };
+		0E7F1EA81B742373003808B4 /* MMXChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXChannel.h; sourceTree = "<group>"; };
+		0E7F1EA91B742373003808B4 /* MMXChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXChannel.m; sourceTree = "<group>"; };
+		0E7F1EAA1B742373003808B4 /* MMXMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXMessage.h; sourceTree = "<group>"; };
+		0E7F1EAB1B742373003808B4 /* MMXMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXMessage.m; sourceTree = "<group>"; };
+		0E7F1EAC1B742373003808B4 /* MMXMessage_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXMessage_Private.h; sourceTree = "<group>"; };
+		0E7F1EAD1B742373003808B4 /* MMXUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXUser.h; sourceTree = "<group>"; };
+		0E7F1EAE1B742373003808B4 /* MMXUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXUser.m; sourceTree = "<group>"; };
 		0E8339341A78480800131CF3 /* MMXClientSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXClientSpec.m; sourceTree = "<group>"; };
 		0E8B4E031A6F2F370000A7C3 /* libMMX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMMX.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E8B4E0E1A6F2F370000A7C3 /* MMXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MMXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -344,6 +364,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E7F1EA01B742373003808B4 /* Abstraction */ = {
+			isa = PBXGroup;
+			children = (
+				0E7F1EA11B742373003808B4 /* MagnetAbstraction.h */,
+				0E7F1EA21B742373003808B4 /* MagnetConstants.h */,
+				0E7F1EA31B742373003808B4 /* MagnetConstants.m */,
+				0E7F1EA41B742373003808B4 /* MagnetDelegate.h */,
+				0E7F1EA51B742373003808B4 /* MagnetDelegate.m */,
+				0E7F1EA61B742373003808B4 /* MagnetMessage.h */,
+				0E7F1EA71B742373003808B4 /* MagnetMessage.m */,
+				0E7F1EA81B742373003808B4 /* MMXChannel.h */,
+				0E7F1EA91B742373003808B4 /* MMXChannel.m */,
+				0E7F1EAA1B742373003808B4 /* MMXMessage.h */,
+				0E7F1EAB1B742373003808B4 /* MMXMessage.m */,
+				0E7F1EAC1B742373003808B4 /* MMXMessage_Private.h */,
+				0E7F1EAD1B742373003808B4 /* MMXUser.h */,
+				0E7F1EAE1B742373003808B4 /* MMXUser.m */,
+			);
+			path = Abstraction;
+			sourceTree = "<group>";
+		};
 		0E8B4DFA1A6F2F370000A7C3 = {
 			isa = PBXGroup;
 			children = (
@@ -397,6 +438,7 @@
 		0EA201F91AF838E1004018AE /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				0E7F1EA01B742373003808B4 /* Abstraction */,
 				0EA201FA1AF838E1004018AE /* Categories */,
 				0EA201FF1AF838E1004018AE /* Configuration */,
 				0EA202041AF838E1004018AE /* Constants */,
@@ -922,11 +964,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E7F1EB21B742373003808B4 /* MMXChannel.m in Sources */,
 				0EA202A21AF838E1004018AE /* MMXInternalMessageAdaptor.m in Sources */,
 				0EA202931AF838E1004018AE /* _MMXOutboxEntry.m in Sources */,
 				0EA202A61AF838E1004018AE /* MMXDeviceManager.m in Sources */,
 				0EA202A11AF838E1004018AE /* MMXIQResponse.m in Sources */,
 				0EA202B01AF838E1004018AE /* MMXTopicListResponse.m in Sources */,
+				0E7F1EB31B742373003808B4 /* MMXMessage.m in Sources */,
+				0E7F1EAF1B742373003808B4 /* MagnetConstants.m in Sources */,
 				0EA202B11AF838E1004018AE /* MMXTopicQueryFilter.m in Sources */,
 				0EA202B61AF838E1004018AE /* MMXTopicSummary.m in Sources */,
 				0EA2029D1AF838E1004018AE /* MMXMessageOptions.m in Sources */,
@@ -936,10 +981,12 @@
 				0EA202AA1AF838E1004018AE /* MMXRemoteNotification.m in Sources */,
 				0EA2029A1AF838E1004018AE /* MMXEndpoint.m in Sources */,
 				0EA2029C1AF838E1004018AE /* MMXInboundMessage.m in Sources */,
+				0E7F1EB41B742373003808B4 /* MMXUser.m in Sources */,
 				0EA202A81AF838E1004018AE /* MMXDeviceQueryResponse.m in Sources */,
 				0EA202A41AF838E1004018AE /* MMXQuery.m in Sources */,
 				0EA202B81AF838E1004018AE /* MMXAccountManager.m in Sources */,
 				0EA202BF1AF838E1004018AE /* MMXUtils.m in Sources */,
+				0E7F1EB01B742373003808B4 /* MagnetDelegate.m in Sources */,
 				0EA202921AF838E1004018AE /* MMXConstants.m in Sources */,
 				0EA202B41AF838E1004018AE /* MMXSubscriptionResponse.m in Sources */,
 				0EA202BD1AF838E1004018AE /* MMXMessageUtils.m in Sources */,
@@ -953,6 +1000,7 @@
 				0EA202911AF838E1004018AE /* MMXConfigurationRegistry.m in Sources */,
 				0EA202AC1AF838E1004018AE /* MMXPubSubFetchRequest.m in Sources */,
 				0EA202AB1AF838E1004018AE /* MMXGeoLocationMessage.m in Sources */,
+				0E7F1EB11B742373003808B4 /* MagnetMessage.m in Sources */,
 				0EA2029B1AF838E1004018AE /* MMXUserID.m in Sources */,
 				0EA202BA1AF838E1004018AE /* MMXUserQueryFilter.m in Sources */,
 				0EA2029E1AF838E1004018AE /* MMXOutboundMessage.m in Sources */,

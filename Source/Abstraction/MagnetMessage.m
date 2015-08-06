@@ -8,7 +8,7 @@
 
 #import "MagnetMessage.h"
 #import "MagnetDelegate.h"
-#import <MMX.h>
+#import "MMX.h"
 
 @implementation MagnetMessage
 

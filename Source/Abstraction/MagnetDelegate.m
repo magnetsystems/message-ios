@@ -10,7 +10,7 @@
 #import "MMXMessage_Private.h"
 #import "MagnetConstants.h"
 #import "MMXUser.h"
-#import <MMX.h>
+#import "MMX.h"
 
 @interface MagnetDelegate () <MMXClientDelegate>
 
@@ -105,12 +105,14 @@
 					user.displayName = userProfile.displayName;
 					user.email = userProfile.email;
 					self.logInSuccessBlock(user);
+					self.logInSuccessBlock = nil;
+					self.logInFailureBlock = nil;
 				} failure:^(NSError *error) {
 					self.logInSuccessBlock(nil);
+					self.logInSuccessBlock = nil;
+					self.logInFailureBlock = nil;
 				}];
 			}
-			self.logInSuccessBlock = nil;
-			self.logInFailureBlock = nil;
 			}
 			break;
 		case MMXConnectionStatusAuthenticationFailure: {

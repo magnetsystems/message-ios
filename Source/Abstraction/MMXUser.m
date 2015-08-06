@@ -8,7 +8,7 @@
 
 #import "MMXUser.h"
 #import "MagnetDelegate.h"
-#import <MMX.h>
+#import "MMX.h"
 
 @implementation MMXUser
 

@@ -8,7 +8,7 @@
 
 #import "MMXChannel.h"
 #import "MMXMessage_Private.h"
-#import <MMX.h>
+#import "MMX.h"
 
 @implementation MMXChannel
 
