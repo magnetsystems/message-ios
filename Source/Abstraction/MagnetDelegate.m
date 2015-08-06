@@ -85,7 +85,7 @@
 			success:(void (^)(NSString *messageID))success
 			failure:(void (^)(NSError *error))failure {
 	//FIXME: Needs to properly handle failure and success blocks
-	MMXOutboundMessage *msg = [MMXOutboundMessage messageTo:[message.recipients allObjects] withContent:nil metaData:message.messageContent];
+	MMXOutboundMessage *msg = [MMXOutboundMessage messageTo:[message recipientsForOutboundMessage] withContent:nil metaData:message.messageContent];
 	NSString *messageID = [[MMXClient sharedClient] sendMessage:msg];
 	if (success) {
 		success(messageID);

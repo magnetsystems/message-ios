@@ -22,4 +22,6 @@
 
 @property(nonatomic, readwrite) NSDictionary *messageContent;
 
+- (NSArray *)recipientsForOutboundMessage;
+
 @end

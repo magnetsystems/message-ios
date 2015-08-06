@@ -55,7 +55,9 @@
 					success:(void (^)(NSString *))success
 					failure:(void (^)(NSError *))failure {
 	//FIXME: Handle case that user is not logged in
-	MMXMessage *msg = [MMXMessage messageTo:[NSSet setWithObjects:self.sender, nil] messageContent:content];
+	NSMutableSet *newSet = [NSMutableSet setWithSet:self.recipients];
+	[newSet addObject:self.sender];
+	MMXMessage *msg = [MMXMessage messageTo:newSet messageContent:content];
 	[[MagnetDelegate sharedDelegate] sendMessage:msg success:^(NSString *messageID) {
 		if (success) {
 			success(messageID);
