@@ -150,6 +150,9 @@
 	//FIXME: remove the receiver/current user from the list of recipients.
 	MMXMessage *msg = [MMXMessage messageTo:[NSSet setWithArray:message.recipients]
 							 messageContent:message.metaData];
+	MMXUser *user = [MMXUser new];
+	user.username = message.senderUserID.username;
+	msg.sender = user;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
 	[[NSNotificationCenter defaultCenter] postNotificationName:kNotificationReceivedMessage
