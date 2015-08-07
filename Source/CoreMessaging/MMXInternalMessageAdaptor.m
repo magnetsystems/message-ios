@@ -48,11 +48,15 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
         XMPPJID* recipient = [xmppMessage to] ;
         XMPPJID* sender =[xmppMessage from];
 		NSString * senderUsername = [sender usernameWithoutAppID];
+		NSString * recipientUsername = [recipient usernameWithoutAppID];
 		if ([MMXUtils objectIsValidString:senderUsername]) {
 			_senderUserID = [MMXUserID userIDWithUsername:[senderUsername jidUnescapedString]];
 			if ([MMXUtils objectIsValidString:[sender resource]]) {
 				_senderEndpoint = [MMXEndpoint endpointWithUsername:[senderUsername jidUnescapedString] deviceID:[sender resource]];
 			}
+		}
+		if ([MMXUtils objectIsValidString:recipientUsername]) {
+			_targetUserID = [MMXUserID userIDWithUsername:[recipientUsername jidUnescapedString]];
 		}
 		NSString * receiverUsername = [recipient usernameWithoutAppID];
 		if ([MMXUtils objectIsValidString:receiverUsername]) {

@@ -148,7 +148,7 @@
 
 - (void)client:(MMXClient *)client didReceiveMessage:(MMXInboundMessage *)message deliveryReceiptRequested:(BOOL)receiptRequested {
 	//FIXME: remove the receiver/current user from the list of recipients.
-	MMXMessage *msg = [MMXMessage messageTo:[NSSet setWithArray:message.recipients]
+	MMXMessage *msg = [MMXMessage messageTo:[NSSet setWithArray:message.otherRecipients]
 							 messageContent:message.metaData];
 	MMXUser *user = [MMXUser new];
 	user.username = message.senderUserID.username;
