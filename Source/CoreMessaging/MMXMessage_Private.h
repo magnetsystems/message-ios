@@ -23,11 +23,7 @@
 
 @interface MMXMessage ()
 
-@property (nonatomic) BOOL deliveryReceipt;
-@property (nonatomic, readwrite) id<MMXAddressable>recipient;
 @property (nonatomic, strong, readwrite) NSString *messageContent;
-
-@property (nonatomic, readonly) BOOL hasMultipleRecipients;
 
 @property (nonatomic) BOOL deliveryReceiptRequested;
 
@@ -39,18 +35,15 @@
 
 @property (nonatomic, strong) NSString* mType;
 
-@property(nonatomic, strong, readwrite) NSString* senderDeviceId;
-
-@property(nonatomic, strong, readwrite) NSString* receiverDeviceId;
-
 @property(nonatomic, strong, readwrite) MMXUserID *senderUserID;
+@property(nonatomic, strong, readwrite) MMXUserID *targetUserID;
 @property(nonatomic, strong, readwrite) MMXEndpoint *senderEndpoint;
 @property(nonatomic, strong, readwrite) NSString* receiverUsername;
 @property(nonatomic, readwrite) CLLocation *location;
 
 @property (nonatomic, strong) MMXTopic * topic;
 
-- (instancetype)initWith:(id<MMXAddressable>)recipient
+- (instancetype)initWith:(NSArray *)recipients
              withContent:(NSString *)content
              messageType:(NSString *)messageType
                 metaData:(NSDictionary *)metaData;
@@ -64,5 +57,6 @@
 
 - (NSXMLElement *)contentToXML;
 - (NSXMLElement *)metaDataToXML;
+- (NSXMLElement *)recipientsAsXML;
 
 @end

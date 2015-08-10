@@ -24,15 +24,24 @@
 @implementation MMXInboundMessage
 
 + (instancetype)initWithMessage:(MMXMessage *)message {
-    MMXInboundMessage * msg = [[MMXInboundMessage alloc] init];
+	MMXInboundMessage * msg = [[MMXInboundMessage alloc] init];
 	msg.messageID		= message.messageID;
 	msg.timestamp		= message.timestamp;
 	msg.metaData		= message.metaData;
 	msg.messageContent	= message.messageContent;
+	msg.otherRecipients	= [MMXInboundMessage removeUser:message.targetUserID fromRecipients:message.recipients];
 	msg.senderUserID	= message.senderUserID;
 	msg.senderEndpoint	= message.senderEndpoint;
-    return msg;
+	return msg;
 }
 
-
++ (NSArray *)removeUser:(MMXUserID *)userID fromRecipients:(NSArray *)recipients {
+	NSMutableArray *otherRecipients = @[].mutableCopy;
+	for (id<MMXAddressable> recipient in recipients) {
+		if (![[recipient address] isEqualToString:[userID address]]) {
+			[otherRecipients addObject:recipient];
+		}
+	}
+	return otherRecipients.copy;
+}
 @end

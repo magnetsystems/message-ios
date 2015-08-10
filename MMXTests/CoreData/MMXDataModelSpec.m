@@ -44,7 +44,7 @@ describe(@"MMXDataModel", ^{
 
         beforeEach(^{
 			_testuser = [MMXUserID userIDWithUsername:@"testuser"];
-            _message = [MMXMessage messageTo:_testuser
+            _message = [MMXMessage messageTo:@[_testuser]
                                  withContent:@"Hello World"
                                  messageType:@"text/plain"
                                     metaData:@{@"foo" : @"bar"}];
@@ -106,7 +106,7 @@ describe(@"MMXDataModel", ^{
 
         beforeEach(^{
 			_testuser = [MMXUserID userIDWithUsername:@"testuser"];
-            _message = [MMXMessage messageTo:_testuser
+            _message = [MMXMessage messageTo:@[_testuser]
                                  withContent:@"Hello World"
                                  messageType:@"text/plain"
                                     metaData:@{@"foo" : @"bar"}];
@@ -138,7 +138,7 @@ describe(@"MMXDataModel", ^{
 
         beforeEach(^{
 			_testuser = [MMXUserID userIDWithUsername:@"testuser"];
-            _message = [MMXMessage messageTo:_testuser
+            _message = [MMXMessage messageTo:@[_testuser]
                                  withContent:@"Hello World"
                                  messageType:@"text/plain"
                                     metaData:@{@"foo" : @"bar"}];
@@ -164,7 +164,7 @@ describe(@"MMXDataModel", ^{
 
         beforeEach(^{
 			_testuser = [MMXUserID userIDWithUsername:@"testuser"];
-            _message = [MMXMessage messageTo:_testuser
+            _message = [MMXMessage messageTo:@[_testuser]
                                  withContent:@"Hello World"
                                  messageType:@"text/plain"
                                     metaData:@{@"foo" : @"bar"}];
@@ -192,7 +192,7 @@ describe(@"MMXDataModel", ^{
 
         beforeEach(^{
 			_testuser = [MMXUserID userIDWithUsername:@"testuser"];
-            _message = [MMXMessage messageTo:_testuser
+            _message = [MMXMessage messageTo:@[_testuser]
                                  withContent:@"Hello World"
                                  messageType:@"text/plain"
                                     metaData:@{@"foo" : @"bar"}];
