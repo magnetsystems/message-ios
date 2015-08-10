@@ -17,10 +17,16 @@
 
 
 #import <Foundation/Foundation.h>
+#import "MMXMessageTypes.h"
 @class MMXUser;
 @class MMXTopic;
 
 @interface MMXMessage : NSObject
+
+/**
+ *  Type of message. See MMXMessageTypes
+ */
+@property (nonatomic, assign, readonly) MMXMessageType messageType;
 
 /**
  *  Unique UUID for the message to allow tracking.

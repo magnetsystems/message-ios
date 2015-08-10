@@ -146,11 +146,14 @@
 	}
 }
 
+
+
 - (void)client:(MMXClient *)client didReceiveMessage:(MMXInboundMessage *)message deliveryReceiptRequested:(BOOL)receiptRequested {
 	//FIXME: remove the receiver/current user from the list of recipients.
 	MMXMessage *msg = [MMXMessage messageTo:[NSSet setWithArray:message.otherRecipients]
 							 messageContent:message.metaData];
 	MMXUser *user = [MMXUser new];
+	msg.messageType = MMXMessageTypeDefault;
 	user.username = message.senderUserID.username;
 	msg.sender = user;
 	msg.timestamp = message.timestamp;
@@ -162,13 +165,36 @@
 
 - (void)client:(MMXClient *)client didReceivePubSubMessage:(MMXPubSubMessage *)message {
 	MMXMessage *msg = [MMXMessage new];
+	msg.messageType = MMXMessageTypePubSub;
 	msg.topic = message.topic;
 	msg.messageContent = message.metaData;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
-	[[NSNotificationCenter defaultCenter] postNotificationName:kNotificationReceivedPubSubMessage
+	[[NSNotificationCenter defaultCenter] postNotificationName:kNotificationReceivedMessage
 														object:nil
 													  userInfo:@{kMMXMessageKey:msg}];
+}
+
+- (void)client:(MMXClient *)client didReceiveMessageSentSuccessfully:(NSString *)messageID {
+	NSDictionary *messageBlockDict = [self.messageBlockQueue objectForKey:messageID];
+	if (messageBlockDict) {
+		MessageSuccessBlock success = messageBlockDict[@"success"];
+		if (success) {
+			success();
+		}
+		[self.messageBlockQueue removeObjectForKey:messageID];
+	}
+}
+
+- (void)client:(MMXClient *)client didFailToSendMessage:(NSString *)messageID recipients:(NSArray *)recipients error:(NSError *)error {
+	NSDictionary *messageBlockDict = [self.messageBlockQueue objectForKey:messageID];
+	if (messageBlockDict) {
+		MessageFailureBlock failure = messageBlockDict[@"failure"];
+		if (failure) {
+			failure(error);
+		}
+		[self.messageBlockQueue removeObjectForKey:messageID];
+	}
 }
 
 @end

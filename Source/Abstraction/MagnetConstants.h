@@ -11,7 +11,6 @@
 @interface MagnetConstants : NSObject
 
 extern NSString  * const kNotificationReceivedMessage;
-extern NSString  * const kNotificationReceivedPubSubMessage;
 extern NSString  * const kMMXMessageKey;
 
 @end

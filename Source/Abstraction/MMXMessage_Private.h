@@ -10,6 +10,8 @@
 
 @interface MMXMessage ()
 
+@property (nonatomic, readwrite) MMXMessageType messageType;
+
 @property(nonatomic, readwrite) NSString *messageID;
 
 @property(nonatomic, readwrite) NSDate *timestamp;
