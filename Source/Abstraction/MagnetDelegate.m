@@ -45,10 +45,14 @@ typedef void(^MessageFailureBlock)(NSError *);
 }
 
 - (void)startMMXClient {
-	MMXConfiguration * config = [MMXConfiguration configurationWithName:@"default"];
-	[MMXClient sharedClient].configuration = config;
-	[MMXClient sharedClient].delegate = self;
-	[[MMXClient sharedClient] connectAnonymous];
+	//TODO: Test this logic to make sure you can call startMMXClient multiple times without messing up an existing connection.
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated &&
+		[MMXClient sharedClient].connectionStatus != MMXConnectionStatusConnected) {
+		MMXConfiguration * config = [MMXConfiguration configurationWithName:@"default"];
+		[MMXClient sharedClient].configuration = config;
+		[MMXClient sharedClient].delegate = self;
+		[[MMXClient sharedClient] connectAnonymous];
+	}
 }
 
 - (void)registerUser:(MMXUser *)user
