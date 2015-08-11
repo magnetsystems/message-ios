@@ -9,7 +9,10 @@
 #import "MMXMessage_Private.h"
 #import "MagnetDelegate.h"
 #import "MMXUser.h"
+#import "MMXChannel.h"
 #import "MMX.h"
+#import "MMXMessageUtils.h"
+#import "MMXClient_Private.h"
 
 @implementation MMXMessage
 
@@ -23,6 +26,14 @@
 - (NSString *)sendWithSuccess:(void (^)(void))success
 					  failure:(void (^)(NSError *))failure {
 	//FIXME: Handle case that user is not logged in
+	//FIXME: Make sure that the content is JSON serializable
+	if (![MMXMessageUtils isValidMetaData:self.messageContent]) {
+		NSError * error = [MMXClient errorWithTitle:@"Message Content Not Valid" message:@"Message Content dictionary must be JSON serializable." code:401];
+		if (failure) {
+			failure(error);
+		}
+		return nil;
+	}
 	NSString * messageID = [[MagnetDelegate sharedDelegate] sendMessage:self.copy success:^(void) {
 		self.messageID = messageID;
 		if (success) {
