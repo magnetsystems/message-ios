@@ -18,7 +18,7 @@
 
 @property(nonatomic, readwrite) MMXUser *sender;
 
-@property (nonatomic, readwrite) MMXTopic *topic;
+@property (nonatomic, readwrite) MMXChannel *channel;
 
 @property(nonatomic, readwrite) NSSet *recipients;
 

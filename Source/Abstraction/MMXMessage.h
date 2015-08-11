@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 #import "MMXMessageTypes.h"
 @class MMXUser;
-@class MMXTopic;
+@class MMXChannel;
 
 @interface MMXMessage : NSObject
 
@@ -44,9 +44,9 @@
 @property(nonatomic, strong, readonly) MMXUser *sender;
 
 /**
- *  The topic the message was published to. See MMXTopic.h for more details.
+ *  The channel the message was published to. See MMXChannel.h for more details.
  */
-@property (nonatomic, readonly) MMXTopic *topic;
+@property (nonatomic, readonly) MMXChannel *channel;
 
 /**
  *  The list of users the message was sent to.
@@ -67,8 +67,19 @@
  *
  *  @return New MMXMessage
  */
-+ (instancetype)messageTo:(NSSet *)recipients
-		   messageContent:(NSDictionary *)messageContent;
++ (instancetype)messageToRecipients:(NSSet *)recipients
+					 messageContent:(NSDictionary *)messageContent;
+
+/**
+ *  Initializer for creating a new MMXMessage object
+ *
+ *  @param recipients     Set of unique recipients to send the message to
+ *  @param messageContent NSDictionary of content to send. Must contain only objects that are JSON serializable.
+ *
+ *  @return New MMXMessage
+ */
++ (instancetype)messageToChannel:(MMXChannel *)channel
+				  messageContent:(NSDictionary *)messageContent;
 
 /**
  *  Method to send the message

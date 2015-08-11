@@ -16,12 +16,21 @@
 
 @implementation MMXMessage
 
-+ (instancetype)messageTo:(NSSet *)recipients messageContent:(NSDictionary *)messageContent {
++ (instancetype)messageToRecipients:(NSSet *)recipients
+					 messageContent:(NSDictionary *)messageContent {
 	MMXMessage *msg = [MMXMessage new];
 	msg.recipients = recipients;
 	msg.messageContent = messageContent;
 	return msg;
 };
+
++ (instancetype)messageToChannel:(MMXChannel *)channel
+				  messageContent:(NSDictionary *)messageContent {
+	MMXMessage *msg = [MMXMessage new];
+	msg.channel = channel;
+	msg.messageContent = messageContent;
+	return msg;
+}
 
 - (NSString *)sendWithSuccess:(void (^)(void))success
 					  failure:(void (^)(NSError *))failure {
@@ -52,7 +61,7 @@
 				 success:(void (^)(void))success
 				 failure:(void (^)(NSError *))failure {
 	//FIXME: Handle case that user is not logged in
-	MMXMessage *msg = [MMXMessage messageTo:[NSSet setWithObjects:self.sender, nil] messageContent:content];
+	MMXMessage *msg = [MMXMessage messageToRecipients:[NSSet setWithObjects:self.sender, nil] messageContent:content];
 	NSString * messageID = [[MagnetDelegate sharedDelegate] sendMessage:msg success:^() {
 		if (success) {
 			success();
@@ -71,7 +80,7 @@
 	//FIXME: Handle case that user is not logged in
 	NSMutableSet *newSet = [NSMutableSet setWithSet:self.recipients];
 	[newSet addObject:self.sender];
-	MMXMessage *msg = [MMXMessage messageTo:newSet messageContent:content];
+	MMXMessage *msg = [MMXMessage messageToRecipients:newSet messageContent:content];
 	NSString * messageID = [[MagnetDelegate sharedDelegate] sendMessage:msg success:^() {
 		if (success) {
 			success();
@@ -113,7 +122,7 @@
 		_messageID = [coder decodeObjectForKey:@"_messageID"];
 		_timestamp = [coder decodeObjectForKey:@"_timestamp"];
 		_sender = [coder decodeObjectForKey:@"_sender"];
-		_topic = [coder decodeObjectForKey:@"_topic"];
+		_channel = [coder decodeObjectForKey:@"_channel"];
 		_recipients = [coder decodeObjectForKey:@"_recipients"];
 		_messageContent = [coder decodeObjectForKey:@"_messageContent"];
 	}
@@ -125,7 +134,7 @@
 	[coder encodeObject:self.messageID forKey:@"_messageID"];
 	[coder encodeObject:self.timestamp forKey:@"_timestamp"];
 	[coder encodeObject:self.sender forKey:@"_sender"];
-	[coder encodeObject:self.topic forKey:@"_topic"];
+	[coder encodeObject:self.channel forKey:@"_channel"];
 	[coder encodeObject:self.recipients forKey:@"_recipients"];
 	[coder encodeObject:self.messageContent forKey:@"_messageContent"];
 }
@@ -137,7 +146,7 @@
 		copy.messageID = self.messageID;
 		copy.timestamp = self.timestamp;
 		copy.sender = self.sender;
-		copy.topic = self.topic;
+		copy.channel = self.channel;
 		copy.recipients = self.recipients;
 		copy.messageContent = self.messageContent;
 	}

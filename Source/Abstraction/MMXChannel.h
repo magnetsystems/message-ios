@@ -25,7 +25,7 @@
 /**
  *  The unique name of the topic.
  */
-@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy, readonly) NSString *name;
 
 /**
  *  An optional summary of the topic.
@@ -50,12 +50,24 @@
 /**
  *  Tags currently set on the topic.
  */
-@property (nonatomic, readonly) NSSet *tags;
+@property (nonatomic, copy, readonly) NSSet *tags;
 
 /**
  *  BOOL letting you know if the current user is subscribed to the topic.
  */
 @property (nonatomic, readonly) BOOL isSubscribed;
+
+
+/**
+ *  Create a new channel object
+ *
+ *  @param name    The name you want the channel to have
+ *  @param summary A summary or description of the channel
+ *
+ *  @return A new MMXChannel object
+ */
++ (instancetype)channelWithName:(NSString *)name
+						summary:(NSString *)summary;
 
 /**
  *  Method used to discover existing topics by name
@@ -134,10 +146,25 @@
  *
  *  @param message MMXMessage with the content you want to publish
  *  @param success Block with the published message
- *  @param failure - Block with an NSError with details about the call failure.
+ *  @param failure Block with an NSError with details about the call failure.
  */
 - (void)publish:(MMXMessage *)message
 		success:(void (^)(MMXMessage *message))success
 		failure:(void (^)(NSError *error))failure;
+
+/**
+ *  Fetch previous items posted to this channel.
+ *
+ *  @param from          The earliest date you would like messages from.
+ *  @param to            The latest date you would like messages until. Defaults to now.
+ *  @param maxToReturned The max number of items you want returned.
+ *  @param success		 Block with a NSArray of MMXMessages
+ *  @param failure		 Block with an NSError with details about the call failure.
+ */
+- (void)fetchMessagesFrom:(NSDate *)from
+					   to:(NSDate *)to
+			maxToReturned:(int)maxToReturned
+				  success:(void (^)(NSArray *messages))success
+				  failure:(void (^)(NSError *error))failure;
 
 @end

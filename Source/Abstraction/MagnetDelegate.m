@@ -12,6 +12,7 @@
 #import "MMXUser.h"
 #import "MMXMessageTypes.h"
 #import "MMX.h"
+#import "MMXChannel.h"
 
 typedef void(^MessageSuccessBlock)(void);
 typedef void(^MessageFailureBlock)(NSError *);
@@ -157,7 +158,7 @@ typedef void(^MessageFailureBlock)(NSError *);
 
 - (void)client:(MMXClient *)client didReceiveMessage:(MMXInboundMessage *)message deliveryReceiptRequested:(BOOL)receiptRequested {
 	//FIXME: remove the receiver/current user from the list of recipients.
-	MMXMessage *msg = [MMXMessage messageTo:[NSSet setWithArray:message.otherRecipients]
+	MMXMessage *msg = [MMXMessage messageToRecipients:[NSSet setWithArray:message.otherRecipients]
 							 messageContent:message.metaData];
 	MMXUser *user = [MMXUser new];
 	msg.messageType = MMXMessageTypeDefault;
@@ -173,7 +174,7 @@ typedef void(^MessageFailureBlock)(NSError *);
 - (void)client:(MMXClient *)client didReceivePubSubMessage:(MMXPubSubMessage *)message {
 	MMXMessage *msg = [MMXMessage new];
 	msg.messageType = MMXMessageTypePubSub;
-	msg.topic = message.topic;
+	msg.channel = [MMXChannel channelWithName:message.topic.topicName summary:nil];
 	msg.messageContent = message.metaData;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
