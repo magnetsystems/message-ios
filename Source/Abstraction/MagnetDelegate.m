@@ -10,7 +10,11 @@
 #import "MMXMessage_Private.h"
 #import "MagnetConstants.h"
 #import "MMXUser.h"
+#import "MMXMessageTypes.h"
 #import "MMX.h"
+
+typedef void(^MessageSuccessBlock)(void);
+typedef void(^MessageFailureBlock)(NSError *);
 
 @interface MagnetDelegate () <MMXClientDelegate>
 
@@ -24,7 +28,7 @@
 
 @property (nonatomic, copy) void (^logOutFailureBlock)(NSError *);
 
-@property (nonatomic, copy) NSDictionary *messageBlockQueue;
+@property (nonatomic, copy) NSMutableDictionary *messageBlockQueue;
 
 @end
 
@@ -81,16 +85,15 @@
 	[[MMXClient sharedClient] disconnect];
 }
 
-- (void)sendMessage:(MMXMessage *)message
-			success:(void (^)(NSString *messageID))success
+- (NSString *)sendMessage:(MMXMessage *)message
+			success:(void (^)(void))success
 			failure:(void (^)(NSError *error))failure {
 	//FIXME: Needs to properly handle failure and success blocks
 	MMXOutboundMessage *msg = [MMXOutboundMessage messageTo:[message recipientsForOutboundMessage] withContent:nil metaData:message.messageContent];
 	NSString *messageID = [[MMXClient sharedClient] sendMessage:msg];
-	if (success) {
-		success(messageID);
-	}
-	
+	[self.messageBlockQueue setObject:@{@"success":success,
+										@"failure":failure} forKey:messageID];
+	return messageID;
 }
 
 #pragma mark - MMXClientDelegate Callbacks

@@ -76,8 +76,8 @@
  *  @param success - Block with the message ID for the sent message.
  *  @param failure - Block with an NSError with details about the call failure.
  */
-- (void)sendWithSuccess:(void (^)(NSString *messageID))success
-				failure:(void (^)(NSError *error))failure;
+- (NSString *)sendWithSuccess:(void (^)(void))success
+					  failure:(void (^)(NSError *error))failure;
 
 /**
  *  Method to send a message in reply to the received message
@@ -86,8 +86,8 @@
  *  @param success - Block with the message ID for the sent message.
  *  @param failure - Block with an NSError with details about the call failure.
  */
-- (void)replyWithContent:(NSDictionary *)content
-				 success:(void (^)(NSString *messageID))success
+- (NSString *)replyWithContent:(NSDictionary *)content
+				 success:(void (^)(void))success
 				 failure:(void (^)(NSError * error))failure;
 
 /**
@@ -96,10 +96,12 @@
  *  @param content NSDictionary of content to send. Must contain only objects that are JSON serializable.
  *  @param success - Block with the message ID for the sent message.
  *  @param failure - Block with an NSError with details about the call failure.
+ *
+ *  @return The messageID for the message sent
  */
-- (void)replyAllWithContent:(NSDictionary *)content
-					success:(void (^)(NSString *messageID))success
-					failure:(void (^)(NSError * error))failure;
+- (NSString *)replyAllWithContent:(NSDictionary *)content
+						  success:(void (^)(void))success
+						  failure:(void (^)(NSError * error))failure;
 
 
 @end

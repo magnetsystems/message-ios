@@ -56,11 +56,11 @@
  *  Method to send the message
  *
  *  @param message - MMXOutboundMessage to send
- *  @param success - Block with the message ID for the sent message.
+ *  @param success 	  - Block called if operation is successful.
  *  @param failure - Block with an NSError with details about the call failure.
  */
-- (void)sendMessage:(MMXMessage *)message
-			success:(void (^)(NSString *messageID))success
-			failure:(void (^)(NSError *error))failure;
+- (NSString *)sendMessage:(MMXMessage *)message
+				  success:(void (^)(void))success
+				  failure:(void (^)(NSError *error))failure;
 
 @end

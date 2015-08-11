@@ -20,53 +20,57 @@
 	return msg;
 };
 
-- (void)sendWithSuccess:(void (^)(NSString *))success
-				failure:(void (^)(NSError *))failure {
+- (NSString *)sendWithSuccess:(void (^)(void))success
+					  failure:(void (^)(NSError *))failure {
 	//FIXME: Handle case that user is not logged in
-	[[MagnetDelegate sharedDelegate] sendMessage:self.copy success:^(NSString *messageID) {
+	NSString * messageID = [[MagnetDelegate sharedDelegate] sendMessage:self.copy success:^(void) {
 		self.messageID = messageID;
 		if (success) {
-			success(messageID);
+			success();
 		}
 	} failure:^(NSError *error) {
 		if (failure) {
 			failure(error);
 		}
 	}];
+	
+	return messageID;
 }
 
-- (void)replyWithContent:(NSDictionary *)content
-				 success:(void (^)(NSString *))success
+- (NSString *)replyWithContent:(NSDictionary *)content
+				 success:(void (^)(void))success
 				 failure:(void (^)(NSError *))failure {
 	//FIXME: Handle case that user is not logged in
 	MMXMessage *msg = [MMXMessage messageTo:[NSSet setWithObjects:self.sender, nil] messageContent:content];
-	[[MagnetDelegate sharedDelegate] sendMessage:msg success:^(NSString *messageID) {
+	NSString * messageID = [[MagnetDelegate sharedDelegate] sendMessage:msg success:^() {
 		if (success) {
-			success(messageID);
+			success();
 		}
 	} failure:^(NSError *error) {
 		if (failure) {
 			failure(error);
 		}
 	}];
+	return messageID;
 }
 
-- (void)replyAllWithContent:(NSDictionary *)content
-					success:(void (^)(NSString *))success
+- (NSString *)replyAllWithContent:(NSDictionary *)content
+					success:(void (^)(void))success
 					failure:(void (^)(NSError *))failure {
 	//FIXME: Handle case that user is not logged in
 	NSMutableSet *newSet = [NSMutableSet setWithSet:self.recipients];
 	[newSet addObject:self.sender];
 	MMXMessage *msg = [MMXMessage messageTo:newSet messageContent:content];
-	[[MagnetDelegate sharedDelegate] sendMessage:msg success:^(NSString *messageID) {
+	NSString * messageID = [[MagnetDelegate sharedDelegate] sendMessage:msg success:^() {
 		if (success) {
-			success(messageID);
+			success();
 		}
 	} failure:^(NSError *error) {
 		if (failure) {
 			failure(error);
 		}
 	}];
+	return messageID;
 }
 
 #pragma mark - Conversion Helpers

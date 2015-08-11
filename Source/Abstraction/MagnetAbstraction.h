@@ -15,5 +15,5 @@
 	#import "MMXChannel.h"
 	#import "MMXUser.h"
 	#import "MagnetConstants.h"
-
+	#import "MMXMessageTypes.h"
 #endif /* _MagnetAbstraction_ */
