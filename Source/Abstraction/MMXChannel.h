@@ -64,9 +64,9 @@
  *  @param success  Block with the number of topics that match the query and a NSArray of MMXTopics that match the criteria.
  *  @param failure  Block with an NSError with details about the call failure.
  */
-+ (void)queryByName:(NSString *)name
-			success:(void (^)(int totalCount, NSArray *topics))success
-			failure:(void (^)(NSError *error))failure;
++ (void)findByName:(NSString *)name
+		   success:(void (^)(int totalCount, NSArray *topics))success
+		   failure:(void (^)(NSError *error))failure;
 
 /**
  *  Method used to discover existing topics by tags
@@ -75,9 +75,9 @@
  *  @param success  Block with the number of topics that match the query and a NSArray of MMXTopics that match the criteria.
  *  @param failure  Block with an NSError with details about the call failure.
  */
-+ (void)queryByTags:(NSSet *)tags
-			success:(void (^)(int totalCount, NSArray *topics))success
-			failure:(void (^)(NSError *error))failure;
++ (void)findByTags:(NSSet *)tags
+		   success:(void (^)(int totalCount, NSArray *topics))success
+		   failure:(void (^)(NSError *error))failure;
 
 /**
  *  Set tags for a specific topic. This will overwrite ALL existing tags for the topic.

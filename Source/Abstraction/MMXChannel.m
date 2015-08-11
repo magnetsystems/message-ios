@@ -12,7 +12,7 @@
 
 @implementation MMXChannel
 
-+ (void)queryByName:(NSString *)name
++ (void)findByName:(NSString *)name
 			success:(void (^)(int, NSArray *))success
 			failure:(void (^)(NSError *))failure {
 	//FIXME: Handle case that user is not logged in
@@ -35,7 +35,7 @@
 	}];
 }
 
-+ (void)queryByTags:(NSSet *)tags
++ (void)findByTags:(NSSet *)tags
 			success:(void (^)(int, NSArray *))success
 			failure:(void (^)(NSError *))failure {
 	//FIXME: Handle case that user is not logged in
