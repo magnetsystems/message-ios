@@ -17,5 +17,5 @@ typedef NS_ENUM(NSUInteger, MMXMessageType){
 	/**
 	 *  Message that was published to a channel.
 	 */
-	MMXMessageTypePubSub,
+	MMXMessageTypeChannel,
 };

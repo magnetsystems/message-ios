@@ -10,7 +10,7 @@
 
 @implementation MagnetConstants
 
-NSString * const kNotificationReceivedMessage = @"com.magnet.recievedmessage.notification";
-NSString * const kMMXMessageKey = @"com.magnet.message.key";
+NSString * const MagnetDidReceiveMessageNotification = @"com.magnet.recievedmessage.notification";
+NSString * const MagnetMessageKey = @"com.magnet.message.key";
 
 @end

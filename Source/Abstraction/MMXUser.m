@@ -12,10 +12,16 @@
 
 @implementation MMXUser
 
++ (MMXUser *)currentUser {
+	return [MagnetDelegate sharedDelegate].currentUser;
+}
 - (void)registerWithCredentials:(NSURLCredential *)credential
 						success:(void (^)(void))success
 						failure:(void (^)(NSError *))failure {
-	[[MMXClient sharedClient].accountManager createAccountForUsername:self.username displayName:self.displayName email:self.email password:credential.password success:^(MMXUserProfile *userProfile) {
+	[[MMXClient sharedClient].accountManager createAccountForUsername:self.username
+														  displayName:self.displayName
+																email:self.email password:credential.password
+															  success:^(MMXUserProfile *userProfile) {
 		if (success) {
 			success();
 		}
@@ -29,7 +35,8 @@
 + (void)logInWithCredentials:(NSURLCredential *)credential
 					 success:(void (^)(MMXUser *))success
 					 failure:(void (^)(NSError *))failure {
-	[[MagnetDelegate sharedDelegate] logInWithCredential:credential success:^(MMXUser *user) {
+	[[MagnetDelegate sharedDelegate] logInWithCredential:credential
+												 success:^(MMXUser *user) {
 		if (success) {
 			success(user);
 		}
@@ -72,6 +79,58 @@
 			failure(error);
 		}
 	}];
+}
+
++ (void)findByName:(NSString *)name
+			 limit:(int)limit
+		   success:(void (^)(int, NSArray *))success
+		   failure:(void (^)(NSError *))failure {
+	MMXQuery *query = [MMXQuery queryForUserDisplayNameStartsWith:name
+															 tags:nil
+															limit:limit];
+	[[MMXClient sharedClient].accountManager queryUsers:query
+												success:^(int totalCount, NSArray *users) {
+		NSMutableArray *userArray = [[NSMutableArray alloc] initWithCapacity:users.count];
+		for (MMXUserProfile *profile in users) {
+			[userArray addObject:[MMXUser userFromMMXUserProfile:profile]];
+		}
+		if (success) {
+			success(totalCount, userArray.copy);
+		}
+	} failure:^(NSError *error) {
+		if (failure) {
+			failure(error);
+		}
+	}];
+}
+
++ (void)findByTags:(NSSet *)tags
+			 limit:(int)limit
+		   success:(void (^)(int, NSArray *))success
+		   failure:(void (^)(NSError *))failure {
+	MMXQuery *query = [MMXQuery queryForUserDisplayNameStartsWith:@"" tags:[tags allObjects] limit:limit];
+	[[MMXClient sharedClient].accountManager queryUsers:query success:^(int totalCount, NSArray *users) {
+		NSMutableArray *userArray = [[NSMutableArray alloc] initWithCapacity:users.count];
+		for (MMXUserProfile *profile in users) {
+			[userArray addObject:[MMXUser userFromMMXUserProfile:profile]];
+		}
+		if (success) {
+			success(totalCount, userArray.copy);
+		}
+	} failure:^(NSError *error) {
+		if (failure) {
+			failure(error);
+		}
+	}];
+
+}
+
++ (MMXUser *)userFromMMXUserProfile:(MMXUserProfile *)profile {
+	MMXUser *user = [MMXUser new];
+	user.username = profile.userID.username;
+	user.displayName = profile.displayName;
+	user.email = profile.email;
+	return user;
 }
 
 @end

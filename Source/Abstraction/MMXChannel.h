@@ -23,37 +23,37 @@
 @interface MMXChannel : NSObject
 
 /**
- *  The unique name of the topic.
+ *  The unique name of the channel.
  */
 @property (nonatomic, copy, readonly) NSString *name;
 
 /**
- *  An optional summary of the topic.
+ *  An optional summary of the channel.
  */
 @property (nonatomic, copy) NSString *summary;
 
 /**
- *  The owner/creator of the topic.
+ *  The owner/creator of the channel.
  */
 @property (nonatomic, readonly) MMXUser *owner;
 
 /**
- *  The total number of messages that have been posted to the topic.
+ *  The total number of messages that have been posted to the channel.
  */
 @property (nonatomic, readonly) int numberOfMessages;
 
 /**
- *  The timestamp of the most recent message published to the topic.
+ *  The timestamp of the most recent message published to the channel.
  */
 @property (nonatomic, readonly) NSDate *lastTimeActive;
 
 /**
- *  Tags currently set on the topic.
+ *  Tags currently set on the channel.
  */
 @property (nonatomic, copy, readonly) NSSet *tags;
 
 /**
- *  BOOL letting you know if the current user is subscribed to the topic.
+ *  BOOL letting you know if the current user is subscribed to the channel.
  */
 @property (nonatomic, readonly) BOOL isSubscribed;
 
@@ -70,29 +70,29 @@
 						summary:(NSString *)summary;
 
 /**
- *  Method used to discover existing topics by name
+ *  Method used to discover existing channels by name
  *
  *  @param name    The exact name of the tpic you are searching for.
- *  @param success  Block with the number of topics that match the query and a NSArray of MMXTopics that match the criteria.
+ *  @param success  Block with the number of channels that match the query and a NSArray of MMXChannels that match the criteria.
  *  @param failure  Block with an NSError with details about the call failure.
  */
 + (void)findByName:(NSString *)name
-		   success:(void (^)(int totalCount, NSArray *topics))success
+		   success:(void (^)(int totalCount, NSArray *channels))success
 		   failure:(void (^)(NSError *error))failure;
 
 /**
- *  Method used to discover existing topics by tags
+ *  Method used to discover existing channels by tags
  *
  *  @param tags		A set of unique tags
- *  @param success  Block with the number of topics that match the query and a NSArray of MMXTopics that match the criteria.
+ *  @param success  Block with the number of channels that match the query and a NSArray of MMXChannels that match the criteria.
  *  @param failure  Block with an NSError with details about the call failure.
  */
 + (void)findByTags:(NSSet *)tags
-		   success:(void (^)(int totalCount, NSArray *topics))success
+		   success:(void (^)(int totalCount, NSArray *channels))success
 		   failure:(void (^)(NSError *error))failure;
 
 /**
- *  Set tags for a specific topic. This will overwrite ALL existing tags for the topic.
+ *  Set tags for a specific channel. This will overwrite ALL existing tags for the chanel.
  *	This can be used to delete tags by passing in the sub-set of existing tags that you want to keep.
  *
  *  @param tags    - NSSet of tags(NSStrings).
@@ -104,7 +104,7 @@
 		failure:(void (^)(NSError *error))failure;
 
 /**
- *  Method to create a new topic.
+ *  Method to create a new channel.
  *
  *  @param success - Block called if operation is successful.
  *  @param failure - Block with an NSError with details about the call failure.
@@ -113,8 +113,8 @@
 				  failure:(void (^)(NSError * error))failure;
 
 /**
- *  Method to delete an existing new topic.
- * Current user must be the owner of the topic to delete it.
+ *  Method to delete an existing new channel.
+ * Current user must be the owner of the channel to delete it.
  *
  *  @param success - Block called if operation is successful.
  *  @param failure - Block with an NSError with details about the call failure.
@@ -123,7 +123,7 @@
 				  failure:(void (^)(NSError * error))failure;
 
 /**
- *  Method to subscribe to an existing topic.
+ *  Method to subscribe to an existing channel.
  *
  *  @param success - Block called if operation is successful.
  *  @param failure - Block with an NSError with details about the call failure.
@@ -132,7 +132,7 @@
 					 failure:(void (^)(NSError * error))failure;
 
 /**
- *  Method to unsubscribe to an existing topic.
+ *  Method to unsubscribe to an existing channel.
  *
  *  @param success - Block called if operation is successful.
  *  @param failure - Block with an NSError with details about the call failure.
@@ -141,8 +141,7 @@
 					   failure:(void (^)(NSError * error))failure;
 
 /**
- *  Method to publish to a topic.
- *	If the topic does not exist it will be created.
+ *  Method to publish to a channel.
  *
  *  @param message MMXMessage with the content you want to publish
  *  @param success Block with the published message

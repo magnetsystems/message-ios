@@ -119,21 +119,24 @@ typedef void(^MessageFailureBlock)(NSError *);
 - (void)client:(MMXClient *)client didReceiveConnectionStatusChange:(MMXConnectionStatus)connectionStatus error:(NSError *)error {
 	switch (connectionStatus) {
 		case MMXConnectionStatusAuthenticated: {
-			if (self.logInSuccessBlock) {
-				[[MMXClient sharedClient].accountManager userProfileWithSuccess:^(MMXUserProfile *userProfile) {
-					MMXUser *user = [MMXUser new];
-					user.username = userProfile.userID.username;
-					user.displayName = userProfile.displayName;
-					user.email = userProfile.email;
+			[[MMXClient sharedClient].accountManager userProfileWithSuccess:^(MMXUserProfile *userProfile) {
+				MMXUser *user = [MMXUser new];
+				user.username = userProfile.userID.username;
+				user.displayName = userProfile.displayName;
+				user.email = userProfile.email;
+				self.currentUser = user.copy;
+				if (self.logInSuccessBlock) {
 					self.logInSuccessBlock(user);
 					self.logInSuccessBlock = nil;
 					self.logInFailureBlock = nil;
-				} failure:^(NSError *error) {
+				}
+			} failure:^(NSError *error) {
+				if (self.logInSuccessBlock) {
 					self.logInSuccessBlock(nil);
 					self.logInSuccessBlock = nil;
 					self.logInFailureBlock = nil;
-				}];
-			}
+				}
+			}];
 			}
 			break;
 		case MMXConnectionStatusAuthenticationFailure: {
@@ -151,6 +154,7 @@ typedef void(^MessageFailureBlock)(NSError *);
 			}
 			break;
 		case MMXConnectionStatusDisconnected: {
+			self.currentUser = nil;
 			if (self.logOutSuccessBlock) {
 				self.logOutSuccessBlock();
 			}
@@ -179,21 +183,21 @@ typedef void(^MessageFailureBlock)(NSError *);
 	msg.sender = user;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
-	[[NSNotificationCenter defaultCenter] postNotificationName:kNotificationReceivedMessage
+	[[NSNotificationCenter defaultCenter] postNotificationName:MagnetDidReceiveMessageNotification
 														object:nil
-													  userInfo:@{kMMXMessageKey:msg}];
+													  userInfo:@{MagnetMessageKey:msg}];
 }
 
 - (void)client:(MMXClient *)client didReceivePubSubMessage:(MMXPubSubMessage *)message {
 	MMXMessage *msg = [MMXMessage new];
-	msg.messageType = MMXMessageTypePubSub;
+	msg.messageType = MMXMessageTypeChannel;
 	msg.channel = [MMXChannel channelWithName:message.topic.topicName summary:nil];
 	msg.messageContent = message.metaData;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
-	[[NSNotificationCenter defaultCenter] postNotificationName:kNotificationReceivedMessage
+	[[NSNotificationCenter defaultCenter] postNotificationName:MagnetDidReceiveMessageNotification
 														object:nil
-													  userInfo:@{kMMXMessageKey:msg}];
+													  userInfo:@{MagnetMessageKey:msg}];
 }
 
 - (void)client:(MMXClient *)client didReceiveMessageSentSuccessfully:(NSString *)messageID {

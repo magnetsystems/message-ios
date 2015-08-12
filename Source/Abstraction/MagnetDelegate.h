@@ -12,6 +12,8 @@
 
 @interface MagnetDelegate : NSObject
 
+@property (nonatomic, strong) MMXUser *currentUser;
+
 + (instancetype)sharedDelegate;
 
 - (void)startMMXClient;
