@@ -100,4 +100,11 @@
 		   success:(void (^)(int totalCount, NSArray *users))success
 		   failure:(void (^)(NSError *error))failure;
 
+/**
+ *  Set push token for this device
+ *
+ *  @param token returned in application:didRegisterForRemoteNotificationsWithDeviceToken:
+ */
+- (void)addDeviceToken:(NSData *)token;
+
 @end

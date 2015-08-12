@@ -133,4 +133,12 @@
 	return user;
 }
 
+- (void)addDeviceToken:(NSData *)token {
+	if ([MMXClient sharedClient].connectionStatus == MMXConnectionStatusConnected ||
+		([MMXClient sharedClient].connectionStatus == MMXConnectionStatusAuthenticated &&
+		 [[MMXUser currentUser].username isEqualToString:self.username])) {
+		[[MMXClient sharedClient] updateRemoteNotificationDeviceToken:token];
+	}	
+}
+
 @end
