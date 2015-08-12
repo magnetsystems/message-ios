@@ -98,6 +98,19 @@ typedef void(^MessageFailureBlock)(NSError *);
 	NSString *messageID = [[MMXClient sharedClient] sendMessage:msg];
 	[self.messageBlockQueue setObject:@{@"success":success,
 										@"failure":failure} forKey:messageID];
+	double delayInSeconds = 2.0;
+	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+		NSDictionary *blockDict = [self.messageBlockQueue objectForKey:messageID];
+		if (blockDict) {
+			MessageSuccessBlock successBlock = [blockDict objectForKey:@"success"];
+			if (successBlock) {
+				successBlock();
+			}
+			[self.messageBlockQueue removeObjectForKey:messageID];
+		}
+	});
+
 	return messageID;
 }
 
