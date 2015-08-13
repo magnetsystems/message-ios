@@ -19,6 +19,6 @@ Pod::Spec.new do |s|
   s.dependency     'MDMCoreData', '1.5.0'
   s.dependency     'Mantle', '1.5.4'
   s.dependency     'CocoaAsyncSocket', '7.4.1'
-  s.dependency     'CocoaLumberjack', '1.8.1'
+  s.dependency     'CocoaLumberjack', '~>1.8.1'
 
 end
