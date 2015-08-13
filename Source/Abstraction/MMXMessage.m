@@ -44,7 +44,6 @@
 		return nil;
 	}
 	NSString * messageID = [[MagnetDelegate sharedDelegate] sendMessage:self.copy success:^(void) {
-		self.messageID = messageID;
 		if (success) {
 			success();
 		}
