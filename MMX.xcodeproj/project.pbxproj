@@ -91,6 +91,9 @@
 		0EA202BB1AF838E1004018AE /* MMXUserQueryResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA202821AF838E1004018AE /* MMXUserQueryResponse.m */; };
 		0EA202BD1AF838E1004018AE /* MMXMessageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA202891AF838E1004018AE /* MMXMessageUtils.m */; };
 		0EA202BF1AF838E1004018AE /* MMXUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA2028D1AF838E1004018AE /* MMXUtils.m */; };
+		0EA7C8401B7D09400041C2D3 /* MMXAsyncOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA7C83F1B7D09400041C2D3 /* MMXAsyncOperation.m */; };
+		0EA7C8431B7D0B490041C2D3 /* MMXConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA7C8421B7D0B490041C2D3 /* MMXConnectionOperation.m */; };
+		0EA7C8491B7D14A20041C2D3 /* MMXLogInOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EA7C8481B7D14A20041C2D3 /* MMXLogInOperation.m */; };
 		0EB377551ACDFA5000137977 /* MMXAccountManagerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB377541ACDFA5000137977 /* MMXAccountManagerSpec.m */; };
 		0EDE8D881AA0D74000CB16AF /* MMXPubSubManagerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EDE8D871AA0D74000CB16AF /* MMXPubSubManagerSpec.m */; };
 		214A0D1C1A8D3AF500E6939A /* MMXKeyedArchiverSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 66021A53159259CBF0D9D85A /* MMXKeyedArchiverSpec.m */; };
@@ -311,6 +314,12 @@
 		0EA2028B1AF838E1004018AE /* MMXTestingUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXTestingUtils.m; sourceTree = "<group>"; };
 		0EA2028C1AF838E1004018AE /* MMXUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXUtils.h; sourceTree = "<group>"; };
 		0EA2028D1AF838E1004018AE /* MMXUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXUtils.m; sourceTree = "<group>"; };
+		0EA7C83E1B7D09400041C2D3 /* MMXAsyncOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXAsyncOperation.h; sourceTree = "<group>"; };
+		0EA7C83F1B7D09400041C2D3 /* MMXAsyncOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXAsyncOperation.m; sourceTree = "<group>"; };
+		0EA7C8411B7D0B490041C2D3 /* MMXConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXConnectionOperation.h; sourceTree = "<group>"; };
+		0EA7C8421B7D0B490041C2D3 /* MMXConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXConnectionOperation.m; sourceTree = "<group>"; };
+		0EA7C8471B7D14A20041C2D3 /* MMXLogInOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXLogInOperation.h; sourceTree = "<group>"; };
+		0EA7C8481B7D14A20041C2D3 /* MMXLogInOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXLogInOperation.m; sourceTree = "<group>"; };
 		0EB377541ACDFA5000137977 /* MMXAccountManagerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXAccountManagerSpec.m; sourceTree = "<group>"; };
 		0EDE8D871AA0D74000CB16AF /* MMXPubSubManagerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXPubSubManagerSpec.m; sourceTree = "<group>"; };
 		214A0D121A8D20DF00E6939A /* MMX.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MMX.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -383,6 +392,12 @@
 				0E7F1EAC1B742373003808B4 /* MMXMessage_Private.h */,
 				0E7F1EAD1B742373003808B4 /* MMXUser.h */,
 				0E7F1EAE1B742373003808B4 /* MMXUser.m */,
+				0EA7C83E1B7D09400041C2D3 /* MMXAsyncOperation.h */,
+				0EA7C83F1B7D09400041C2D3 /* MMXAsyncOperation.m */,
+				0EA7C8411B7D0B490041C2D3 /* MMXConnectionOperation.h */,
+				0EA7C8421B7D0B490041C2D3 /* MMXConnectionOperation.m */,
+				0EA7C8471B7D14A20041C2D3 /* MMXLogInOperation.h */,
+				0EA7C8481B7D14A20041C2D3 /* MMXLogInOperation.m */,
 			);
 			path = Abstraction;
 			sourceTree = "<group>";
@@ -969,6 +984,7 @@
 				0E7F1EB21B742373003808B4 /* MMXChannel.m in Sources */,
 				0EA202A21AF838E1004018AE /* MMXInternalMessageAdaptor.m in Sources */,
 				0EA202931AF838E1004018AE /* _MMXOutboxEntry.m in Sources */,
+				0EA7C8431B7D0B490041C2D3 /* MMXConnectionOperation.m in Sources */,
 				0EA202A61AF838E1004018AE /* MMXDeviceManager.m in Sources */,
 				0EA202A11AF838E1004018AE /* MMXIQResponse.m in Sources */,
 				0EA202B01AF838E1004018AE /* MMXTopicListResponse.m in Sources */,
@@ -999,8 +1015,10 @@
 				0EA202991AF838E1004018AE /* MMXOutboxTransformer.m in Sources */,
 				0EA2029F1AF838E1004018AE /* MMXClient.m in Sources */,
 				0EA202B91AF838E1004018AE /* MMXUserProfile.m in Sources */,
+				0EA7C8491B7D14A20041C2D3 /* MMXLogInOperation.m in Sources */,
 				0EA202911AF838E1004018AE /* MMXConfigurationRegistry.m in Sources */,
 				0EA202AC1AF838E1004018AE /* MMXPubSubFetchRequest.m in Sources */,
+				0EA7C8401B7D09400041C2D3 /* MMXAsyncOperation.m in Sources */,
 				0EA202AB1AF838E1004018AE /* MMXGeoLocationMessage.m in Sources */,
 				0E7F1EB11B742373003808B4 /* MagnetMessage.m in Sources */,
 				0EA2029B1AF838E1004018AE /* MMXUserID.m in Sources */,

@@ -31,6 +31,8 @@
 			 success:(void (^)(void))success
 			 failure:(void (^)(NSError *))failure;
 
+- (void)connectWithSuccess:(void (^)(void))success
+				   failure:(void (^)(NSError *error))failure;
 /**
  *  Method to log in to Magnet Message
  *
@@ -41,6 +43,10 @@
 - (void)logInWithCredential:(NSURLCredential *)credential
 					success:(void (^)(MMXUser *))success
 					failure:(void (^)(NSError *error))failure;
+
+- (void)privateLogInWithCredential:(NSURLCredential *)credential
+						   success:(void (^)(MMXUser *))success
+						   failure:(void (^)(NSError *error))failure;
 
 
 /**

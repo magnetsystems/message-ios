@@ -13,6 +13,8 @@
 #import "MMXMessageTypes.h"
 #import "MMX.h"
 #import "MMXChannel.h"
+#import "MMXLogInOperation.h"
+#import "MMXConnectionOperation.h"
 
 typedef void(^MessageSuccessBlock)(void);
 typedef void(^MessageFailureBlock)(NSError *);
@@ -20,6 +22,10 @@ typedef void(^MessageFailureBlock)(NSError *);
 @interface MagnetDelegate () <MMXClientDelegate>
 
 //@property (nonatomic, strong) MMXClient *client;
+
+@property (nonatomic, copy) void (^connectSuccessBlock)(void);
+
+@property (nonatomic, copy) void (^connectFailureBlock)(NSError *);
 
 @property (nonatomic, copy) void (^logInSuccessBlock)(MMXUser *);
 
@@ -30,6 +36,8 @@ typedef void(^MessageFailureBlock)(NSError *);
 @property (nonatomic, copy) void (^logOutFailureBlock)(NSError *);
 
 @property (nonatomic, strong) NSMutableDictionary *messageBlockQueue;
+
+@property(nonatomic, strong) NSOperationQueue *internalQueue;
 
 @end
 
@@ -53,8 +61,14 @@ typedef void(^MessageFailureBlock)(NSError *);
 		MMXConfiguration * config = [MMXConfiguration configurationWithName:@"default"];
 		[MMXClient sharedClient].configuration = config;
 		[MMXClient sharedClient].delegate = self;
-		[[MMXClient sharedClient] connectAnonymous];
+		[self connect];
 	}
+}
+
+- (void)connect {
+	//Create operation
+	MMXConnectionOperation *op = [MMXConnectionOperation new];
+	[self.internalQueue addOperation:op];
 }
 
 - (void)registerUser:(MMXUser *)user
@@ -72,17 +86,38 @@ typedef void(^MessageFailureBlock)(NSError *);
 	}];
 }
 
+- (void)connectWithSuccess:(void (^)(void))success
+				   failure:(void (^)(NSError *error))failure {
+	
+	self.connectSuccessBlock = success;
+	self.connectFailureBlock = failure;
+	[[MMXClient sharedClient] connectAnonymous];
+	
+}
+
+
 - (void)logInWithCredential:(NSURLCredential *)credential
 					success:(void (^)(MMXUser *))success
 					failure:(void (^)(NSError *error))failure {
+	//Create Operation
+	MMXLogInOperation *op = [MMXLogInOperation new];
+	op.creds = credential.copy;
+	op.logInSuccessBlock = success;
+	op.logInFailureBlock = failure;
+	[self.internalQueue addOperation:op];
+
+}
+
+- (void)privateLogInWithCredential:(NSURLCredential *)credential
+						   success:(void (^)(MMXUser *))success
+						   failure:(void (^)(NSError *error))failure {
+	
 	[MMXClient sharedClient].configuration.credential = credential;
-	self.logInSuccessBlock = ^ (MMXUser *user) {
-		success(user);
-	};
+	self.logInSuccessBlock = success;
 	self.logInFailureBlock = failure;
 	[[MMXClient sharedClient] connectWithCredentials];
-	
 }
+
 
 - (void)logOutWithSuccess:(void (^)(void))success
 				  failure:(void (^)(NSError *error))failure {
@@ -162,6 +197,11 @@ typedef void(^MessageFailureBlock)(NSError *);
 			}
 			break;
 		case MMXConnectionStatusConnected: {
+			if (self.connectSuccessBlock) {
+				self.connectSuccessBlock();
+			}
+			self.connectSuccessBlock = nil;
+			self.connectFailureBlock = nil;
 			}
 			break;
 		case MMXConnectionStatusDisconnected: {
@@ -169,11 +209,27 @@ typedef void(^MessageFailureBlock)(NSError *);
 			if (self.logOutSuccessBlock) {
 				self.logOutSuccessBlock();
 			}
+			if (self.connectFailureBlock) {
+				self.connectFailureBlock(error);
+			}
+			self.connectSuccessBlock = nil;
+			self.connectFailureBlock = nil;
 			self.logOutSuccessBlock = nil;
 			self.logOutFailureBlock = nil;
 		}
 			break;
 		case MMXConnectionStatusFailed: {
+			if (self.connectFailureBlock) {
+				self.connectFailureBlock(error);
+			}
+			if (self.logInFailureBlock) {
+				self.logInFailureBlock(error);
+			}
+			self.connectSuccessBlock = nil;
+			self.connectFailureBlock = nil;
+			self.logInSuccessBlock = nil;
+			self.logInFailureBlock = nil;
+
 			}
 			break;
 		case MMXConnectionStatusReconnecting: {
@@ -231,6 +287,18 @@ typedef void(^MessageFailureBlock)(NSError *);
 		}
 		[self.messageBlockQueue removeObjectForKey:messageID];
 	}
+}
+
+#pragma mark - Overriden getters
+
+- (NSOperationQueue *)internalQueue {
+	
+	if (!_internalQueue) {
+		_internalQueue = [[NSOperationQueue alloc] init];
+		_internalQueue.maxConcurrentOperationCount = 1;
+	}
+	
+	return _internalQueue;
 }
 
 @end

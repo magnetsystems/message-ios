@@ -15,10 +15,10 @@ Pod::Spec.new do |s|
 
   s.frameworks     =  'Foundation', 'UIKit'
   s.xcconfig       =  { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2', 'OTHER_LDFLAGS' => '-ObjC', 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES'} 
-  s.dependency     'Magnet-XMPPFramework', '~> 3.6.10'
-  s.dependency     'MDMCoreData', '~> 1.4.0'
-  s.dependency     'Mantle', '~>1.4'
-  s.dependency     'CocoaAsyncSocket', '~>7.4.1'
-  s.dependency     'CocoaLumberjack', '~>1.9'
+  s.dependency     'Magnet-XMPPFramework', '3.6.10'
+  s.dependency     'MDMCoreData', '1.5.0'
+  s.dependency     'Mantle', '1.5.4'
+  s.dependency     'CocoaAsyncSocket', '7.4.1'
+  s.dependency     'CocoaLumberjack', '1.9'
 
 end
