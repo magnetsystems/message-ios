@@ -183,7 +183,7 @@ typedef void(^MessageFailureBlock)(NSError *);
 	msg.sender = user;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MagnetDidReceiveMessageNotification
+	[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
 														object:nil
 													  userInfo:@{MagnetMessageKey:msg}];
 }
@@ -195,7 +195,7 @@ typedef void(^MessageFailureBlock)(NSError *);
 	msg.messageContent = message.metaData;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MagnetDidReceiveMessageNotification
+	[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
 														object:nil
 													  userInfo:@{MagnetMessageKey:msg}];
 }
