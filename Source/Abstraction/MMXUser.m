@@ -18,7 +18,7 @@
 - (void)registerWithCredentials:(NSURLCredential *)credential
 						success:(void (^)(void))success
 						failure:(void (^)(NSError *))failure {
-	[[MMXClient sharedClient].accountManager createAccountForUsername:self.username
+	[[MMXClient sharedClient].accountManager createAccountForUsername:credential.user
 														  displayName:self.displayName
 																email:self.email password:credential.password
 															  success:^(MMXUserProfile *userProfile) {
