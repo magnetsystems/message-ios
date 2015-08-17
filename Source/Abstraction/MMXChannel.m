@@ -32,7 +32,8 @@
 
 @implementation MMXChannel
 
-+ (instancetype)channelWithName:(NSString *)name summary:(NSString *)summary {
++ (instancetype)channelWithName:(NSString *)name
+						summary:(NSString *)summary {
 	MMXChannel *channel = [MMXChannel new];
 	channel.name = name;
 	channel.summary = summary;
@@ -153,6 +154,11 @@
 	}];
 }
 
+- (void)subscribersWithSuccess:(void (^)(NSSet *))success
+					   failure:(void (^)(NSError *))failure {
+	
+}
+
 - (void)publish:(MMXMessage *)message
 		success:(void (^)(MMXMessage *))success
 		failure:(void (^)(NSError *))failure {
@@ -199,6 +205,13 @@
 		}
 	}];
 
+}
+
+- (void)inviteUser:(MMXUser *)user
+		   message:(NSString *)message
+		   success:(void (^)(MMXInvite *))success
+		   failure:(void (^)(NSError *))failure {
+	
 }
 
 #pragma mark - Conversion Helpers

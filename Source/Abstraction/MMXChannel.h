@@ -19,8 +19,14 @@
 #import <Foundation/Foundation.h>
 @class MMXUser;
 @class MMXMessage;
+@class MMXInvite;
 
 @interface MMXChannel : NSObject
+
+/**
+ *  Is the topic public?
+ */
+@property (nonatomic, assign) BOOL isPublic;
 
 /**
  *  The unique name of the channel.
@@ -141,6 +147,16 @@
 					   failure:(void (^)(NSError * error))failure;
 
 /**
+ *  Get the subscribers for a channel
+ *	Must be subscribed to the channel to use this API
+ *
+ *  @param success Block with a NSSet of the subscribers(MMXUser objects)
+ *  @param failure - Block with an NSError with details about the call failure.
+ */
+- (void)subscribersWithSuccess:(void (^)(NSSet *subscribers))success
+					   failure:(void (^)(NSError *error))failure;
+
+/**
  *  Method to publish to a channel.
  *
  *  @param message MMXMessage with the content you want to publish
@@ -157,7 +173,7 @@
  *  @param from          The earliest date you would like messages from.
  *  @param to            The latest date you would like messages until. Defaults to now.
  *  @param maxToReturned The max number of items you want returned.
- *  @param success		 Block with a NSArray of MMXMessages
+ *  @param success		 NSArray of MMXMessages
  *  @param failure		 Block with an NSError with details about the call failure.
  */
 - (void)fetchMessagesFrom:(NSDate *)from
@@ -165,5 +181,18 @@
 			maxToReturned:(int)maxToReturned
 				  success:(void (^)(NSArray *messages))success
 				  failure:(void (^)(NSError *error))failure;
+
+/**
+ *  Invite a user to the channel
+ *
+ *  @param user    The MMXUser object for the user you want to invite
+ *  @param message An optional message telling the user why you want them to join the channel
+ *  @param success Block with the MMXInvite object that was sent.
+ *  @param failure Block with an NSError with details about the call failure.
+ */
+- (void)inviteUser:(MMXUser *)user
+		   message:(NSString *)message
+		   success:(void (^)(MMXInvite *invite))success
+		   failure:(void (^)(NSError *error))failure;
 
 @end

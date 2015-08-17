@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0E11E2C11AF83D0C00263B9B /* MMX.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = 0EA2020B1AF838E1004018AE /* MMX.xcdatamodeld */; };
 		0E47F4FC1B069EF20089E887 /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E47F4FB1B069EF20089E887 /* Configurations.plist */; };
+		0E523E631B82547000BC8712 /* MMXInvite.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E523E621B82547000BC8712 /* MMXInvite.m */; };
 		0E54CFC81AFAA1B3000326D7 /* MMXClient.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0EA2022B1AF838E1004018AE /* MMXClient.h */; };
 		0E54CFC91AFAA1C1000326D7 /* MMXDeviceManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0EA202401AF838E1004018AE /* MMXDeviceManager.h */; };
 		0E54CFCA1AFAA1CC000326D7 /* MMXDeviceProfile.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0EA202431AF838E1004018AE /* MMXDeviceProfile.h */; };
@@ -164,6 +165,8 @@
 /* Begin PBXFileReference section */
 		0E3633931B7955D400A5EB4B /* MMXMessageTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMXMessageTypes.h; sourceTree = "<group>"; };
 		0E47F4FB1B069EF20089E887 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Configurations.plist; path = Configuration/Configurations.plist; sourceTree = "<group>"; };
+		0E523E611B82547000BC8712 /* MMXInvite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXInvite.h; sourceTree = "<group>"; };
+		0E523E621B82547000BC8712 /* MMXInvite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXInvite.m; sourceTree = "<group>"; };
 		0E5F2D8A1A76B99F00396DF4 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
 		0E7F1EA11B742373003808B4 /* MagnetAbstraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetAbstraction.h; sourceTree = "<group>"; };
 		0E7F1EA21B742373003808B4 /* MagnetConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetConstants.h; sourceTree = "<group>"; };
@@ -386,6 +389,8 @@
 				0E7F1EA71B742373003808B4 /* MagnetMessage.m */,
 				0E7F1EA81B742373003808B4 /* MMXChannel.h */,
 				0E7F1EA91B742373003808B4 /* MMXChannel.m */,
+				0E523E611B82547000BC8712 /* MMXInvite.h */,
+				0E523E621B82547000BC8712 /* MMXInvite.m */,
 				0E3633931B7955D400A5EB4B /* MMXMessageTypes.h */,
 				0E7F1EAA1B742373003808B4 /* MMXMessage.h */,
 				0E7F1EAB1B742373003808B4 /* MMXMessage.m */,
@@ -1023,6 +1028,7 @@
 				0E7F1EB11B742373003808B4 /* MagnetMessage.m in Sources */,
 				0EA2029B1AF838E1004018AE /* MMXUserID.m in Sources */,
 				0EA202BA1AF838E1004018AE /* MMXUserQueryFilter.m in Sources */,
+				0E523E631B82547000BC8712 /* MMXInvite.m in Sources */,
 				0EA2029E1AF838E1004018AE /* MMXOutboundMessage.m in Sources */,
 				0EA2028E1AF838E1004018AE /* XMPPIQ+MMX.m in Sources */,
 				0EA2028F1AF838E1004018AE /* XMPPJID+MMX.m in Sources */,

@@ -15,12 +15,19 @@
  * permissions and limitations under the License.
  */
 
-#import "MagnetConstants.h"
+#import "MMXInvite.h"
 
-@implementation MagnetConstants
+@implementation MMXInvite
 
-NSString * const MMXDidReceiveMessageNotification = @"com.magnet.mmx.message.receive";
-NSString * const MagnetMessageKey = @"com.magnet.message.key";
-NSString * const MMXDidReceiveChannelInvitationNotification = @"com.magnet.mmx.invite.receive";
+
+- (void)acceptWithSuccess:(void (^)(MMXInvite *))success
+				  failure:(void (^)(NSError *))failure {
+	
+}
+
+- (void)declineWithSuccess:(void (^)(MMXInvite *))success
+				   failure:(void (^)(NSError *))failure {
+	
+}
 
 @end

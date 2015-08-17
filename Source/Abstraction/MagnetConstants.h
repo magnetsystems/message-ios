@@ -21,5 +21,6 @@
 
 extern NSString  * const MMXDidReceiveMessageNotification;
 extern NSString  * const MagnetMessageKey;
+extern NSString  * const MMXDidReceiveChannelInvitationNotification;
 
 @end
