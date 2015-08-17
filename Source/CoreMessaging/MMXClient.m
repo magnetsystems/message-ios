@@ -884,8 +884,9 @@ int const kReconnectionTimerInterval = 4;
 			if (readError == nil) {
 				NSDictionary *serverackDict = mmxMetaDict[@"serverack"];
 				if (serverackDict) {
-					NSString *ackForMsgId = mmxMetaDict[@"ackForMsgId"];
-					NSString *receiver = mmxMetaDict[@"receiver"];
+					NSString *ackForMsgId = serverackDict[@"ackForMsgId"];
+					NSDictionary *receiverDict = serverackDict[@"receiver"];
+					NSString *receiver = receiverDict[@"userId"];
 					if (ackForMsgId && [self.delegate respondsToSelector:@selector(client:didReceiveServerAckForMessageID:recipient:)]) {
 						dispatch_async(self.callbackQueue, ^{
 							MMXUserID *userID = [MMXUserID userIDWithUsername:receiver];

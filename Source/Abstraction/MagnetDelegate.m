@@ -153,18 +153,18 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 		[self.messageBlockQueue setObject:blockDict forKey:messageID];
 	}
 	
-	double delayInSeconds = 2.0;
-	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-		NSDictionary *blockDict = [self.messageBlockQueue objectForKey:messageID];
-		if (blockDict) {
-			MessageSuccessBlock successBlock = [blockDict objectForKey:MMXMessageSuccessBlockKey];
-			if (successBlock) {
-				successBlock();
-			}
-			[self.messageBlockQueue removeObjectForKey:messageID];
-		}
-	});
+//	double delayInSeconds = 2.0;
+//	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+//	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+//		NSDictionary *blockDict = [self.messageBlockQueue objectForKey:messageID];
+//		if (blockDict) {
+//			MessageSuccessBlock successBlock = [blockDict objectForKey:MMXMessageSuccessBlockKey];
+//			if (successBlock) {
+//				successBlock();
+//			}
+//			[self.messageBlockQueue removeObjectForKey:messageID];
+//		}
+//	});
 	
 	return messageID;
 }
@@ -276,7 +276,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 													  userInfo:@{MagnetMessageKey:msg}];
 }
 
-- (void)client:(MMXClient *)client didReceiveMessageSentSuccessfully:(NSString *)messageID {
+- (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID recipient:(MMXUserID *)recipient {
 	NSDictionary *messageBlockDict = [self.messageBlockQueue objectForKey:messageID];
 	if (messageBlockDict) {
 		MessageSuccessBlock success = messageBlockDict[MMXMessageSuccessBlockKey];
