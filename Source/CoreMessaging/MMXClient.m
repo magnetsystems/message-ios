@@ -860,20 +860,43 @@ int const kReconnectionTimerInterval = 4;
     XMPPJID* to = [xmppMessage to] ;
     XMPPJID* from =[xmppMessage from];
     NSString* msgId = [xmppMessage elementID];
-    NSXMLElement* mmxElement = [xmppMessage elementForName:MXmmxElement];
-    if (mmxElement) {
-        MMXInternalMessageAdaptor* inMessage = [[MMXInternalMessageAdaptor alloc] initWithXMPPMessage:xmppMessage];
-        if (![inMessage.mType isEqualToString:@"normal"]) {
-            [self sendSDKAckMessageId:msgId sourceFrom:from sourceTo:to];
-        }
-        if ([self.delegate respondsToSelector:@selector(client:didReceiveMessage:deliveryReceiptRequested:)]) {
-            MMXInboundMessage * inboundMessage = [MMXInboundMessage initWithMessage:inMessage];
+    if ([xmppMessage elementsForXmlns:MXnsDataPayload].count) {
+		MMXInternalMessageAdaptor* inMessage = [[MMXInternalMessageAdaptor alloc] initWithXMPPMessage:xmppMessage];
+		if (![inMessage.mType isEqualToString:@"normal"]) {
+			[self sendSDKAckMessageId:msgId sourceFrom:from sourceTo:to];
+		}
+		if ([self.delegate respondsToSelector:@selector(client:didReceiveMessage:deliveryReceiptRequested:)]) {
+			MMXInboundMessage * inboundMessage = [MMXInboundMessage initWithMessage:inMessage];
 			dispatch_async(self.callbackQueue, ^{
 				[self.delegate client:self didReceiveMessage:inboundMessage deliveryReceiptRequested:inMessage.deliveryReceiptRequested];
 			});
-        }
+		}
+	} else if ([xmppMessage elementsForXmlns:MXnsServerSignal].count) {
+		NSArray* mmxElements = [xmppMessage elementsForName:MXmmxElement];
+		NSXMLElement *mmxElement = mmxElements[0];
+		NSArray* mmxMetaElements = [mmxElement elementsForName:MXmmxMetaElement];
+		NSXMLElement *recipientElement = mmxMetaElements[0];
+		NSString* metaJSON = [recipientElement stringValue];
+		if (metaJSON && [metaJSON length] > 0) {
+			NSData* jsonData = [metaJSON dataUsingEncoding:NSUTF8StringEncoding];
+			NSError* readError;
+			NSDictionary * mmxMetaDict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&readError];
+			if (readError == nil) {
+				NSDictionary *serverackDict = mmxMetaDict[@"serverack"];
+				if (serverackDict) {
+					NSString *ackForMsgId = mmxMetaDict[@"ackForMsgId"];
+					NSString *receiver = mmxMetaDict[@"receiver"];
+					if (ackForMsgId && [self.delegate respondsToSelector:@selector(client:didReceiveServerAckForMessageID:recipient:)]) {
+						dispatch_async(self.callbackQueue, ^{
+							MMXUserID *userID = [MMXUserID userIDWithUsername:receiver];
+							[self.delegate client:self didReceiveServerAckForMessageID:ackForMsgId recipient:userID.username ? userID : nil];
+						});
+					}
+				}
+			}
+		}
     } else {
-        mmxElement = [xmppMessage elementForName:MXreceivedElement];
+        NSXMLElement *mmxElement = [xmppMessage elementForName:MXreceivedElement];
 		if (mmxElement) {
 			[self sendSDKAckMessageId:msgId sourceFrom:from sourceTo:to];
 			if ([self.delegate respondsToSelector:@selector(client:didDeliverMessage:recipient:)]) {

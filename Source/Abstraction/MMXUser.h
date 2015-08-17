@@ -91,12 +91,12 @@
  *
  *  @param name		The start of the name for the user you are searching for.
  *  @param limit	The max number of results you want returned. Defaults to 20.
- *  @param success  Block with the number of users that match the query and a NSArray of MMXUsers that match the criteria.
+ *  @param success  Block with the number of users that match the query and a NSSet of MMXUsers that match the criteria.
  *  @param failure  Block with an NSError with details about the call failure.
  */
 + (void)findByName:(NSString *)name
 			 limit:(int)limit
-		   success:(void (^)(int totalCount, NSArray *users))success
+		   success:(void (^)(int totalCount, NSSet *users))success
 		   failure:(void (^)(NSError *error))failure;
 
 /**

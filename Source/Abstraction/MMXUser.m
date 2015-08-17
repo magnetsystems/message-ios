@@ -92,7 +92,7 @@
 
 + (void)findByName:(NSString *)name
 			 limit:(int)limit
-		   success:(void (^)(int, NSArray *))success
+		   success:(void (^)(int, NSSet *))success
 		   failure:(void (^)(NSError *))failure {
 	MMXQuery *query = [MMXQuery queryForUserDisplayNameStartsWith:name
 															 tags:nil
@@ -104,7 +104,7 @@
 			[userArray addObject:[MMXUser userFromMMXUserProfile:profile]];
 		}
 		if (success) {
-			success(totalCount, userArray.copy);
+			success(totalCount, [NSSet setWithArray:userArray]);
 		}
 	} failure:^(NSError *error) {
 		if (failure) {

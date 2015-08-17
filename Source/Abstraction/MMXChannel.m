@@ -52,7 +52,7 @@
 	query.compoundPredicateType = MMXAndPredicateType;
 	[[MMXClient sharedClient].pubsubManager queryTopics:query success:^(int totalCount, NSArray *topics) {
 		if (success) {
-			//FIXME: convert topics to channels
+			//FIXME: convert topics to channels and fully hydrate the channel
 			success(totalCount, topics);
 		}
 	} failure:^(NSError *error) {
@@ -70,7 +70,7 @@
 	query.tags = [tags allObjects];;
 	[[MMXClient sharedClient].pubsubManager queryTopics:query success:^(int totalCount, NSArray *topics) {
 		if (success) {
-			//FIXME: convert topics to channels
+			//FIXME: convert topics to channels and fully hydrate the channel
 			success(totalCount, topics);
 		}
 	} failure:^(NSError *error) {
