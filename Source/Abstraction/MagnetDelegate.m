@@ -24,6 +24,7 @@
 #import "MMXChannel.h"
 #import "MMXLogInOperation.h"
 #import "MMXConnectionOperation.h"
+#import "MMXClient_Private.h"
 
 typedef void(^MessageSuccessBlock)(void);
 typedef void(^MessageFailureBlock)(NSError *);
@@ -295,6 +296,11 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 		}
 		[self.messageBlockQueue removeObjectForKey:messageID];
 	}
+}
+
++ (NSError *)notNotLoggedInError {
+	NSError * error = [MMXClient errorWithTitle:@"Forbidden" message:@"You must log in to use this API." code:403];
+	return error;
 }
 
 #pragma mark - Overriden getters

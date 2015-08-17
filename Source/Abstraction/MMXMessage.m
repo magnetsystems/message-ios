@@ -22,6 +22,7 @@
 #import "MMX.h"
 #import "MMXMessageUtils.h"
 #import "MMXClient_Private.h"
+#import "MMXChannel.h"
 
 @implementation MMXMessage
 
@@ -38,6 +39,13 @@
 	MMXMessage *msg = [MMXMessage new];
 	msg.channel = channel;
 	msg.messageContent = messageContent;
+	return msg;
+}
+
++ (instancetype)messageFromPubSubMessage:(MMXPubSubMessage *)pubSubMessage {
+	MMXMessage *msg = [MMXMessage new];
+	msg.channel = [MMXChannel channelWithName:pubSubMessage.topic.topicName summary:pubSubMessage.topic.topicDescription];
+	msg.messageContent = pubSubMessage.metaData;
 	return msg;
 }
 

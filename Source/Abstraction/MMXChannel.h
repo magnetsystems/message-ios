@@ -78,23 +78,25 @@
 /**
  *  Method used to discover existing channels by name
  *
- *  @param name    The exact name of the tpic you are searching for.
- *  @param success  Block with the number of channels that match the query and a NSArray of MMXChannels that match the criteria.
+ *  @param name     The exact name of the channel you are searching for.
+ *  @param limit	The max number of items you want returned.
+ *  @param success  Block with the number of channels that match the query and a NSSet of MMXChannels that match the criteria.
  *  @param failure  Block with an NSError with details about the call failure.
  */
-+ (void)findByName:(NSString *)name
-		   success:(void (^)(int totalCount, NSArray *channels))success
-		   failure:(void (^)(NSError *error))failure;
++ (void)findChannelThatStartsWith:(NSString *)name
+							limit:(int)limit
+						  success:(void (^)(int totalCount, NSSet *channels))success
+						  failure:(void (^)(NSError *error))failure;
 
 /**
- *  Method used to discover existing channels by tags
+ *  Method used to discover existing channels that have any of the tags provided
  *
  *  @param tags		A set of unique tags
- *  @param success  Block with the number of channels that match the query and a NSArray of MMXChannels that match the criteria.
+ *  @param success  Block with the number of channels that match the query and a NSSet of MMXChannels that match the criteria.
  *  @param failure  Block with an NSError with details about the call failure.
  */
 + (void)findByTags:(NSSet *)tags
-		   success:(void (^)(int totalCount, NSArray *channels))success
+		   success:(void (^)(int totalCount, NSSet *channels))success
 		   failure:(void (^)(NSError *error))failure;
 
 /**
@@ -172,14 +174,16 @@
  *
  *  @param from          The earliest date you would like messages from.
  *  @param to            The latest date you would like messages until. Defaults to now.
- *  @param maxToReturned The max number of items you want returned.
- *  @param success		 NSArray of MMXMessages
+ *  @param limit		 The max number of items you want returned.
+ *  @param ascending	 The sort order(by date) for the messages returned.
+ *  @param success		 NSSet of MMXMessages
  *  @param failure		 Block with an NSError with details about the call failure.
  */
 - (void)fetchMessagesFrom:(NSDate *)from
 					   to:(NSDate *)to
-			maxToReturned:(int)maxToReturned
-				  success:(void (^)(NSArray *messages))success
+					limit:(int)limit
+				ascending:(int)ascending
+				  success:(void (^)(NSSet *messages))success
 				  failure:(void (^)(NSError *error))failure;
 
 /**

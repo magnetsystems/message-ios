@@ -16,6 +16,7 @@
  */
 
 #import "MMXMessage.h"
+@class MMXPubSubMessage;
 
 @interface MMXMessage ()
 
@@ -34,5 +35,6 @@
 @property(nonatomic, readwrite) NSDictionary *messageContent;
 
 - (NSArray *)recipientsForOutboundMessage;
++ (instancetype)messageFromPubSubMessage:(MMXPubSubMessage *)pubSubMessage;
 
 @end

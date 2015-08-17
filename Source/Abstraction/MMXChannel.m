@@ -18,6 +18,10 @@
 #import "MMXChannel.h"
 #import "MMXMessage_Private.h"
 #import "MMX.h"
+#import "MMXTopic_Private.h"
+#import "MMXUser.h"
+#import "MMXClient_Private.h"
+#import "MagnetDelegate.h"
 
 @interface MMXChannel ()
 
@@ -40,10 +44,17 @@
 	return channel;
 }
 
-+ (void)findByName:(NSString *)name
-			success:(void (^)(int, NSArray *))success
-			failure:(void (^)(NSError *))failure {
-	//FIXME: Handle case that user is not logged in
++ (void)findChannelThatStartsWith:(NSString *)name
+							limit:(int)limit
+						  success:(void (^)(int, NSSet *))success
+						  failure:(void (^)(NSError *))failure {
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		
+		return;
+	}
 	MMXTopicQueryFilter *tFilter = [[MMXTopicQueryFilter alloc] init];
 	tFilter.topicName = name;
 	tFilter.predicateOperatorType = MMXEqualToPredicateOperatorType;
@@ -51,10 +62,11 @@
 	MMXQuery * query =  [[MMXQuery alloc] init];
 	query.queryFilters = @[tFilter];
 	query.compoundPredicateType = MMXAndPredicateType;
+	query.limit = limit;
 	[[MMXClient sharedClient].pubsubManager queryTopics:query success:^(int totalCount, NSArray *topics) {
 		if (success) {
 			//FIXME: convert topics to channels and fully hydrate the channel
-			success(totalCount, topics);
+			success(totalCount, [NSSet setWithArray:topics]);
 		}
 	} failure:^(NSError *error) {
 		if (failure) {
@@ -64,15 +76,22 @@
 }
 
 + (void)findByTags:(NSSet *)tags
-			success:(void (^)(int, NSArray *))success
-			failure:(void (^)(NSError *))failure {
-	//FIXME: Handle case that user is not logged in
+		   success:(void (^)(int, NSSet *))success
+		   failure:(void (^)(NSError *))failure {
+
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		
+		return;
+	}
 	MMXQuery * query =  [[MMXQuery alloc] init];
 	query.tags = [tags allObjects];;
 	[[MMXClient sharedClient].pubsubManager queryTopics:query success:^(int totalCount, NSArray *topics) {
 		if (success) {
 			//FIXME: convert topics to channels and fully hydrate the channel
-			success(totalCount, topics);
+			success(totalCount, [NSSet setWithArray:topics]);
 		}
 	} failure:^(NSError *error) {
 		if (failure) {
@@ -84,7 +103,14 @@
 - (void)setTags:(NSSet *)tags
 		success:(void (^)(void))success
 		failure:(void (^)(NSError *))failure {
-	//FIXME: Handle case that user is not logged in
+
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		
+		return;
+	}
 	[[MMXClient sharedClient].pubsubManager setTags:[tags allObjects]
 											  topic:[self asTopic]
 											success:^(BOOL successful) {
@@ -100,7 +126,14 @@
 
 - (void)createWithSuccess:(void (^)(void))success
 				  failure:(void (^)(NSError *))failure {
-	//FIXME: Handle case that user is not logged in
+
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		
+		return;
+	}
 	[[MMXClient sharedClient].pubsubManager createTopic:[self asTopic] success:^(BOOL successful) {
 		if (success) {
 			success();
@@ -114,7 +147,14 @@
 
 - (void)deleteWithSuccess:(void (^)(void))success
 				 failure:(void (^)(NSError *))failure {
-	//FIXME: Handle case that user is not logged in
+
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		
+		return;
+	}
 	[[MMXClient sharedClient].pubsubManager deleteTopic:[self asTopic] success:^(BOOL successful) {
 		if (success) {
 			success();
@@ -128,7 +168,14 @@
 
 - (void)subscribeWithSuccess:(void (^)(void))success
 					 failure:(void (^)(NSError *))failure {
-	//FIXME: Handle case that user is not logged in
+
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		
+		return;
+	}
 	[[MMXClient sharedClient].pubsubManager subscribeToTopic:[self asTopic] device:nil success:^(MMXTopicSubscription *subscription) {
 		if (success) {
 			success();
@@ -142,7 +189,14 @@
 
 - (void)unSubscribeWithSuccess:(void (^)(void))success
 					   failure:(void (^)(NSError *))failure {
-	//FIXME: Handle case that user is not logged in
+
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		
+		return;
+	}
 	[[MMXClient sharedClient].pubsubManager unsubscribeFromTopic:[self asTopic] subscriptionID:nil success:^(BOOL successful) {
 		if (success) {
 			success();
@@ -156,13 +210,27 @@
 
 - (void)subscribersWithSuccess:(void (^)(NSSet *))success
 					   failure:(void (^)(NSError *))failure {
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		
+		return;
+	}
 	
 }
 
 - (void)publish:(MMXMessage *)message
 		success:(void (^)(MMXMessage *))success
 		failure:(void (^)(NSError *))failure {
-	//FIXME: Handle case that user is not logged in
+
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		
+		return;
+	}
 	MMXPubSubMessage *msg = [MMXPubSubMessage pubSubMessageToTopic:[self asTopic] content:nil metaData:message.messageContent];
 	[[MMXClient sharedClient].pubsubManager publishPubSubMessage:msg success:^(BOOL successful, NSString *messageID) {
 		if (success) {
@@ -180,23 +248,31 @@
 
 - (void)fetchMessagesFrom:(NSDate *)from
 					   to:(NSDate *)to
-			maxToReturned:(int)maxToReturned
-				  success:(void (^)(NSArray *))success
+					limit:(int)limit
+				ascending:(int)ascending
+				  success:(void (^)(NSSet *))success
 				  failure:(void (^)(NSError *))failure {
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		
+		return;
+	}
 	MMXPubSubFetchRequest * fetch = [[MMXPubSubFetchRequest alloc] init];
 	fetch.topic = [MMXTopic topicWithName:self.name];
 	fetch.since = from;
 	fetch.until = to;
-	fetch.maxItems = maxToReturned;
-	fetch.ascending = YES;
+	fetch.maxItems = limit;
+	fetch.ascending = ascending;
 	[[MMXClient sharedClient].pubsubManager fetchItems:fetch success:^(NSArray *messages) {
 		NSMutableArray *msgArray = [[NSMutableArray alloc] initWithCapacity:messages.count];
 		for (MMXPubSubMessage *message in messages) {
-			MMXMessage *msg = [MMXMessage messageToChannel:self.copy messageContent:message.metaData];
+			MMXMessage *msg = [MMXMessage messageFromPubSubMessage:message];
 			[msgArray addObject:msg];
 		}
 		if (success) {
-			success(msgArray.copy);
+			success([NSSet setWithArray:msgArray.copy]);
 		}
 	} failure:^(NSError *error) {
 		NSLog(@"Fail error = %@",error);
@@ -211,12 +287,28 @@
 		   message:(NSString *)message
 		   success:(void (^)(MMXInvite *))success
 		   failure:(void (^)(NSError *))failure {
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		
+		return;
+	}
 	
 }
 
 #pragma mark - Conversion Helpers
 - (MMXTopic *)asTopic {
-	return [MMXTopic topicWithName:self.name];
+	MMXTopic *newTopic = [MMXTopic topicWithName:self.name];
+	if (!self.isPublic) {
+		MMXUser *currentUser = [MMXUser currentUser];
+		if (currentUser) {
+			newTopic.nameSpace = currentUser.username;
+		} else {
+			return nil;
+		}
+	}
+	return newTopic;
 }
 
 #pragma mark - NSCoding
