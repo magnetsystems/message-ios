@@ -79,7 +79,12 @@
 - (void)changePasswordWithCredentials:(NSURLCredential *)credential
 							  success:(void (^)(void))success
 							  failure:(void (^)(NSError *))failure {
-	//FIXME: This is not correct. Must be logged in, etc. Think through the cases.
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		return;
+	}
 	[[MMXClient sharedClient].accountManager updatePassword:credential.password success:^(BOOL successful) {
 		if (success) {
 			success();
@@ -95,6 +100,12 @@
 			 limit:(int)limit
 		   success:(void (^)(int, NSSet *))success
 		   failure:(void (^)(NSError *))failure {
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		return;
+	}
 	MMXQuery *query = [MMXQuery queryForUserDisplayNameStartsWith:name
 															 tags:nil
 															limit:limit];
@@ -118,6 +129,12 @@
 			 limit:(int)limit
 		   success:(void (^)(int, NSArray *))success
 		   failure:(void (^)(NSError *))failure {
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		return;
+	}
 	MMXQuery *query = [MMXQuery queryForUserDisplayNameStartsWith:@"" tags:[tags allObjects] limit:limit];
 	[[MMXClient sharedClient].accountManager queryUsers:query success:^(int totalCount, NSArray *users) {
 		NSMutableArray *userArray = [[NSMutableArray alloc] initWithCapacity:users.count];
