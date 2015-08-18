@@ -17,13 +17,14 @@
 
 #import "MMXUser.h"
 #import "MagnetDelegate.h"
-#import "MMX.h"
+#import "MMX_Private.h"
 
 @implementation MMXUser
 
 + (MMXUser *)currentUser {
 	return [MagnetDelegate sharedDelegate].currentUser;
 }
+
 - (void)registerWithCredentials:(NSURLCredential *)credential
 						success:(void (^)(void))success
 						failure:(void (^)(NSError *))failure {

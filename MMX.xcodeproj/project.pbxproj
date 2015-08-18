@@ -188,6 +188,7 @@
 		0E8B4E141A6F2F370000A7C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0E91FF441A8184160055F77F /* MMXDeviceManagerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXDeviceManagerSpec.m; sourceTree = "<group>"; };
 		0E98DC211AE087BC00C1A519 /* MMXTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MMXTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		0E9CC77C1B83D258003334F1 /* MMX_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMX_Private.h; sourceTree = "<group>"; };
 		0EA201FB1AF838E1004018AE /* XMPPIQ+MMX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XMPPIQ+MMX.h"; sourceTree = "<group>"; };
 		0EA201FC1AF838E1004018AE /* XMPPIQ+MMX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XMPPIQ+MMX.m"; sourceTree = "<group>"; };
 		0EA201FD1AF838E1004018AE /* XMPPJID+MMX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XMPPJID+MMX.h"; sourceTree = "<group>"; };
@@ -257,7 +258,6 @@
 		0EA202471AF838E1004018AE /* MMXDeviceQueryResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXDeviceQueryResponse.m; sourceTree = "<group>"; };
 		0EA202491AF838E1004018AE /* MMXLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXLogger.h; sourceTree = "<group>"; };
 		0EA2024A1AF838E1004018AE /* MMXLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXLogger.m; sourceTree = "<group>"; };
-		0EA2024B1AF838E1004018AE /* MMX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMX.h; sourceTree = "<group>"; };
 		0EA2024D1AF838E1004018AE /* MMXRemoteNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXRemoteNotification.h; sourceTree = "<group>"; };
 		0EA2024E1AF838E1004018AE /* MMXRemoteNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXRemoteNotification.m; sourceTree = "<group>"; };
 		0EA202501AF838E1004018AE /* MMXGeoLocationMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXGeoLocationMessage.h; sourceTree = "<group>"; };
@@ -468,7 +468,7 @@
 				0EA202171AF838E1004018AE /* CoreMessaging */,
 				0EA2023F1AF838E1004018AE /* Devices */,
 				0EA202481AF838E1004018AE /* Logging */,
-				0EA2024B1AF838E1004018AE /* MMX.h */,
+				0E9CC77C1B83D258003334F1 /* MMX_Private.h */,
 				0EA2024C1AF838E1004018AE /* Notifications */,
 				0EA2024F1AF838E1004018AE /* PubSub */,
 				0EA202771AF838E1004018AE /* User */,

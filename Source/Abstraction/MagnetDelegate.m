@@ -20,7 +20,7 @@
 #import "MagnetConstants.h"
 #import "MMXUser.h"
 #import "MMXMessageTypes.h"
-#import "MMX.h"
+#import "MMX_Private.h"
 #import "MMXChannel.h"
 #import "MMXLogInOperation.h"
 #import "MMXConnectionOperation.h"

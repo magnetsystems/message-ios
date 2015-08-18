@@ -17,7 +17,7 @@
 
 #import "MMXChannel.h"
 #import "MMXMessage_Private.h"
-#import "MMX.h"
+#import "MMX_Private.h"
 #import "MMXTopic_Private.h"
 #import "MMXUser.h"
 #import "MMXClient_Private.h"

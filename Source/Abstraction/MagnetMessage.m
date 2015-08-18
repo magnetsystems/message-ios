@@ -17,7 +17,7 @@
 
 #import "MagnetMessage.h"
 #import "MagnetDelegate.h"
-#import "MMX.h"
+#import "MMX_Private.h"
 
 @implementation MagnetMessage
 
