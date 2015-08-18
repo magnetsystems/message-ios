@@ -26,7 +26,7 @@
 @interface MMXChannel ()
 
 @property (nonatomic, readwrite) NSString *name;
-@property (nonatomic, readwrite) MMXUser *owner;
+@property (nonatomic, readwrite) NSString *ownerUsername;
 @property (nonatomic, readwrite) int numberOfMessages;
 @property (nonatomic, readwrite) NSDate *lastTimeActive;
 @property (nonatomic, readwrite) NSSet *tags;
@@ -52,7 +52,6 @@
 		if (failure) {
 			failure([MagnetDelegate notNotLoggedInError]);
 		}
-		
 		return;
 	}
 	MMXTopicQueryFilter *tFilter = [[MMXTopicQueryFilter alloc] init];
@@ -63,16 +62,7 @@
 	query.queryFilters = @[tFilter];
 	query.compoundPredicateType = MMXAndPredicateType;
 	query.limit = limit;
-	[[MMXClient sharedClient].pubsubManager queryTopics:query success:^(int totalCount, NSArray *topics) {
-		if (success) {
-			//FIXME: convert topics to channels and fully hydrate the channel
-			success(totalCount, [NSSet setWithArray:topics]);
-		}
-	} failure:^(NSError *error) {
-		if (failure) {
-			failure(error);
-		}
-	}];
+	[MMXChannel findChannelsWithQuery:query success:success failure:failure];
 }
 
 + (void)findByTags:(NSSet *)tags
@@ -83,15 +73,52 @@
 		if (failure) {
 			failure([MagnetDelegate notNotLoggedInError]);
 		}
-		
 		return;
 	}
 	MMXQuery * query =  [[MMXQuery alloc] init];
 	query.tags = [tags allObjects];;
+	[MMXChannel findChannelsWithQuery:query success:success failure:failure];
+}
+
++ (void)findChannelsWithQuery:(MMXQuery *)query
+					  success:(void (^)(int, NSSet *))success
+					  failure:(void (^)(NSError *))failure {
+	
 	[[MMXClient sharedClient].pubsubManager queryTopics:query success:^(int totalCount, NSArray *topics) {
+		[[MMXClient sharedClient].pubsubManager summaryOfTopics:topics since:nil until:nil success:^(NSArray *summaries) {
+			[[MMXClient sharedClient].pubsubManager listSubscriptionsWithSuccess:^(NSArray *subscriptions) {
+				NSSet *channelSet = [MMXChannel channelsFromTopics:topics summaries:summaries subscriptions:subscriptions];
+				if (success) {
+					success(totalCount, channelSet);
+				}
+			} failure:^(NSError *error) {
+				if (failure) {
+					failure(error);
+				}
+			}];
+		} failure:^(NSError *error) {
+			if (failure) {
+				failure(error);
+			}
+		}];
+	} failure:^(NSError *error) {
+		if (failure) {
+			failure(error);
+		}
+	}];
+}
+
+- (void)tagsWithSuccess:(void (^)(NSSet *))success
+				failure:(void (^)(NSError *))failure {
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		return;
+	}
+	[[MMXClient sharedClient].pubsubManager tagsForTopic:[self asTopic] success:^(NSDate *lastTimeModified, NSArray *tags) {
 		if (success) {
-			//FIXME: convert topics to channels and fully hydrate the channel
-			success(totalCount, [NSSet setWithArray:topics]);
+			success([NSSet setWithArray:tags]);
 		}
 	} failure:^(NSError *error) {
 		if (failure) {
@@ -246,12 +273,12 @@
 	}];
 }
 
-- (void)fetchMessagesFrom:(NSDate *)from
-					   to:(NSDate *)to
-					limit:(int)limit
-				ascending:(BOOL)ascending
-				  success:(void (^)(NSSet *))success
-				  failure:(void (^)(NSError *))failure {
+- (void)fetchMessagesBetweenStartDate:(NSDate *)startDate
+							  endDate:(NSDate *)endDate
+								limit:(int)limit
+							ascending:(BOOL)ascending
+							  success:(void (^)(NSSet *))success
+							  failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
 			failure([MagnetDelegate notNotLoggedInError]);
@@ -261,8 +288,8 @@
 	}
 	MMXPubSubFetchRequest * fetch = [[MMXPubSubFetchRequest alloc] init];
 	fetch.topic = [MMXTopic topicWithName:self.name];
-	fetch.since = from;
-	fetch.until = to;
+	fetch.since = startDate;
+	fetch.until = endDate;
 	fetch.maxItems = limit;
 	fetch.ascending = ascending;
 	[[MMXClient sharedClient].pubsubManager fetchItems:fetch success:^(NSArray *messages) {
@@ -291,13 +318,37 @@
 		if (failure) {
 			failure([MagnetDelegate notNotLoggedInError]);
 		}
-		
 		return;
 	}
 	
 }
 
 #pragma mark - Conversion Helpers
+
++ (NSSet *)channelsFromTopics:(NSArray *)topics summaries:(NSArray *)summaries subscriptions:(NSArray *)subscriptions {
+	NSMutableDictionary *channelDict = [NSMutableDictionary dictionaryWithCapacity:topics.count];
+	for (MMXTopic *topic in topics) {
+		MMXChannel *channel = [MMXChannel channelWithName:topic.topicName summary:topic.topicDescription];
+		channel.ownerUsername = topic.topicCreator.username;
+		channel.isPublic = !topic.inUserNameSpace;
+		[channelDict setObject:channel forKey:channel.name];
+	}
+	for (MMXTopicSummary *sum in summaries) {
+		MMXChannel *channel = channelDict[sum.topic.topicName];
+		if (channel) {
+			channel.numberOfMessages = sum.numItemsPublished;
+			channel.lastTimeActive = sum.lastTimePublishedTo;
+		}
+	}
+	for (MMXTopicSubscription *sub in subscriptions) {
+		MMXChannel *channel = channelDict[sub.topic.topicName];
+		if (channel) {
+			channel.isSubscribed = sub.isSubscribed;
+		}
+	}
+	return [NSSet setWithArray:[channelDict allValues]];
+}
+
 - (MMXTopic *)asTopic {
 	MMXTopic *newTopic = [MMXTopic topicWithName:self.name];
 	if (!self.isPublic) {
@@ -318,7 +369,7 @@
 	if (self) {
 		_name = [coder decodeObjectForKey:@"_name"];
 		_summary = [coder decodeObjectForKey:@"_summary"];
-		_owner = [coder decodeObjectForKey:@"_owner"];
+		_ownerUsername = [coder decodeObjectForKey:@"_ownerUsername"];
 		_numberOfMessages = [[coder decodeObjectForKey:@"_numberOfMessages"] intValue];
 		_lastTimeActive = [coder decodeObjectForKey:@"_lastTimeActive"];
 		_tags = [coder decodeObjectForKey:@"_tags"];
@@ -331,7 +382,7 @@
 - (void)encodeWithCoder:(NSCoder *)coder {
 	[coder encodeObject:self.name forKey:@"_name"];
 	[coder encodeObject:self.summary forKey:@"_summary"];
-	[coder encodeObject:self.owner forKey:@"_owner"];
+	[coder encodeObject:self.ownerUsername forKey:@"_ownerUsername"];
 	[coder encodeObject:@(self.numberOfMessages) forKey:@"_numberOfMessages"];
 	[coder encodeObject:self.lastTimeActive forKey:@"_lastTimeActive"];
 	[coder encodeObject:self.tags forKey:@"_tags"];
@@ -344,7 +395,7 @@
 	if (copy != nil) {
 		copy.name = self.name;
 		copy.summary = self.summary;
-		copy.owner = self.owner;
+		copy.ownerUsername = self.ownerUsername;
 		copy.numberOfMessages = self.numberOfMessages;
 		copy.lastTimeActive = self.lastTimeActive;
 		copy.tags = self.tags;

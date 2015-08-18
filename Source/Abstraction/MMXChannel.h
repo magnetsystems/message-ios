@@ -41,7 +41,7 @@
 /**
  *  The owner/creator of the channel.
  */
-@property (nonatomic, readonly) MMXUser *owner;
+@property (nonatomic, readonly) NSString *ownerUsername;
 
 /**
  *  The total number of messages that have been posted to the channel.
@@ -52,11 +52,6 @@
  *  The timestamp of the most recent message published to the channel.
  */
 @property (nonatomic, readonly) NSDate *lastTimeActive;
-
-/**
- *  Tags currently set on the channel.
- */
-@property (nonatomic, copy, readonly) NSSet *tags;
 
 /**
  *  BOOL letting you know if the current user is subscribed to the channel.
@@ -93,11 +88,20 @@
  *
  *  @param tags		A set of unique tags
  *  @param success  Block with the number of channels that match the query and a NSSet of MMXChannels that match the criteria.
- *  @param failure  Block with an NSError with details about the call failure.
+ *  @param failure  Block with a NSError with details about the call failure.
  */
 + (void)findByTags:(NSSet *)tags
 		   success:(void (^)(int totalCount, NSSet *channels))success
 		   failure:(void (^)(NSError *error))failure;
+
+/**
+ *  Get tags for this channel
+ *
+ *  @param success - Block with a NSSet of tags(NSStrings)
+ *  @param failure - Block with a NSError with details about the call failure.
+ */
+- (void)tagsWithSuccess:(void (^)(NSSet * tags))success
+				failure:(void (^)(NSError * error))failure;
 
 /**
  *  Set tags for a specific channel. This will overwrite ALL existing tags for the chanel.
@@ -105,7 +109,7 @@
  *
  *  @param tags    - NSSet of tags(NSStrings).
  *  @param success - Block called if operation is successful.
- *  @param failure - Block with an NSError with details about the call failure.
+ *  @param failure - Block with a NSError with details about the call failure.
  */
 - (void)setTags:(NSSet *)tags
 		success:(void (^)(void))success
@@ -153,7 +157,7 @@
  *	Must be subscribed to the channel to use this API
  *
  *  @param success Block with a NSSet of the subscribers(MMXUser objects)
- *  @param failure - Block with an NSError with details about the call failure.
+ *  @param failure Block with an NSError with details about the call failure.
  */
 - (void)subscribersWithSuccess:(void (^)(NSSet *subscribers))success
 					   failure:(void (^)(NSError *error))failure;
@@ -172,19 +176,19 @@
 /**
  *  Fetch previous items posted to this channel.
  *
- *  @param from          The earliest date you would like messages from.
- *  @param to            The latest date you would like messages until. Defaults to now.
+ *  @param startDate     The earliest date you would like messages from.
+ *  @param endDate       The latest date you would like messages until. Defaults to now.
  *  @param limit		 The max number of items you want returned.
  *  @param ascending	 The sort order(by date) for the messages returned.
  *  @param success		 NSSet of MMXMessages
  *  @param failure		 Block with an NSError with details about the call failure.
  */
-- (void)fetchMessagesFrom:(NSDate *)from
-					   to:(NSDate *)to
-					limit:(int)limit
-				ascending:(BOOL)ascending
-				  success:(void (^)(NSSet *messages))success
-				  failure:(void (^)(NSError *error))failure;
+- (void)fetchMessagesBetweenStartDate:(NSDate *)startDate
+							  endDate:(NSDate *)endDate
+								limit:(int)limit
+							ascending:(BOOL)ascending
+							  success:(void (^)(NSSet *messages))success
+							  failure:(void (^)(NSError *error))failure;
 
 /**
  *  Invite a user to the channel
