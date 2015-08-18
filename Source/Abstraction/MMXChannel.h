@@ -83,10 +83,10 @@
  *  @param success  Block with the number of channels that match the query and a NSSet of MMXChannels that match the criteria.
  *  @param failure  Block with an NSError with details about the call failure.
  */
-+ (void)findChannelThatStartsWith:(NSString *)name
-							limit:(int)limit
-						  success:(void (^)(int totalCount, NSSet *channels))success
-						  failure:(void (^)(NSError *error))failure;
++ (void)channelsStartingWith:(NSString *)name
+					   limit:(int)limit
+					 success:(void (^)(int totalCount, NSSet *channels))success
+					 failure:(void (^)(NSError *error))failure;
 
 /**
  *  Method used to discover existing channels that have any of the tags provided

@@ -44,10 +44,10 @@
 	return channel;
 }
 
-+ (void)findChannelThatStartsWith:(NSString *)name
-							limit:(int)limit
-						  success:(void (^)(int, NSSet *))success
-						  failure:(void (^)(NSError *))failure {
++ (void)channelsStartingWith:(NSString *)name
+					   limit:(int)limit
+					 success:(void (^)(int, NSSet *))success
+					 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
 			failure([MagnetDelegate notNotLoggedInError]);
