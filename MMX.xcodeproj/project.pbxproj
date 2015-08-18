@@ -168,7 +168,6 @@
 		0E523E611B82547000BC8712 /* MMXInvite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXInvite.h; sourceTree = "<group>"; };
 		0E523E621B82547000BC8712 /* MMXInvite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXInvite.m; sourceTree = "<group>"; };
 		0E5F2D8A1A76B99F00396DF4 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
-		0E7F1EA11B742373003808B4 /* MagnetAbstraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetAbstraction.h; sourceTree = "<group>"; };
 		0E7F1EA21B742373003808B4 /* MagnetConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetConstants.h; sourceTree = "<group>"; };
 		0E7F1EA31B742373003808B4 /* MagnetConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagnetConstants.m; sourceTree = "<group>"; };
 		0E7F1EA41B742373003808B4 /* MagnetDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetDelegate.h; sourceTree = "<group>"; };
@@ -380,7 +379,6 @@
 		0E7F1EA01B742373003808B4 /* Abstraction */ = {
 			isa = PBXGroup;
 			children = (
-				0E7F1EA11B742373003808B4 /* MagnetAbstraction.h */,
 				0E7F1EA21B742373003808B4 /* MagnetConstants.h */,
 				0E7F1EA31B742373003808B4 /* MagnetConstants.m */,
 				0E7F1EA41B742373003808B4 /* MagnetDelegate.h */,
