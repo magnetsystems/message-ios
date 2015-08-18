@@ -182,7 +182,7 @@
 - (void)fetchMessagesFrom:(NSDate *)from
 					   to:(NSDate *)to
 					limit:(int)limit
-				ascending:(int)ascending
+				ascending:(BOOL)ascending
 				  success:(void (^)(NSSet *messages))success
 				  failure:(void (^)(NSError *error))failure;
 

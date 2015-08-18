@@ -249,7 +249,7 @@
 - (void)fetchMessagesFrom:(NSDate *)from
 					   to:(NSDate *)to
 					limit:(int)limit
-				ascending:(int)ascending
+				ascending:(BOOL)ascending
 				  success:(void (^)(NSSet *))success
 				  failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
