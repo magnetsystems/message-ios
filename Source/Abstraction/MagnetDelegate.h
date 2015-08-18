@@ -25,7 +25,7 @@
 
 + (instancetype)sharedDelegate;
 
-- (void)startMMXClient;
+- (void)startMMXClientWithConfiguration:(NSString *)name;
 
 /**
  *  Method to register a new user with Magnet Message

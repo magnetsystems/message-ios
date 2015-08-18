@@ -241,7 +241,6 @@
 		if (failure) {
 			failure([MagnetDelegate notNotLoggedInError]);
 		}
-		
 		return;
 	}
 	

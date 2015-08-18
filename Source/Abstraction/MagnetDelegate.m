@@ -65,16 +65,15 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	return _sharedClient;
 }
 
-- (void)startMMXClient {
+- (void)startMMXClientWithConfiguration:(NSString *)name {
 	//You must include your Configurations.plist file in the project. You can download this file on the Settings page of the Magnet Message Console
 	NSString *pathAndFileName = [[NSBundle mainBundle] pathForResource:@"Configurations" ofType:@"plist"];
 	NSAssert([[NSFileManager defaultManager] fileExistsAtPath:pathAndFileName], @"You must include your Configurations.plist file in the project. You can download this file on the Settings page of the Magnet Message Web Interface");
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated &&
 		[MMXClient sharedClient].connectionStatus != MMXConnectionStatusConnected) {
-		MMXConfiguration * config = [MMXConfiguration configurationWithName:@"default"];
+		MMXConfiguration * config = [MMXConfiguration configurationWithName:name];
 		[MMXClient sharedClient].configuration = config;
 		[MMXClient sharedClient].delegate = self;
-		[self connect];
 	}
 }
 

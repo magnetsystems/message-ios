@@ -15,14 +15,28 @@
  * permissions and limitations under the License.
  */
 
-#ifndef _MagnetAbstraction_
-	#define _MagnetAbstraction_
+#import <Foundation/Foundation.h>
+#import "MagnetDelegate.h"
+#import "MMXMessage.h"
+#import "MMXChannel.h"
+#import "MMXUser.h"
+#import "MagnetConstants.h"
+#import "MMXMessageTypes.h"
+#import "MMXLogger.h"
+#import "MMXRemoteNotification.h"
 
-	#import "MagnetMessage.h"
-	#import "MagnetDelegate.h"
-	#import "MMXMessage.h"
-	#import "MMXChannel.h"
-	#import "MMXUser.h"
-	#import "MagnetConstants.h"
-	#import "MMXMessageTypes.h"
-#endif /* _MagnetAbstraction_ */
+@interface MMX : NSObject
+
+/**
+ *  Initialize MMX with a configuration
+ *
+ *  @param name The name of the configuration in your Configurations.plist file that you want to connect to.
+ */
++ (void)setupWithConfiguration:(NSString *)name;
+
+/**
+ *  Call when no longer need to use the MMX features or when the app goes to the background
+ */
++ (void)teardown;
+
+@end
