@@ -51,9 +51,9 @@
  *  @param success 	  - Block called if operation is successful.
  *  @param failure    - Block with an NSError with details about the call failure.
  */
-- (void)registerWithCredentials:(NSURLCredential *)credential
-						success:(void (^)(void))success
-						failure:(void (^)(NSError * error))failure;
+- (void)registerWithCredential:(NSURLCredential *)credential
+					   success:(void (^)(void))success
+					   failure:(void (^)(NSError * error))failure;
 
 /**
  *  Method to log in to Magnet Message
@@ -62,9 +62,9 @@
  *  @param success 	  - Block with the MMXUser object for the newly logged in user.
  *  @param failure    - Block with an NSError with details about the call failure.
  */
-+ (void)logInWithCredentials:(NSURLCredential *)credential
-					 success:(void (^)(MMXUser *user))success
-					 failure:(void (^)(NSError * error))failure;
++ (void)logInWithCredential:(NSURLCredential *)credential
+					success:(void (^)(MMXUser *user))success
+					failure:(void (^)(NSError * error))failure;
 
 
 /**
@@ -83,9 +83,9 @@
  *  @param success    - Block called if operation is successful.
  *  @param failure    - Block with an NSError with details about the call failure.
  */
-- (void)changePasswordWithCredentials:(NSURLCredential *)credential
-							  success:(void (^)(void))success
-							  failure:(void (^)(NSError * error))failure;
+- (void)changePasswordWithCredential:(NSURLCredential *)credential
+							 success:(void (^)(void))success
+							 failure:(void (^)(NSError * error))failure;
 
 /**
  *  Method used to discover existing users by name

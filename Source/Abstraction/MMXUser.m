@@ -26,9 +26,9 @@
 	return [MagnetDelegate sharedDelegate].currentUser;
 }
 
-- (void)registerWithCredentials:(NSURLCredential *)credential
-						success:(void (^)(void))success
-						failure:(void (^)(NSError *))failure {
+- (void)registerWithCredential:(NSURLCredential *)credential
+					   success:(void (^)(void))success
+					   failure:(void (^)(NSError *))failure {
 	[[MMXClient sharedClient].accountManager createAccountForUsername:credential.user
 														  displayName:self.displayName
 																email:self.email password:credential.password
@@ -43,9 +43,9 @@
 	}];
 }
 
-+ (void)logInWithCredentials:(NSURLCredential *)credential
-					 success:(void (^)(MMXUser *))success
-					 failure:(void (^)(NSError *))failure {
++ (void)logInWithCredential:(NSURLCredential *)credential
+					success:(void (^)(MMXUser *))success
+					failure:(void (^)(NSError *))failure {
 	[[MagnetDelegate sharedDelegate] logInWithCredential:credential
 												 success:^(MMXUser *user) {
 		if (success) {
@@ -77,9 +77,9 @@
 	}
 }
 
-- (void)changePasswordWithCredentials:(NSURLCredential *)credential
-							  success:(void (^)(void))success
-							  failure:(void (^)(NSError *))failure {
+- (void)changePasswordWithCredential:(NSURLCredential *)credential
+							 success:(void (^)(void))success
+							 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
 			failure([MagnetDelegate notNotLoggedInError]);
@@ -174,6 +174,7 @@
 - (MMXInternalAddress *)address {
 	MMXInternalAddress *address = [MMXInternalAddress new];
 	address.username = [self.username jidEscapedString];
+	address.displayName = self.displayName;
 	return address;
 }
 
