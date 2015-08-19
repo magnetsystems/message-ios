@@ -15,24 +15,13 @@
  * permissions and limitations under the License.
  */
 
-#import "MMXChannel.h"
+#import "MMXChannel_Private.h"
 #import "MMXMessage_Private.h"
 #import "MMX_Private.h"
 #import "MMXTopic_Private.h"
 #import "MMXUser.h"
 #import "MMXClient_Private.h"
 #import "MagnetDelegate.h"
-
-@interface MMXChannel ()
-
-@property (nonatomic, readwrite) NSString *name;
-@property (nonatomic, readwrite) NSString *ownerUsername;
-@property (nonatomic, readwrite) int numberOfMessages;
-@property (nonatomic, readwrite) NSDate *lastTimeActive;
-@property (nonatomic, readwrite) NSSet *tags;
-@property (nonatomic, readwrite) BOOL isSubscribed;
-
-@end
 
 @implementation MMXChannel
 

@@ -22,7 +22,8 @@
 #import "MMX_Private.h"
 #import "MMXMessageUtils.h"
 #import "MMXClient_Private.h"
-#import "MMXChannel.h"
+#import "MMXChannel_Private.h"
+#import "MMXPubSubMessage_Private.h"
 
 @implementation MMXMessage
 
@@ -60,17 +61,33 @@
 		}
 		return nil;
 	}
-	NSString * messageID = [[MagnetDelegate sharedDelegate] sendMessage:self.copy success:^(void) {
-		if (success) {
-			success();
-		}
-	} failure:^(NSError *error) {
-		if (failure) {
-			failure(error);
-		}
-	}];
-	
-	return messageID;
+	if (self.channel) {
+		NSString *messageID = [[MMXClient sharedClient] generateMessageID];
+		self.messageID = messageID;
+		MMXPubSubMessage *msg = [MMXPubSubMessage pubSubMessageToTopic:[self.channel asTopic] content:nil metaData:self.messageContent];
+		msg.messageID = messageID;
+		[[MMXClient sharedClient].pubsubManager publishPubSubMessage:msg success:^(BOOL successful, NSString *messageID) {
+			if (success) {
+				success();
+			}
+		} failure:^(NSError *error) {
+			if (failure) {
+				failure(error);
+			}
+		}];
+		return messageID;
+	} else {
+		NSString * messageID = [[MagnetDelegate sharedDelegate] sendMessage:self.copy success:^(void) {
+			if (success) {
+				success();
+			}
+		} failure:^(NSError *error) {
+			if (failure) {
+				failure(error);
+			}
+		}];
+		return messageID;
+	}
 }
 
 - (NSString *)replyWithContent:(NSDictionary *)content

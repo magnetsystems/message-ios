@@ -165,6 +165,7 @@
 /* Begin PBXFileReference section */
 		0E3633931B7955D400A5EB4B /* MMXMessageTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMXMessageTypes.h; sourceTree = "<group>"; };
 		0E47F4FB1B069EF20089E887 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Configurations.plist; path = Configuration/Configurations.plist; sourceTree = "<group>"; };
+		0E4DB1191B84E032000B73DD /* MMXChannel_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMXChannel_Private.h; sourceTree = "<group>"; };
 		0E523E611B82547000BC8712 /* MMXInvite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXInvite.h; sourceTree = "<group>"; };
 		0E523E621B82547000BC8712 /* MMXInvite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXInvite.m; sourceTree = "<group>"; };
 		0E5F2D8A1A76B99F00396DF4 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
@@ -386,6 +387,7 @@
 				0E9CC77D1B83D577003334F1 /* MMX.h */,
 				0E9CC77E1B83D577003334F1 /* MMX.m */,
 				0E7F1EA81B742373003808B4 /* MMXChannel.h */,
+				0E4DB1191B84E032000B73DD /* MMXChannel_Private.h */,
 				0E7F1EA91B742373003808B4 /* MMXChannel.m */,
 				0E523E611B82547000BC8712 /* MMXInvite.h */,
 				0E523E621B82547000BC8712 /* MMXInvite.m */,
