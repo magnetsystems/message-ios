@@ -56,6 +56,13 @@
 
 - (NSXMLElement *)contentToXML;
 - (NSXMLElement *)metaDataToXML;
-- (NSXMLElement *)recipientsAndSenderAsXML;
++ (NSXMLElement *)xmlFromRecipients:(NSArray *)recipients senderAddress:(MMXInternalAddress *)address;
+
++ (NSString *)extractPayload:(NSArray *)payLoadElements;
++ (NSDictionary *)extractMetaData:(NSArray *)metaElements;
++ (NSDictionary *)extractMMXMetaData:(NSArray *)metaElements;
++ (MMXUserID *)extractSenderFromMMXMetaDict:(NSDictionary *)mmxMetaDict;
++ (NSArray *)extractRecipientsFromMMXMetaDict:(NSDictionary *)mmxMetaDict;
+
 
 @end

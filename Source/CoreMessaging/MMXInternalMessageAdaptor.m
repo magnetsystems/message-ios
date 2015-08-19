@@ -264,7 +264,7 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 }
 
 + (MMXUserID *)extractSenderFromMMXMetaDict:(NSDictionary *)mmxMetaDict {
-	if (mmxMetaDict && mmxMetaDict[@"To"]) {
+	if (mmxMetaDict && mmxMetaDict[@"From"]) {
 		NSDictionary *senderDict = mmxMetaDict[@"From"];
 		if (senderDict) {
 			MMXInternalAddress *address = [MMXInternalAddress new];
@@ -351,25 +351,29 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
     return nil;
 }
 
-- (NSXMLElement *)recipientsAndSenderAsXML {
-	if (self.recipients == nil || self.recipients.count < 1) {
++ (NSXMLElement *)xmlFromRecipients:(NSArray *)recipients senderAddress:(MMXInternalAddress *)address {
+	if ((recipients == nil || recipients.count < 1) && address == nil) {
 		return nil;
 	}
 	NSXMLElement *metaDataElement = [[NSXMLElement alloc] initWithName:@"mmxmeta"];
 	
-	NSMutableArray *recipientArray = @[].mutableCopy;
-	for (id<MMXAddressable> recipient in self.recipients) {
-		MMXInternalAddress *address = recipient.address;
-		if (address) {
-			[recipientArray addObject:[address asDictionary]];
+	NSMutableDictionary *mmxMetaDict = [NSMutableDictionary dictionary];
+	if (recipients.count >= 1) {
+		NSMutableArray *recipientArray = @[].mutableCopy;
+		for (id<MMXAddressable> recipient in recipients) {
+			MMXInternalAddress *address = recipient.address;
+			if (address) {
+				[recipientArray addObject:[address asDictionary]];
+			}
 		}
+		[mmxMetaDict setObject:recipientArray forKey:@"To"];
+	}
+	if (address) {
+		[mmxMetaDict setObject:[address asDictionary] forKey:@"From"];
 	}
 	
-	MMXInternalAddress *address = self.senderUserID.address;
-
 	NSError *error;
-	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{@"To":recipientArray,
-																 @"From":address ? [address asDictionary] : [NSNull null]}
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:mmxMetaDict
 													   options:NSJSONWritingPrettyPrinted
 														 error:&error];
 	NSString *json = [[NSString alloc] initWithData:jsonData
