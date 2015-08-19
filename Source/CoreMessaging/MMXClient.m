@@ -351,7 +351,7 @@ int const kReconnectionTimerInterval = 4;
 
 	NSString * mType = @"chat";
     NSXMLElement *mmxElement = [[NSXMLElement alloc] initWithName:MXmmxElement xmlns:MXnsDataPayload];
-	[mmxElement addChild:[outboundMessage recipientsAsXML]];
+	[mmxElement addChild:[outboundMessage recipientsAndSenderAsXML]];
 	[mmxElement addChild:[outboundMessage contentToXML]];
 
     if (outboundMessage.metaData) {

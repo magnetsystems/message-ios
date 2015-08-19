@@ -178,6 +178,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	switch (connectionStatus) {
 		case MMXConnectionStatusAuthenticated: {
 			[[MMXClient sharedClient].accountManager userProfileWithSuccess:^(MMXUserProfile *userProfile) {
+				[MMXClient sharedClient].currentProfile = userProfile;
 				MMXUser *user = [MMXUser new];
 				user.username = userProfile.userID.username;
 				user.displayName = userProfile.displayName;

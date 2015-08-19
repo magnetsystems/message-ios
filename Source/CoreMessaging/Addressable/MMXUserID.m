@@ -26,6 +26,16 @@
 	return userID;
 }
 
++ (instancetype)userIDFromAddress:(MMXInternalAddress *)address {
+	MMXUserID * userID = [[MMXUserID alloc] init];
+	if (address.username && ![address.username isEqualToString:@""]) {
+		userID.username = address.username;
+		userID.displayName = address.displayName;
+		return userID;
+	}
+	return nil;
+}
+
 - (MMXInternalAddress *)address {
 	MMXInternalAddress *address = [MMXInternalAddress new];
 	address.username = [self.username jidEscapedString];

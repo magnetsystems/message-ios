@@ -79,8 +79,17 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
         _metaData = [MMXInternalMessageAdaptor extractMetaData:metaElements];
 		
 		NSArray* mmxMetaElements = [mmxElement elementsForName:MXmmxMetaElement];
-        _recipients = [MMXInternalMessageAdaptor extractRecipients:mmxMetaElements];
-		
+		if (mmxMetaElements) {
+			NSDictionary *mmxMetaDict = [MMXInternalMessageAdaptor extractMMXMetaData:mmxMetaElements];
+			_recipients = [MMXInternalMessageAdaptor extractRecipientsFromMMXMetaDict:mmxMetaDict];
+			
+			MMXUserID *senderID = [MMXInternalMessageAdaptor extractSenderFromMMXMetaDict:mmxMetaDict];
+			if (senderID) {
+				_senderUserID = senderID;
+				_senderEndpoint.userID = senderID;
+			}
+		}
+
         NSArray* elements = [xmppMessage elementsForXmlns:MXnsDeliveryReceipt];
         BOOL deliveryFlag = NO;
         if ([elements count]) {
@@ -128,6 +137,17 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 		//meta
 		NSArray* metaElements = [mmxElement elementsForName:MXmetaElement];
 		_metaData = [MMXInternalMessageAdaptor extractMetaData:metaElements];
+		
+		NSArray* mmxMetaElements = [mmxElement elementsForName:MXmmxMetaElement];
+		if (mmxMetaElements) {
+			NSDictionary *mmxMetaDict = [MMXInternalMessageAdaptor extractMMXMetaData:mmxMetaElements];
+			
+			MMXUserID *senderID = [MMXInternalMessageAdaptor extractSenderFromMMXMetaDict:mmxMetaDict];
+			if (senderID) {
+				_senderUserID = senderID;
+				_senderEndpoint.userID = senderID;
+			}
+		}
 		
 		_deliveryReceiptRequested = NO;
 	}
@@ -212,55 +232,74 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 }
 
 + (NSDictionary *)extractMetaData:(NSArray *)metaElements {
-    if ([metaElements count] > 0) {
-        NSXMLElement* metaElement = metaElements[0];
-        NSString* metaJSON = [metaElement stringValue];
-        if (metaJSON && [metaJSON length] > 0) {
-            NSData* jsonData = [metaJSON dataUsingEncoding:NSUTF8StringEncoding];
-            NSError* readError;
-            NSDictionary * dict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&readError];
-            if (!readError) {
-                return dict;
-            }
-        }
-    }
-    return @{};
-}
-
-+ (NSArray *)extractRecipients:(NSArray *)recipientElements {
-	if ([recipientElements count] > 0) {
-		NSXMLElement *recipientElement = recipientElements[0];
-		NSString* metaJSON = [recipientElement stringValue];
+	if ([metaElements count] > 0) {
+		NSXMLElement* metaElement = metaElements[0];
+		NSString* metaJSON = [metaElement stringValue];
 		if (metaJSON && [metaJSON length] > 0) {
 			NSData* jsonData = [metaJSON dataUsingEncoding:NSUTF8StringEncoding];
 			NSError* readError;
-			NSDictionary * recipientDict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&readError];
+			NSDictionary * dict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&readError];
 			if (!readError) {
-				if (recipientDict && recipientDict[@"To"]) {
-					NSArray *tempRecipientArray = recipientDict[@"To"];
-					NSMutableArray *recipientOutputArray = [NSMutableArray arrayWithCapacity:tempRecipientArray.count];
-					for (NSDictionary *userDict in tempRecipientArray) {
-						if (userDict[kAddressUsernameKey] && userDict[kAddressUsernameKey] != [NSNull null] && ![userDict[kAddressUsernameKey] isEqualToString:@""]) {
-							if (userDict[kAddressDeviceIDKey] && userDict[kAddressDeviceIDKey] != [NSNull null] && ![userDict[kAddressDeviceIDKey] isEqualToString:@""]) {
-								MMXEndpoint *end = [MMXEndpoint endpointWithUsername:userDict[kAddressUsernameKey] deviceID:userDict[kAddressDeviceIDKey]];
-								if (userDict[kAddressDisplayNameKey] && userDict[kAddressDisplayNameKey] != [NSNull null] && ![userDict[kAddressDisplayNameKey] isEqualToString:@""]) {
-									end.userID.displayName = userDict[kAddressDisplayNameKey];
-								}
-								[recipientOutputArray addObject:end];
-							} else {
-								MMXUserID *user = [MMXUserID userIDWithUsername:userDict[kAddressUsernameKey]];
-								if (userDict[kAddressDisplayNameKey] && userDict[kAddressDisplayNameKey] != [NSNull null] && ![userDict[kAddressDisplayNameKey] isEqualToString:@""]) {
-									user.displayName = userDict[kAddressDisplayNameKey];
-								}
-								[recipientOutputArray addObject:user];
-							}
-						}
-						
-					}
-					return recipientOutputArray.copy;
-				}
+				return dict;
 			}
 		}
+	}
+	return @{};
+}
+
++ (NSDictionary *)extractMMXMetaData:(NSArray *)metaElements {
+	if ([metaElements count] > 0) {
+		NSXMLElement *metaElement = metaElements[0];
+		NSString* metaJSON = [metaElement stringValue];
+		if (metaJSON && [metaJSON length] > 0) {
+			NSData* jsonData = [metaJSON dataUsingEncoding:NSUTF8StringEncoding];
+			NSError* readError;
+			NSDictionary * mmxMetaDict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&readError];
+			if (!readError) {
+				return mmxMetaDict;
+			}
+		}
+	}
+	return @{};
+}
+
++ (MMXUserID *)extractSenderFromMMXMetaDict:(NSDictionary *)mmxMetaDict {
+	if (mmxMetaDict && mmxMetaDict[@"To"]) {
+		NSDictionary *senderDict = mmxMetaDict[@"From"];
+		if (senderDict) {
+			MMXInternalAddress *address = [MMXInternalAddress new];
+			address.username = senderDict[kAddressUsernameKey];
+			address.displayName = senderDict[kAddressDisplayNameKey];
+			MMXUserID *senderID = [MMXUserID userIDFromAddress:address];
+			return senderID;
+		}
+	}
+	return nil;
+}
+
++ (NSArray *)extractRecipientsFromMMXMetaDict:(NSDictionary *)mmxMetaDict {
+	if (mmxMetaDict && mmxMetaDict[@"To"]) {
+		NSArray *tempRecipientArray = mmxMetaDict[@"To"];
+		NSMutableArray *recipientOutputArray = [NSMutableArray arrayWithCapacity:tempRecipientArray.count];
+		for (NSDictionary *userDict in tempRecipientArray) {
+			if (userDict[kAddressUsernameKey] && userDict[kAddressUsernameKey] != [NSNull null] && ![userDict[kAddressUsernameKey] isEqualToString:@""]) {
+				if (userDict[kAddressDeviceIDKey] && userDict[kAddressDeviceIDKey] != [NSNull null] && ![userDict[kAddressDeviceIDKey] isEqualToString:@""]) {
+					MMXEndpoint *end = [MMXEndpoint endpointWithUsername:userDict[kAddressUsernameKey] deviceID:userDict[kAddressDeviceIDKey]];
+					if (userDict[kAddressDisplayNameKey] && userDict[kAddressDisplayNameKey] != [NSNull null] && ![userDict[kAddressDisplayNameKey] isEqualToString:@""]) {
+						end.userID.displayName = userDict[kAddressDisplayNameKey];
+					}
+					[recipientOutputArray addObject:end];
+				} else {
+					MMXUserID *user = [MMXUserID userIDWithUsername:userDict[kAddressUsernameKey]];
+					if (userDict[kAddressDisplayNameKey] && userDict[kAddressDisplayNameKey] != [NSNull null] && ![userDict[kAddressDisplayNameKey] isEqualToString:@""]) {
+						user.displayName = userDict[kAddressDisplayNameKey];
+					}
+					[recipientOutputArray addObject:user];
+				}
+			}
+			
+		}
+		return recipientOutputArray.copy;
 	}
 	//NSLog(@"Badly formatted message ?");
 	return @[];
@@ -312,7 +351,7 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
     return nil;
 }
 
-- (NSXMLElement *)recipientsAsXML {
+- (NSXMLElement *)recipientsAndSenderAsXML {
 	if (self.recipients == nil || self.recipients.count < 1) {
 		return nil;
 	}
@@ -325,8 +364,12 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 			[recipientArray addObject:[address asDictionary]];
 		}
 	}
+	
+	MMXInternalAddress *address = self.senderUserID.address;
+
 	NSError *error;
-	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{@"To":recipientArray}
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:@{@"To":recipientArray,
+																 @"From":address ? [address asDictionary] : [NSNull null]}
 													   options:NSJSONWritingPrettyPrinted
 														 error:&error];
 	NSString *json = [[NSString alloc] initWithData:jsonData

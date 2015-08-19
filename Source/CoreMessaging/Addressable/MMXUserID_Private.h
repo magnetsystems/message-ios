@@ -25,4 +25,6 @@
 
 + (NSString *)stripUsername:(NSString *)fullUser;
 
++ (instancetype)userIDFromAddress:(MMXInternalAddress *)address;
+
 @end
