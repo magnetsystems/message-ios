@@ -80,18 +80,18 @@
  */
 + (void)channelsStartingWith:(NSString *)name
 					   limit:(int)limit
-					 success:(void (^)(int totalCount, NSSet *channels))success
+					 success:(void (^)(int totalCount, NSArray *channels))success
 					 failure:(void (^)(NSError *error))failure;
 
 /**
  *  Method used to discover existing channels that have any of the tags provided
  *
  *  @param tags		A set of unique tags
- *  @param success  Block with the number of channels that match the query and a NSSet of MMXChannels that match the criteria.
+ *  @param success  Block with the number of channels that match the query and a NSArray of MMXChannels that match the criteria.
  *  @param failure  Block with a NSError with details about the call failure.
  */
 + (void)findByTags:(NSSet *)tags
-		   success:(void (^)(int totalCount, NSSet *channels))success
+		   success:(void (^)(int totalCount, NSArray *channels))success
 		   failure:(void (^)(NSError *error))failure;
 
 /**
@@ -180,14 +180,14 @@
  *  @param endDate       The latest date you would like messages until. Defaults to now.
  *  @param limit		 The max number of items you want returned.
  *  @param ascending	 The sort order(by date) for the messages returned.
- *  @param success		 NSSet of MMXMessages
+ *  @param success		 NSArray of MMXMessages
  *  @param failure		 Block with an NSError with details about the call failure.
  */
 - (void)fetchMessagesBetweenStartDate:(NSDate *)startDate
 							  endDate:(NSDate *)endDate
 								limit:(int)limit
 							ascending:(BOOL)ascending
-							  success:(void (^)(NSSet *messages))success
+							  success:(void (^)(NSArray *messages))success
 							  failure:(void (^)(NSError *error))failure;
 
 /**
