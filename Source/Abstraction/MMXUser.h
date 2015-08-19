@@ -16,9 +16,10 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "MMXAddressable.h"
 #import <Mantle/Mantle.h>
 
-@interface MMXUser : MTLModel
+@interface MMXUser : MTLModel <MMXAddressable>
 
 /**
  *  Unique username the user.
@@ -105,5 +106,8 @@
  *  @param token returned in application:didRegisterForRemoteNotificationsWithDeviceToken:
  */
 - (void)addDeviceToken:(NSData *)token;
+
+//MMXAddressable Protocol
+@property (nonatomic, readonly) MMXInternalAddress *address;
 
 @end

@@ -362,9 +362,10 @@ int const kReconnectionTimerInterval = 4;
 	NSUInteger sentCount = 0;
 	NSMutableArray *failedList = @[].mutableCopy;
 	for (id<MMXAddressable> recipient in outboundMessage.recipients) {
-		if ([recipient respondsToSelector:@selector(address)]) {
-			NSString *fullUsername = [NSString stringWithFormat:@"%@%%%@",[recipient address],self.configuration.appID];
-			XMPPJID *toAddress = [XMPPJID jidWithUser:fullUsername domain:[[self currentJID] domain] resource:[recipient subAddress]];
+		MMXInternalAddress *address = recipient.address;
+		if (address) {
+			NSString *fullUsername = [NSString stringWithFormat:@"%@%%%@",address.username,self.configuration.appID];
+			XMPPJID *toAddress = [XMPPJID jidWithUser:fullUsername domain:[[self currentJID] domain] resource:address.deviceID];
 			xmppMessage = [[XMPPMessage alloc] initWithType:mType to:toAddress];
 			[xmppMessage addAttributeWithName:@"from" stringValue: [[self currentJID] full]];
 
@@ -432,24 +433,6 @@ int const kReconnectionTimerInterval = 4;
 		return NO;
 	}
 	return YES;
-}
-
-//FIXME: Add this back when the server has full support for multiple recipients
-- (NSXMLElement *)addressElementWithRecipients:(NSArray *)recipients {
-	NSXMLElement *addressesElement = [[NSXMLElement alloc] initWithName:@"addresses" xmlns:@"http://jabber.org/protocol/address"];
-	
-	for (id<MMXAddressable> addressable in recipients) {
-		NSXMLElement *address = [[NSXMLElement alloc] initWithName:@"address"];
-		[address addAttributeWithName:@"type" stringValue:@"to"];
-
-		if ([addressable respondsToSelector:@selector(address)]) {
-			NSString *fullUsername = [NSString stringWithFormat:@"%@%%%@",[addressable address],self.configuration.appID];
-			XMPPJID *toAddress = [XMPPJID jidWithUser:fullUsername domain:[[self currentJID] domain] resource:[addressable subAddress]];
-			[address addAttributeWithName:@"jid" stringValue:[toAddress full]];
-			[addressesElement addChild:address];
-		}
-	}
-	return addressesElement;
 }
 
 - (NSString *)sendDeliveryConfirmationForMessage:(MMXInboundMessage *)message {
@@ -857,10 +840,10 @@ int const kReconnectionTimerInterval = 4;
 		}
         return;
     }
-    XMPPJID* to = [xmppMessage to] ;
-    XMPPJID* from =[xmppMessage from];
-    NSString* msgId = [xmppMessage elementID];
     if ([xmppMessage elementsForXmlns:MXnsDataPayload].count) {
+		XMPPJID* to = [xmppMessage to] ;
+		XMPPJID* from =[xmppMessage from];
+		NSString* msgId = [xmppMessage elementID];
 		MMXInternalMessageAdaptor* inMessage = [[MMXInternalMessageAdaptor alloc] initWithXMPPMessage:xmppMessage];
 		if (![inMessage.mType isEqualToString:@"normal"]) {
 			[self sendSDKAckMessageId:msgId sourceFrom:from sourceTo:to];
@@ -899,6 +882,9 @@ int const kReconnectionTimerInterval = 4;
     } else {
         NSXMLElement *mmxElement = [xmppMessage elementForName:MXreceivedElement];
 		if (mmxElement) {
+			XMPPJID* to = [xmppMessage to] ;
+			XMPPJID* from =[xmppMessage from];
+			NSString* msgId = [xmppMessage elementID];
 			[self sendSDKAckMessageId:msgId sourceFrom:from sourceTo:to];
 			if ([self.delegate respondsToSelector:@selector(client:didDeliverMessage:recipient:)]) {
 				dispatch_async(self.callbackQueue, ^{

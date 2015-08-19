@@ -34,7 +34,6 @@
 
 @property(nonatomic, readwrite) NSDictionary *messageContent;
 
-- (NSArray *)recipientsForOutboundMessage;
 + (instancetype)messageFromPubSubMessage:(MMXPubSubMessage *)pubSubMessage;
 
 @end

@@ -21,6 +21,8 @@
 
 @property (nonatomic, readwrite) NSString *username;
 
+@property (nonatomic, copy) NSString *displayName;
+
 + (NSString *)stripUsername:(NSString *)fullUser;
 
 @end

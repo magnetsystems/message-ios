@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E10D6E41B84FF2600FB2F0E /* MMXInternalAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E10D6E31B84FF2600FB2F0E /* MMXInternalAddress.m */; };
 		0E11E2C11AF83D0C00263B9B /* MMX.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = 0EA2020B1AF838E1004018AE /* MMX.xcdatamodeld */; };
 		0E47F4FC1B069EF20089E887 /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E47F4FB1B069EF20089E887 /* Configurations.plist */; };
 		0E523E631B82547000BC8712 /* MMXInvite.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E523E621B82547000BC8712 /* MMXInvite.m */; };
@@ -163,6 +164,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0E10D6E21B84FF2600FB2F0E /* MMXInternalAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXInternalAddress.h; sourceTree = "<group>"; };
+		0E10D6E31B84FF2600FB2F0E /* MMXInternalAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXInternalAddress.m; sourceTree = "<group>"; };
 		0E3633931B7955D400A5EB4B /* MMXMessageTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMXMessageTypes.h; sourceTree = "<group>"; };
 		0E47F4FB1B069EF20089E887 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Configurations.plist; path = Configuration/Configurations.plist; sourceTree = "<group>"; };
 		0E4DB1191B84E032000B73DD /* MMXChannel_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMXChannel_Private.h; sourceTree = "<group>"; };
@@ -403,6 +406,8 @@
 				0EA7C8421B7D0B490041C2D3 /* MMXConnectionOperation.m */,
 				0EA7C8471B7D14A20041C2D3 /* MMXLogInOperation.h */,
 				0EA7C8481B7D14A20041C2D3 /* MMXLogInOperation.m */,
+				0E10D6E21B84FF2600FB2F0E /* MMXInternalAddress.h */,
+				0E10D6E31B84FF2600FB2F0E /* MMXInternalAddress.m */,
 			);
 			path = Abstraction;
 			sourceTree = "<group>";
@@ -1024,6 +1029,7 @@
 				0EA7C8491B7D14A20041C2D3 /* MMXLogInOperation.m in Sources */,
 				0EA202911AF838E1004018AE /* MMXConfigurationRegistry.m in Sources */,
 				0EA202AC1AF838E1004018AE /* MMXPubSubFetchRequest.m in Sources */,
+				0E10D6E41B84FF2600FB2F0E /* MMXInternalAddress.m in Sources */,
 				0EA7C8401B7D09400041C2D3 /* MMXAsyncOperation.m in Sources */,
 				0EA202AB1AF838E1004018AE /* MMXGeoLocationMessage.m in Sources */,
 				0EA2029B1AF838E1004018AE /* MMXUserID.m in Sources */,

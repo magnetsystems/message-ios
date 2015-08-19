@@ -68,6 +68,10 @@ extern NSInteger  const MXDevUnregSuccess;
 
 extern NSString * const kMMXXMPPProtocol;
 
+extern NSString * const kAddressUsernameKey;
+extern NSString * const kAddressDeviceIDKey;
+extern NSString * const kAddressDisplayNameKey;
+
 extern NSInteger const kMinUsernameLength;
 extern NSInteger const kMaxUsernameLength;
 extern NSInteger const kMinPasswordLength;

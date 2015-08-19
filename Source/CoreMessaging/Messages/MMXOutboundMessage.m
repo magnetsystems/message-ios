@@ -40,9 +40,8 @@
     MMXOutboundMessage * msg = [[MMXOutboundMessage alloc] init];
 	if (message.recipients) {
 		msg.recipients = message.recipients;
-	} else if (message.receiverUsername) {
-		MMXUserID *user = [MMXUserID userIDWithUsername:message.receiverUsername];
-		msg.recipients = @[user];
+	} else if (message.senderUserID && ![message.senderUserID.username isEqualToString:@""]) {
+		msg.recipients = @[message.senderUserID];
 	} else {
 		msg.recipients = nil;
 	}
@@ -60,9 +59,9 @@
 	
 	NSMutableArray *recipientArray = @[].mutableCopy;
 	for (id<MMXAddressable> recipient in self.recipients) {
-		if ([recipient address] && ![[recipient address] isEqualToString:@""]) {
-			[recipientArray addObject:@{@"userId":[recipient address],
-										@"devId":[recipient subAddress] ?: [NSNull null]}];
+		MMXInternalAddress *address = recipient.address;
+		if (address) {
+			[recipientArray addObject:[address asDictionary]];
 		}
 	}
 	NSError *error;

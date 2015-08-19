@@ -24,6 +24,7 @@
 #import "MMXUtils.h"
 #import "MMXUserID_Private.h"
 #import "MMXEndpoint_Private.h"
+#import "MMXInternalAddress.h"
 
 #import "NSXMLElement+XMPP.h"
 #import "XMPPJID+MMX.h"
@@ -57,10 +58,6 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 		}
 		if ([MMXUtils objectIsValidString:recipientUsername]) {
 			_targetUserID = [MMXUserID userIDWithUsername:[recipientUsername jidUnescapedString]];
-		}
-		NSString * receiverUsername = [recipient usernameWithoutAppID];
-		if ([MMXUtils objectIsValidString:receiverUsername]) {
-			_receiverUsername = [[recipient usernameWithoutAppID] jidUnescapedString];
 		}
         _messageID = [xmppMessage elementID];
         NSXMLElement *mmxElement = [xmppMessage elementForName:MXmmxElement];
@@ -101,7 +98,8 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 		NSString * username = [sender usernameWithoutAppID];
 		_senderUserID = [MMXUserID userIDWithUsername:[username jidUnescapedString]];
 		_senderEndpoint = [MMXEndpoint endpointWithUsername:[username jidUnescapedString] deviceID:[sender resource]];
-		_receiverUsername = [[recipient usernameWithoutAppID] jidUnescapedString];
+		NSString *targetUsername = [[recipient usernameWithoutAppID] jidUnescapedString];
+		_targetUserID = [MMXUserID userIDWithUsername:targetUsername];
 		NSXMLElement *eventElement = [xmppMessage elementForName:@"event"];
 		NSXMLElement *itemsElement = [eventElement elementForName:@"items"];
 		NSXMLNode* node = [itemsElement attributeForName:@"node"];
@@ -242,15 +240,22 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 					NSArray *tempRecipientArray = recipientDict[@"To"];
 					NSMutableArray *recipientOutputArray = [NSMutableArray arrayWithCapacity:tempRecipientArray.count];
 					for (NSDictionary *userDict in tempRecipientArray) {
-						if (userDict[@"userId"] && userDict[@"userId"] != [NSNull null] && ![userDict[@"userId"] isEqualToString:@""]) {
-							if (userDict[@"devId"] && userDict[@"devId"] != [NSNull null] && ![userDict[@"devId"] isEqualToString:@""]) {
-								MMXEndpoint *end = [MMXEndpoint endpointWithUsername:userDict[@"userId"] deviceID:userDict[@"devId"]];
+						if (userDict[kAddressUsernameKey] && userDict[kAddressUsernameKey] != [NSNull null] && ![userDict[kAddressUsernameKey] isEqualToString:@""]) {
+							if (userDict[kAddressDeviceIDKey] && userDict[kAddressDeviceIDKey] != [NSNull null] && ![userDict[kAddressDeviceIDKey] isEqualToString:@""]) {
+								MMXEndpoint *end = [MMXEndpoint endpointWithUsername:userDict[kAddressUsernameKey] deviceID:userDict[kAddressDeviceIDKey]];
+								if (userDict[kAddressDisplayNameKey] && userDict[kAddressDisplayNameKey] != [NSNull null] && ![userDict[kAddressDisplayNameKey] isEqualToString:@""]) {
+									end.userID.displayName = userDict[kAddressDisplayNameKey];
+								}
 								[recipientOutputArray addObject:end];
 							} else {
-								MMXUserID *user = [MMXUserID userIDWithUsername:userDict[@"userId"]];
+								MMXUserID *user = [MMXUserID userIDWithUsername:userDict[kAddressUsernameKey]];
+								if (userDict[kAddressDisplayNameKey] && userDict[kAddressDisplayNameKey] != [NSNull null] && ![userDict[kAddressDisplayNameKey] isEqualToString:@""]) {
+									user.displayName = userDict[kAddressDisplayNameKey];
+								}
 								[recipientOutputArray addObject:user];
 							}
 						}
+						
 					}
 					return recipientOutputArray.copy;
 				}
@@ -315,9 +320,9 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 	
 	NSMutableArray *recipientArray = @[].mutableCopy;
 	for (id<MMXAddressable> recipient in self.recipients) {
-		if ([recipient address] && ![[recipient address] isEqualToString:@""]) {
-			[recipientArray addObject:@{@"userId":[recipient address],
-										@"devId":[recipient subAddress] ?: [NSNull null]}];
+		MMXInternalAddress *address = recipient.address;
+		if (address) {
+			[recipientArray addObject:[address asDictionary]];
 		}
 	}
 	NSError *error;
@@ -352,7 +357,7 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
         _messageContent = [coder decodeObjectForKey:@"_messageContent"];
 		_senderUserID = [coder decodeObjectForKey:@"_senderUserID"];
 		_senderEndpoint = [coder decodeObjectForKey:@"_senderEndpoint"];
-        _receiverUsername = [coder decodeObjectForKey:@"_receiverUsername"];
+        _senderUserID = [coder decodeObjectForKey:@"_senderUserID"];
         _recipients = [coder decodeObjectForKey:@"_recipients"];
     }
 
@@ -366,7 +371,7 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
     [coder encodeObject:self.messageContent forKey:@"_messageContent"];
 	[coder encodeObject:self.senderUserID forKey:@"_senderUserID"];
 	[coder encodeObject:self.senderEndpoint forKey:@"_senderEndpoint"];
-    [coder encodeObject:self.receiverUsername forKey:@"_receiverUsername"];
+    [coder encodeObject:self.senderUserID forKey:@"_senderUserID"];
     [coder encodeObject:self.recipients forKey:@"_recipients"];
 }
 

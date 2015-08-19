@@ -18,6 +18,7 @@
 #import "MMXUser.h"
 #import "MagnetDelegate.h"
 #import "MMX_Private.h"
+#import "NSString+XEP_0106.h"
 
 @implementation MMXUser
 
@@ -166,6 +167,14 @@
 		 [[MMXUser currentUser].username isEqualToString:self.username])) {
 		[[MMXClient sharedClient] updateRemoteNotificationDeviceToken:token];
 	}	
+}
+
+#pragma mark - MMXAddressable
+
+- (MMXInternalAddress *)address {
+	MMXInternalAddress *address = [MMXInternalAddress new];
+	address.username = [self.username jidEscapedString];
+	return address;
 }
 
 @end

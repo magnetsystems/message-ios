@@ -26,12 +26,10 @@
 	return userID;
 }
 
-- (NSString *)address {
-	return [self.username jidEscapedString];
-}
-
-- (NSString *)subAddress {
-	return nil;
+- (MMXInternalAddress *)address {
+	MMXInternalAddress *address = [MMXInternalAddress new];
+	address.username = [self.username jidEscapedString];
+	return address;
 }
 
 + (NSString *)stripUsername:(NSString *)fullUser {

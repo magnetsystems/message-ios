@@ -25,6 +25,7 @@
 #import "MMXLogInOperation.h"
 #import "MMXConnectionOperation.h"
 #import "MMXClient_Private.h"
+#import "MMXAddressable.h"
 
 typedef void(^MessageSuccessBlock)(void);
 typedef void(^MessageFailureBlock)(NSError *);
@@ -141,7 +142,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 				  success:(void (^)(void))success
 				  failure:(void (^)(NSError *error))failure {
 	//FIXME: Needs to properly handle failure and success blocks
-	MMXOutboundMessage *msg = [MMXOutboundMessage messageTo:[message recipientsForOutboundMessage] withContent:nil metaData:message.messageContent];
+	MMXOutboundMessage *msg = [MMXOutboundMessage messageTo:[message.recipients allObjects] withContent:nil metaData:message.messageContent];
 	NSString *messageID = [[MMXClient sharedClient] sendMessage:msg];
 	
 	if (success || failure) {
@@ -252,12 +253,15 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 
 
 - (void)client:(MMXClient *)client didReceiveMessage:(MMXInboundMessage *)message deliveryReceiptRequested:(BOOL)receiptRequested {
-	//FIXME: remove the receiver/current user from the list of recipients.
-	MMXMessage *msg = [MMXMessage messageToRecipients:[NSSet setWithArray:message.otherRecipients]
-							 messageContent:message.metaData];
+
+	MMXMessage *msg = [MMXMessage messageToRecipients:[self usersFromInboundRecipients:message.otherRecipients]
+									   messageContent:message.metaData];
+
+	MMXInternalAddress *address = message.senderUserID.address;
 	MMXUser *user = [MMXUser new];
 	msg.messageType = MMXMessageTypeDefault;
-	user.username = message.senderUserID.username;
+	user.username = address.username;
+	user.displayName = address.displayName;
 	msg.sender = user;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
@@ -303,6 +307,20 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 + (NSError *)notNotLoggedInError {
 	NSError * error = [MMXClient errorWithTitle:@"Forbidden" message:@"You must log in to use this API." code:403];
 	return error;
+}
+
+#pragma mark - Recipient conversion
+
+- (NSSet *)usersFromInboundRecipients:(NSArray *)recipients {
+	NSMutableSet *set = [NSMutableSet setWithCapacity:recipients.count];
+	for (id<MMXAddressable> recipient in recipients) {
+		MMXInternalAddress *address = recipient.address;
+		MMXUser *user = [MMXUser new];
+		user.username = address.username;
+		user.displayName = address.displayName;
+		[set addObject:user];
+	}
+	return set.copy;
 }
 
 #pragma mark - Overriden getters

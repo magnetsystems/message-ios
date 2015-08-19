@@ -126,20 +126,7 @@
 	return messageID;
 }
 
-#pragma mark - Conversion Helpers
-- (NSArray *)recipientsForOutboundMessage {
-	return [self converArrayOfUsersToUserIDs:[self.recipients allObjects]];
-}
-
-- (NSArray *)converArrayOfUsersToUserIDs:(NSArray *)users {
-	NSMutableArray *recipientArray = [[NSMutableArray alloc] initWithCapacity:users.count];
-	for (MMXUser *user in users) {
-		MMXUserID *userID = [MMXUserID userIDWithUsername:user.username];
-		[recipientArray addObject:userID];
-	}
-	return recipientArray.copy;
-}
-
+#pragma mark - Helpers
 - (NSArray *)replyAllArray {
 	NSMutableArray *recipients = [NSMutableArray arrayWithCapacity:self.recipients.count + 1];
 	[recipients addObject:self.sender];
