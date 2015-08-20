@@ -22,6 +22,7 @@
 #import "MMXUser.h"
 #import "MMXClient_Private.h"
 #import "MagnetDelegate.h"
+#import "MMXInvite_Private.h"
 
 @implementation MMXChannel
 
@@ -299,17 +300,31 @@
 
 }
 
-- (void)inviteUser:(MMXUser *)user
-		   message:(NSString *)message
-		   success:(void (^)(MMXInvite *))success
-		   failure:(void (^)(NSError *))failure {
+- (NSString *)inviteUser:(MMXUser *)user
+				 message:(NSString *)message
+				 success:(void (^)(MMXInvite *))success
+				 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
 			failure([MagnetDelegate notNotLoggedInError]);
 		}
-		return;
+		return nil;
 	}
-	
+	NSString *messageID = [[MagnetDelegate sharedDelegate] sendInviteTo:user channel:self.copy textMessage:message success:^{
+		if (success) {
+			MMXInvite *invite = [MMXInvite new];
+			invite.textMessage = message;
+			invite.channel = self.copy;
+			invite.sender = [MMXUser currentUser];
+			invite.timestamp = [NSDate date];
+			success(invite);
+		}
+	} failure:^(NSError *error) {
+		if (failure) {
+			failure(error);
+		}
+	}];
+	return messageID;
 }
 
 #pragma mark - Conversion Helpers
@@ -350,50 +365,5 @@
 	}
 	return newTopic;
 }
-
-#pragma mark - NSCoding
-
-- (id)initWithCoder:(NSCoder *)coder {
-	self = [super init];
-	if (self) {
-		_name = [coder decodeObjectForKey:@"_name"];
-		_summary = [coder decodeObjectForKey:@"_summary"];
-		_ownerUsername = [coder decodeObjectForKey:@"_ownerUsername"];
-		_numberOfMessages = [[coder decodeObjectForKey:@"_numberOfMessages"] intValue];
-		_lastTimeActive = [coder decodeObjectForKey:@"_lastTimeActive"];
-		_tags = [coder decodeObjectForKey:@"_tags"];
-		_isSubscribed = [[coder decodeObjectForKey:@"_isSubscribed"] boolValue];
-	}
-	
-	return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)coder {
-	[coder encodeObject:self.name forKey:@"_name"];
-	[coder encodeObject:self.summary forKey:@"_summary"];
-	[coder encodeObject:self.ownerUsername forKey:@"_ownerUsername"];
-	[coder encodeObject:@(self.numberOfMessages) forKey:@"_numberOfMessages"];
-	[coder encodeObject:self.lastTimeActive forKey:@"_lastTimeActive"];
-	[coder encodeObject:self.tags forKey:@"_tags"];
-	[coder encodeObject:@(self.isSubscribed) forKey:@"_isSubscribed"];
-}
-
-- (id)copyWithZone:(NSZone *)zone {
-	MMXChannel *copy = [[[self class] allocWithZone:zone] init];
-	
-	if (copy != nil) {
-		copy.name = self.name;
-		copy.summary = self.summary;
-		copy.ownerUsername = self.ownerUsername;
-		copy.numberOfMessages = self.numberOfMessages;
-		copy.lastTimeActive = self.lastTimeActive;
-		copy.tags = self.tags;
-		copy.isSubscribed = self.isSubscribed;
-	}
-	
-	return copy;
-}
-
-
 
 @end

@@ -23,6 +23,8 @@
 @class MMXUserID;
 @class MMXEndpoint;
 @class MMXTopic;
+@class MMXUser;
+@class MMXChannel;
 
 @interface MMXInternalMessageAdaptor : MTLModel
 
@@ -52,4 +54,8 @@
               withContent:(NSString *)content
               messageType:(NSString *)messageType
                  metaData:(NSDictionary *)metaData;
+
++ (instancetype)inviteMessageToUser:(MMXUser *)recipient
+						 forChannel:(MMXChannel *)channel
+						textMessage:(NSString *)textMessage;
 @end

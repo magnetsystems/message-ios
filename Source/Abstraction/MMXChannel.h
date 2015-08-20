@@ -17,11 +17,12 @@
 
 
 #import <Foundation/Foundation.h>
+#import "Mantle.h"
 @class MMXUser;
 @class MMXMessage;
 @class MMXInvite;
 
-@interface MMXChannel : NSObject
+@interface MMXChannel : MTLModel
 
 /**
  *  Is the topic public?
@@ -197,10 +198,12 @@
  *  @param message An optional message telling the user why you want them to join the channel
  *  @param success Block with the MMXInvite object that was sent.
  *  @param failure Block with an NSError with details about the call failure.
+ *
+ *  @return The messageID for the invite sent
  */
-- (void)inviteUser:(MMXUser *)user
-		   message:(NSString *)message
-		   success:(void (^)(MMXInvite *invite))success
-		   failure:(void (^)(NSError *error))failure;
+- (NSString *)inviteUser:(MMXUser *)user
+				 message:(NSString *)message
+				 success:(void (^)(MMXInvite *invite))success
+				 failure:(void (^)(NSError *error))failure;
 
 @end

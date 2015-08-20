@@ -26,6 +26,8 @@
 #import "MMXConnectionOperation.h"
 #import "MMXClient_Private.h"
 #import "MMXAddressable.h"
+#import "MMXInternalMessageAdaptor.h"
+#import "MMXClient_Private.h"
 
 typedef void(^MessageSuccessBlock)(void);
 typedef void(^MessageFailureBlock)(NSError *);
@@ -155,20 +157,26 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 		}
 		[self.messageBlockQueue setObject:blockDict forKey:messageID];
 	}
-	
-//	double delayInSeconds = 2.0;
-//	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-//	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-//		NSDictionary *blockDict = [self.messageBlockQueue objectForKey:messageID];
-//		if (blockDict) {
-//			MessageSuccessBlock successBlock = [blockDict objectForKey:MMXMessageSuccessBlockKey];
-//			if (successBlock) {
-//				successBlock();
-//			}
-//			[self.messageBlockQueue removeObjectForKey:messageID];
-//		}
-//	});
-	
+	return messageID;
+}
+
+- (NSString *)sendInviteTo:(MMXUser *)recipient
+				   channel:(MMXChannel *)channel
+			   textMessage:(NSString *)textMessage
+				 success:(void (^)(void))success
+				 failure:(void (^)(NSError *error))failure {
+	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor inviteMessageToUser:recipient forChannel:channel textMessage:textMessage];
+	NSString *messageID = [[MMXClient sharedClient] sendMMXMessage:msg withOptions:nil];
+	if (success || failure) {
+		NSMutableDictionary *blockDict = [NSMutableDictionary dictionary];
+		if (success) {
+			[blockDict setObject:success forKey:MMXMessageSuccessBlockKey];
+		}
+		if (failure) {
+			[blockDict setObject:failure forKey:MMXMessageFailureBlockKey];
+		}
+		[self.messageBlockQueue setObject:blockDict forKey:messageID];
+	}
 	return messageID;
 }
 

@@ -320,6 +320,7 @@
 		0EA2028B1AF838E1004018AE /* MMXTestingUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXTestingUtils.m; sourceTree = "<group>"; };
 		0EA2028C1AF838E1004018AE /* MMXUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXUtils.h; sourceTree = "<group>"; };
 		0EA2028D1AF838E1004018AE /* MMXUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXUtils.m; sourceTree = "<group>"; };
+		0EA6E9A01B866C2700BF3FDD /* MMXInvite_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMXInvite_Private.h; sourceTree = "<group>"; };
 		0EA7C83E1B7D09400041C2D3 /* MMXAsyncOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXAsyncOperation.h; sourceTree = "<group>"; };
 		0EA7C83F1B7D09400041C2D3 /* MMXAsyncOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXAsyncOperation.m; sourceTree = "<group>"; };
 		0EA7C8411B7D0B490041C2D3 /* MMXConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXConnectionOperation.h; sourceTree = "<group>"; };
@@ -393,6 +394,7 @@
 				0E4DB1191B84E032000B73DD /* MMXChannel_Private.h */,
 				0E7F1EA91B742373003808B4 /* MMXChannel.m */,
 				0E523E611B82547000BC8712 /* MMXInvite.h */,
+				0EA6E9A01B866C2700BF3FDD /* MMXInvite_Private.h */,
 				0E523E621B82547000BC8712 /* MMXInvite.m */,
 				0E3633931B7955D400A5EB4B /* MMXMessageTypes.h */,
 				0E7F1EAA1B742373003808B4 /* MMXMessage.h */,

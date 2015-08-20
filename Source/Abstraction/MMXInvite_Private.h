@@ -15,29 +15,19 @@
  * permissions and limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
-#import "MagnetDelegate.h"
-#import "MMXMessage.h"
-#import "MMXChannel.h"
 #import "MMXInvite.h"
-#import "MMXUser.h"
-#import "MagnetConstants.h"
-#import "MMXMessageTypes.h"
-#import "MMXLogger.h"
-#import "MMXRemoteNotification.h"
+@class MMXInternalMessageAdaptor;
 
-@interface MMX : NSObject
+@interface MMXInvite ()
 
-/**
- *  Initialize MMX with a configuration
- *
- *  @param name The name of the configuration in your Configurations.plist file that you want to connect to.
- */
-+ (void)setupWithConfiguration:(NSString *)name;
+@property (nonatomic, readwrite) NSDate *timestamp;
 
-/**
- *  Call when no longer need to use the MMX features or when the app goes to the background
- */
-+ (void)teardown;
+@property (nonatomic, readwrite) NSString *textMessage;
+
+@property (nonatomic, readwrite) MMXUser *sender;
+
+@property (nonatomic, readwrite) MMXChannel *channel;
+
++ (instancetype)inviteFromMMXInternalMessage:(MMXInternalMessageAdaptor *)message;
 
 @end

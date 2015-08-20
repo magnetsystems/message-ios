@@ -20,10 +20,11 @@
 @implementation MagnetConstants
 
 NSString * const MMXDidReceiveMessageNotification = @"com.magnet.mmx.message.receive";
-NSString * const MMXDidReceiveDeliveryConfirmationNotification = @"com.magnet.mmx.delivery.confirmation.receive";
 NSString * const MagnetMessageKey = @"com.magnet.message.key";
-NSString * const MMXDidReceiveChannelInvitationNotification = @"com.magnet.mmx.invite.receive";
+NSString * const MMXDidReceiveDeliveryConfirmationNotification = @"com.magnet.mmx.delivery.confirmation.receive";
 NSString * const MagnetRecipientKey = @"com.magnet.recipient.key";
 NSString * const MagnetMessageIDKey = @"com.magnet.message_id.key";
+NSString * const MMXDidReceiveChannelInvitationNotification = @"com.magnet.mmx.invite.receive";
+NSString * const MagnetInviteKey = @"com.magnet.invite.key";
 
 @end

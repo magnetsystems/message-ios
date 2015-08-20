@@ -29,7 +29,7 @@
 /**
  *  A custom message from the sender
  */
-@property (nonatomic, copy, readonly) NSString *message;
+@property (nonatomic, copy, readonly) NSString *textMessage;
 
 /**
  *  The user that sent the invite

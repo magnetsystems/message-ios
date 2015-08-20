@@ -39,6 +39,9 @@
 #import "MMXUserProfile_Private.h"
 #import "MMXEndpoint.h"
 
+#import "MMXInvite_Private.h"
+#import "MagnetConstants.h"
+
 #import "MMXUtils.h"
 #import "MMXMessageUtils.h"
 
@@ -848,11 +851,19 @@ int const kReconnectionTimerInterval = 4;
 		if (![inMessage.mType isEqualToString:@"normal"]) {
 			[self sendSDKAckMessageId:msgId sourceFrom:from sourceTo:to];
 		}
-		if ([self.delegate respondsToSelector:@selector(client:didReceiveMessage:deliveryReceiptRequested:)]) {
-			MMXInboundMessage * inboundMessage = [MMXInboundMessage initWithMessage:inMessage];
-			dispatch_async(self.callbackQueue, ^{
-				[self.delegate client:self didReceiveMessage:inboundMessage deliveryReceiptRequested:inMessage.deliveryReceiptRequested];
-			});
+		if ([inMessage.mType isEqualToString:@"invitation"]) {
+			MMXInvite *invite = [MMXInvite inviteFromMMXInternalMessage:inMessage];
+			[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInvitationNotification
+																object:nil
+															  userInfo:@{MagnetInviteKey:invite}];
+
+		} else {
+			if ([self.delegate respondsToSelector:@selector(client:didReceiveMessage:deliveryReceiptRequested:)]) {
+				MMXInboundMessage * inboundMessage = [MMXInboundMessage initWithMessage:inMessage];
+				dispatch_async(self.callbackQueue, ^{
+					[self.delegate client:self didReceiveMessage:inboundMessage deliveryReceiptRequested:inMessage.deliveryReceiptRequested];
+				});
+			}
 		}
 	} else if ([xmppMessage elementsForXmlns:MXnsServerSignal].count) {
 		NSArray* mmxElements = [xmppMessage elementsForName:MXmmxElement];

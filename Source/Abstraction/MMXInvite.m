@@ -15,7 +15,11 @@
  * permissions and limitations under the License.
  */
 
-#import "MMXInvite.h"
+#import "MMXInvite_Private.h"
+#import "MMXInternalMessageAdaptor.h"
+#import "MMXChannel_Private.h"
+#import "MMXUserID.h"
+#import "MMXUser.h"
 
 @implementation MMXInvite
 
@@ -30,4 +34,35 @@
 	
 }
 
++ (instancetype)inviteFromMMXInternalMessage:(MMXInternalMessageAdaptor *)message {
+	MMXInvite *invite = [MMXInvite new];
+	invite.textMessage = message.metaData[@"text"];
+	MMXInternalAddress *address = message.senderUserID.address;
+	MMXUser *user = [MMXUser new];
+	user.username = address.username;
+	user.displayName = address.displayName;
+	invite.sender = user;
+	invite.channel = [MMXInvite channelFromMessageMetaData:message.metaData];
+	invite.timestamp = message.timestamp;
+	return invite;
+}
+
++ (MMXChannel *)channelFromMessageMetaData:(NSDictionary *)metaData {
+	if (metaData) {
+		MMXChannel *channel = [MMXChannel channelWithName:metaData[@"channelName"] summary:metaData[@"channelSummary"]];
+		channel.isPublic = ![metaData[@"channelIsPublic"] boolValue];
+		channel.ownerUsername = metaData[@"channelCreatorUsername"];
+		return channel;
+	}
+	return nil;
+}
+
+/*
+ msg.metaData = @{@"text":textMessage ?: [NSNull null],
+ @"channelIsPrivate":@(!channel.isPublic),
+ @"channelName":channel.name,
+ @"channelSummary":channel.summary ?: [NSNull null],
+ @"channelCreatorUsername":channel.ownerUsername ?: [NSNull null]};
+
+ */
 @end

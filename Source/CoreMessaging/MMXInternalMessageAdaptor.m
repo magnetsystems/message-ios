@@ -26,6 +26,9 @@
 #import "MMXEndpoint_Private.h"
 #import "MMXInternalAddress.h"
 
+#import "MMXChannel.h"
+#import "MMXUser.h"
+
 #import "NSXMLElement+XMPP.h"
 #import "XMPPJID+MMX.h"
 
@@ -175,6 +178,18 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
               messageType:(NSString *)messageType
                  metaData:(NSDictionary *)metaData {
     return [[MMXInternalMessageAdaptor alloc] initWith:recipients withContent:content messageType:messageType metaData:metaData];
+}
+
++ (instancetype)inviteMessageToUser:(MMXUser *)recipient forChannel:(MMXChannel *)channel textMessage:(NSString *)textMessage {
+	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor new];
+	msg.mType = @"invitation";
+	msg.recipients = @[recipient];
+	msg.metaData = @{@"text":textMessage ?: [NSNull null],
+					 @"channelIsPrivate":@(!channel.isPublic),
+					 @"channelName":channel.name,
+					 @"channelSummary":channel.summary ?: [NSNull null],
+					 @"channelCreatorUsername":channel.ownerUsername ?: [NSNull null]};
+	return msg;
 }
 
 + (NSArray *)pubsubMessagesFromFetchResponseIQ:(XMPPIQ *)iq topic:(MMXTopic *)topic error:(NSError **)error {
