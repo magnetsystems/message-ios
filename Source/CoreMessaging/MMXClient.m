@@ -818,7 +818,7 @@ int const kReconnectionTimerInterval = 4;
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)xmppMessage {
     if ([xmppMessage isErrorMessage]) {
         if ([self.delegate respondsToSelector:@selector(client:didReceiveError:severity:messageID:)]) {
-            MMXInternalMessageAdaptor * message = [[MMXInternalMessageAdaptor alloc] initWithXMPPMessage:xmppMessage];
+            MMXInternalMessageAdaptor * message = [MMXInternalMessageAdaptor initWithXMPPMessage:xmppMessage];
 			if ([message.mType isEqualToString:@"mmxerror"]) {
 				[self handleErrorMessage:message];
 			} else {
@@ -844,7 +844,7 @@ int const kReconnectionTimerInterval = 4;
 		XMPPJID* to = [xmppMessage to] ;
 		XMPPJID* from =[xmppMessage from];
 		NSString* msgId = [xmppMessage elementID];
-		MMXInternalMessageAdaptor* inMessage = [[MMXInternalMessageAdaptor alloc] initWithXMPPMessage:xmppMessage];
+		MMXInternalMessageAdaptor* inMessage = [MMXInternalMessageAdaptor initWithXMPPMessage:xmppMessage];
 		if (![inMessage.mType isEqualToString:@"normal"]) {
 			[self sendSDKAckMessageId:msgId sourceFrom:from sourceTo:to];
 		}
@@ -906,7 +906,7 @@ int const kReconnectionTimerInterval = 4;
 	if (error) {
 		[[MMXLogger sharedLogger] error:@"%@", error.localizedDescription];
 	}
-    MMXInternalMessageAdaptor* outboundMessage = [[MMXInternalMessageAdaptor alloc] initWithXMPPMessage:message];
+    MMXInternalMessageAdaptor* outboundMessage = [MMXInternalMessageAdaptor initWithXMPPMessage:message];
     MMXMessageOptions * options = [[MMXMessageOptions alloc] init];
     options.shouldRequestDeliveryReceipt = outboundMessage.deliveryReceiptRequested;
     

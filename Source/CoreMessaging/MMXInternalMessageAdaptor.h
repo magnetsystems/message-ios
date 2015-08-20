@@ -17,13 +17,14 @@
 
 #import <Foundation/Foundation.h>
 #import "MMXAddressable.h"
+#import "Mantle.h"
 
 @class CLLocation;
 @class MMXUserID;
 @class MMXEndpoint;
 @class MMXTopic;
 
-@interface MMXInternalMessageAdaptor : NSObject <NSCoding>
+@interface MMXInternalMessageAdaptor : MTLModel
 
 //All Messages
 @property(nonatomic, strong, readonly) NSString *messageID;
