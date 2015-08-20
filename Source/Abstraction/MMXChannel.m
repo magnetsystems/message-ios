@@ -240,7 +240,7 @@
 			[[MMXClient sharedClient].pubsubManager listSubscriptionsWithSuccess:^(NSArray *subscriptions) {
 				NSArray *channelArray = [MMXChannel channelsFromTopics:topics summaries:summaries subscriptions:subscriptions];
 				if (success) {
-					success(subscriptions.count, channelArray);
+					success((int)subscriptions.count, channelArray);
 				}
 			} failure:^(NSError *error) {
 				if (failure) {
