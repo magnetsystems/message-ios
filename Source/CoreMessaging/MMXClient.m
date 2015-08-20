@@ -40,6 +40,7 @@
 #import "MMXEndpoint.h"
 
 #import "MMXInvite_Private.h"
+#import "MMXInviteResponse_Private.h"
 #import "MagnetConstants.h"
 
 #import "MMXUtils.h"
@@ -856,6 +857,11 @@ int const kReconnectionTimerInterval = 4;
 			[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInvitationNotification
 																object:nil
 															  userInfo:@{MagnetInviteKey:invite}];
+		} else if ([inMessage.mType isEqualToString:@"invitationResponse"]) {
+			MMXInviteResponse *inviteResponse = [MMXInviteResponse inviteResponseFromMMXInternalMessage:inMessage];
+				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInvitationResponseNotification
+																	object:nil
+																  userInfo:@{MagnetInviteResponseKey:inviteResponse}];
 
 		} else {
 			if ([self.delegate respondsToSelector:@selector(client:didReceiveMessage:deliveryReceiptRequested:)]) {

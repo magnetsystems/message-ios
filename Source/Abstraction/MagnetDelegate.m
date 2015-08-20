@@ -160,13 +160,11 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	return messageID;
 }
 
-- (NSString *)sendInviteTo:(MMXUser *)recipient
-				   channel:(MMXChannel *)channel
-			   textMessage:(NSString *)textMessage
-				 success:(void (^)(void))success
-				 failure:(void (^)(NSError *error))failure {
-	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor inviteMessageToUser:recipient forChannel:channel textMessage:textMessage];
-	NSString *messageID = [[MMXClient sharedClient] sendMMXMessage:msg withOptions:nil];
+- (NSString *)sendInternalMessageFormat:(MMXInternalMessageAdaptor *)message
+								success:(void (^)(void))success
+								failure:(void (^)(NSError *error))failure {
+
+	NSString *messageID = [[MMXClient sharedClient] sendMMXMessage:message withOptions:nil];
 	if (success || failure) {
 		NSMutableDictionary *blockDict = [NSMutableDictionary dictionary];
 		if (success) {

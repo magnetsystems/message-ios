@@ -20,18 +20,42 @@
 #import "MMXChannel_Private.h"
 #import "MMXUserID.h"
 #import "MMXUser.h"
+#import "MagnetDelegate.h"
 
 @implementation MMXInvite
 
 
-- (void)acceptWithSuccess:(void (^)(MMXInvite *))success
+- (void)acceptWithMessage:(NSString *)textMessage
+				  success:(void (^)(void))success
 				  failure:(void (^)(NSError *))failure {
-	
+	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor inviteResponseMessageToUser:self.sender forChannel:self.channel textMessage:textMessage response:YES];
+	[[MagnetDelegate sharedDelegate] sendInternalMessageFormat:msg success:^{
+	} failure:^(NSError *error) {
+	}];
+	[self.channel subscribeWithSuccess:^{
+		if (success) {
+			success();
+		}
+	} failure:^(NSError *error) {
+		if (failure) {
+			failure(error);
+		}
+	}];
 }
 
-- (void)declineWithSuccess:(void (^)(MMXInvite *))success
+- (void)declineWithMessage:(NSString *)textMessage
+				   success:(void (^)(void))success
 				   failure:(void (^)(NSError *))failure {
-	
+	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor inviteResponseMessageToUser:self.sender forChannel:self.channel textMessage:textMessage response:NO];
+	[[MagnetDelegate sharedDelegate] sendInternalMessageFormat:msg success:^{
+		if (success) {
+			success();
+		}
+	} failure:^(NSError *error) {
+		if (failure) {
+			failure(error);
+		}
+	}];
 }
 
 + (instancetype)inviteFromMMXInternalMessage:(MMXInternalMessageAdaptor *)message {

@@ -26,5 +26,7 @@ NSString * const MagnetRecipientKey = @"com.magnet.recipient.key";
 NSString * const MagnetMessageIDKey = @"com.magnet.message_id.key";
 NSString * const MMXDidReceiveChannelInvitationNotification = @"com.magnet.mmx.invite.receive";
 NSString * const MagnetInviteKey = @"com.magnet.invite.key";
+NSString * const MMXDidReceiveChannelInvitationResponseNotification = @"com.magnet.mmx.invite.response.receive";
+NSString * const MagnetInviteResponseKey = @"com.magnet.invite.response.key";
 
 @end

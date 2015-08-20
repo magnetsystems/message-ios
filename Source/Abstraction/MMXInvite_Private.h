@@ -29,5 +29,6 @@
 @property (nonatomic, readwrite) MMXChannel *channel;
 
 + (instancetype)inviteFromMMXInternalMessage:(MMXInternalMessageAdaptor *)message;
++ (MMXChannel *)channelFromMessageMetaData:(NSDictionary *)metaData;
 
 @end

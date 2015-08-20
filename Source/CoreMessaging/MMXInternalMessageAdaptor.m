@@ -180,6 +180,22 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
     return [[MMXInternalMessageAdaptor alloc] initWith:recipients withContent:content messageType:messageType metaData:metaData];
 }
 
++ (instancetype)inviteResponseMessageToUser:(MMXUser *)recipient
+								 forChannel:(MMXChannel *)channel
+								textMessage:(NSString *)textMessage
+								   response:(BOOL)response {
+	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor new];
+	msg.mType = @"invitationResponse";
+	msg.recipients = @[recipient];
+	msg.metaData = @{@"text":textMessage ?: [NSNull null],
+					 @"channelIsPrivate":@(!channel.isPublic),
+					 @"channelName":channel.name,
+					 @"channelSummary":channel.summary ?: [NSNull null],
+					 @"channelCreatorUsername":channel.ownerUsername ?: [NSNull null],
+					 @"inviteIsAccepted":@(response)};
+	return msg;
+}
+
 + (instancetype)inviteMessageToUser:(MMXUser *)recipient forChannel:(MMXChannel *)channel textMessage:(NSString *)textMessage {
 	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor new];
 	msg.mType = @"invitation";

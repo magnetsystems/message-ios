@@ -23,6 +23,7 @@
 #import "MMXClient_Private.h"
 #import "MagnetDelegate.h"
 #import "MMXInvite_Private.h"
+#import "MMXInternalMessageAdaptor.h"
 
 @implementation MMXChannel
 
@@ -301,7 +302,7 @@
 }
 
 - (NSString *)inviteUser:(MMXUser *)user
-				 message:(NSString *)message
+			 textMessage:(NSString *)textMessage
 				 success:(void (^)(MMXInvite *))success
 				 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
@@ -310,10 +311,11 @@
 		}
 		return nil;
 	}
-	NSString *messageID = [[MagnetDelegate sharedDelegate] sendInviteTo:user channel:self.copy textMessage:message success:^{
+	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor inviteMessageToUser:user forChannel:self.copy textMessage:textMessage];
+	NSString *messageID = [[MagnetDelegate sharedDelegate] sendInternalMessageFormat:msg success:^{
 		if (success) {
 			MMXInvite *invite = [MMXInvite new];
-			invite.textMessage = message;
+			invite.textMessage = textMessage;
 			invite.channel = self.copy;
 			invite.sender = [MMXUser currentUser];
 			invite.timestamp = [NSDate date];

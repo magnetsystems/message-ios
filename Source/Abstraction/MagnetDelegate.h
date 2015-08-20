@@ -19,6 +19,7 @@
 @class MMXMessage;
 @class MMXUser;
 @class MMXChannel;
+@class MMXInternalMessageAdaptor;
 
 @interface MagnetDelegate : NSObject
 
@@ -81,11 +82,9 @@
 				  success:(void (^)(void))success
 				  failure:(void (^)(NSError *error))failure;
 
-- (NSString *)sendInviteTo:(MMXUser *)recipient
-				   channel:(MMXChannel *)channel
-			   textMessage:(NSString *)textMessage
-				   success:(void (^)(void))success
-				   failure:(void (^)(NSError *error))failure;
+- (NSString *)sendInternalMessageFormat:(MMXInternalMessageAdaptor *)message
+								success:(void (^)(void))success
+								failure:(void (^)(NSError *error))failure;
 
 + (NSError *)notNotLoggedInError;
 

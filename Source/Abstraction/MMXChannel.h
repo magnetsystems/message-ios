@@ -194,15 +194,15 @@
 /**
  *  Invite a user to the channel
  *
- *  @param user    The MMXUser object for the user you want to invite
- *  @param message An optional message telling the user why you want them to join the channel
- *  @param success Block with the MMXInvite object that was sent.
- *  @param failure Block with an NSError with details about the call failure.
+ *  @param user			The MMXUser object for the user you want to invite
+ *  @param textMessage	An optional message telling the user why you want them to join the channel
+ *  @param success		Block with the MMXInvite object that was sent.
+ *  @param failure		Block with an NSError with details about the call failure.
  *
  *  @return The messageID for the invite sent
  */
 - (NSString *)inviteUser:(MMXUser *)user
-				 message:(NSString *)message
+			 textMessage:(NSString *)textMessage
 				 success:(void (^)(MMXInvite *invite))success
 				 failure:(void (^)(NSError *error))failure;
 

@@ -58,4 +58,9 @@
 + (instancetype)inviteMessageToUser:(MMXUser *)recipient
 						 forChannel:(MMXChannel *)channel
 						textMessage:(NSString *)textMessage;
+
++ (instancetype)inviteResponseMessageToUser:(MMXUser *)recipient
+								 forChannel:(MMXChannel *)channel
+								textMessage:(NSString *)textMessage
+								   response:(BOOL)response;
 @end
