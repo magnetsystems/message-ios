@@ -307,6 +307,19 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	}
 }
 
+- (void)client:(MMXClient *)client didDeliverMessage:(NSString *)messageID recipient:(id<MMXAddressable>)recipient {
+	MMXUser *user = [MMXUser new];
+	MMXInternalAddress *address = recipient.address;
+	if (address) {
+		user.username = address.username;
+		user.displayName = address.displayName;
+	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveDeliveryConfirmationNotification
+														object:nil
+													  userInfo:@{MagnetRecipientKey:user,
+																 MagnetMessageIDKey:messageID}];
+}
+
 + (NSError *)notNotLoggedInError {
 	NSError * error = [MMXClient errorWithTitle:@"Forbidden" message:@"You must log in to use this API." code:403];
 	return error;
