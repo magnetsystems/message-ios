@@ -235,7 +235,7 @@
 	
 }
 
-- (void)publish:(MMXMessage *)message
+- (void)publish:(NSDictionary *)messageContent
 		success:(void (^)(MMXMessage *))success
 		failure:(void (^)(NSError *))failure {
 
@@ -246,10 +246,11 @@
 		
 		return;
 	}
-	MMXPubSubMessage *msg = [MMXPubSubMessage pubSubMessageToTopic:[self asTopic] content:nil metaData:message.messageContent];
+	MMXPubSubMessage *msg = [MMXPubSubMessage pubSubMessageToTopic:[self asTopic] content:nil metaData:messageContent];
 	[[MMXClient sharedClient].pubsubManager publishPubSubMessage:msg success:^(BOOL successful, NSString *messageID) {
 		if (success) {
 			//FIXME: not sure that this is the best way to handle this
+			MMXMessage *message = [MMXMessage messageToChannel:self.copy messageContent:messageContent];
 			message.messageID = messageID;
 			message.channel = self.copy;
 			success(message);

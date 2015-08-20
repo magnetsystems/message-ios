@@ -165,11 +165,11 @@
 /**
  *  Method to publish to a channel.
  *
- *  @param message MMXMessage with the content you want to publish
- *  @param success Block with the published message
- *  @param failure Block with an NSError with details about the call failure.
+ *  @param messageContent The content you want to publish
+ *  @param success		  Block with the published message
+ *  @param failure		  Block with an NSError with details about the call failure.
  */
-- (void)publish:(MMXMessage *)message
+- (void)publish:(NSDictionary *)messageContent
 		success:(void (^)(MMXMessage *message))success
 		failure:(void (^)(NSError *error))failure;
 
