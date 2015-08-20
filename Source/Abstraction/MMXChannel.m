@@ -226,6 +226,39 @@
 	}];
 }
 
++ (void)subscribedChannelsWithSuccess:(void (^)(int, NSArray *))success
+							  failure:(void (^)(NSError *))failure {
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		return;
+	}
+	[[MMXClient sharedClient].pubsubManager listSubscriptionsWithSuccess:^(NSArray *subscriptions) {
+		NSArray *topics = [MMXChannel topicsFromSubscriptions:subscriptions];
+		[[MMXClient sharedClient].pubsubManager summaryOfTopics:topics since:nil until:nil success:^(NSArray *summaries) {
+			[[MMXClient sharedClient].pubsubManager listSubscriptionsWithSuccess:^(NSArray *subscriptions) {
+				NSArray *channelArray = [MMXChannel channelsFromTopics:topics summaries:summaries subscriptions:subscriptions];
+				if (success) {
+					success(subscriptions.count, channelArray);
+				}
+			} failure:^(NSError *error) {
+				if (failure) {
+					failure(error);
+				}
+			}];
+		} failure:^(NSError *error) {
+			if (failure) {
+				failure(error);
+			}
+		}];
+	} failure:^(NSError *error) {
+		if (failure) {
+			failure(error);
+		}
+	}];
+}
+
 - (void)subscribersWithSuccess:(void (^)(NSSet *))success
 					   failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
@@ -330,6 +363,14 @@
 }
 
 #pragma mark - Conversion Helpers
+
++ (NSArray *)topicsFromSubscriptions:(NSArray *)subscriptions {
+	NSMutableArray *topics = [NSMutableArray arrayWithCapacity:subscriptions.count];
+	for (MMXTopicSubscription *sub in subscriptions) {
+		[topics addObject:sub.topic];
+	}
+	return topics.copy;
+}
 
 + (NSArray *)channelsFromTopics:(NSArray *)topics summaries:(NSArray *)summaries subscriptions:(NSArray *)subscriptions {
 	NSMutableDictionary *channelDict = [NSMutableDictionary dictionaryWithCapacity:topics.count];

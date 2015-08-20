@@ -153,6 +153,10 @@
 - (void)unSubscribeWithSuccess:(void (^)(void))success
 					   failure:(void (^)(NSError * error))failure;
 
+
++ (void)subscribedChannelsWithSuccess:(void (^)(int totalCount, NSArray *channels))success
+							  failure:(void (^)(NSError *error))failure;
+
 /**
  *  Get the subscribers for a channel
  *	Must be subscribed to the channel to use this API
