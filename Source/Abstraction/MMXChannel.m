@@ -21,6 +21,7 @@
 #import "MMXTopic_Private.h"
 #import "MMXUser.h"
 #import "MMXClient_Private.h"
+#import "MMXPubSubManager_Private.h"
 #import "MagnetDelegate.h"
 #import "MMXInvite_Private.h"
 #import "MMXInternalMessageAdaptor.h"
@@ -226,7 +227,7 @@
 	}];
 }
 
-+ (void)subscribedChannelsWithSuccess:(void (^)(int, NSArray *))success
++ (void)subscribedChannelsWithSuccess:(void (^)(NSArray *))success
 							  failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
@@ -240,7 +241,7 @@
 			[[MMXClient sharedClient].pubsubManager listSubscriptionsWithSuccess:^(NSArray *subscriptions) {
 				NSArray *channelArray = [MMXChannel channelsFromTopics:topics summaries:summaries subscriptions:subscriptions];
 				if (success) {
-					success((int)subscriptions.count, channelArray);
+					success(channelArray);
 				}
 			} failure:^(NSError *error) {
 				if (failure) {
@@ -259,7 +260,7 @@
 	}];
 }
 
-- (void)subscribersWithSuccess:(void (^)(NSSet *))success
+- (void)subscribersWithSuccess:(void (^)(int, NSSet *))success
 					   failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
@@ -267,7 +268,15 @@
 		}
 		return;
 	}
-	
+	[[MMXClient sharedClient].pubsubManager subscribersForTopic:[self asTopic] limit:-1 success:^(int totalCount, NSArray *subscriptions) {
+		if (success) {
+			success(totalCount,[NSSet setWithArray:subscriptions]);
+		}
+	} failure:^(NSError *error) {
+		if (failure) {
+			failure(error);
+		}
+	}];
 }
 
 - (void)publish:(NSDictionary *)messageContent

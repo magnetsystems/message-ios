@@ -154,17 +154,23 @@
 					   failure:(void (^)(NSError * error))failure;
 
 
-+ (void)subscribedChannelsWithSuccess:(void (^)(int totalCount, NSArray *channels))success
+/**
+ *  Get all channels the current user is subscribed to
+ *
+ *  @param success Block with a NSArray of channels
+ *  @param failure - Block with an NSError with details about the call failure.
+ */
++ (void)subscribedChannelsWithSuccess:(void (^)(NSArray *channels))success
 							  failure:(void (^)(NSError *error))failure;
 
 /**
  *  Get the subscribers for a channel
  *	Must be subscribed to the channel to use this API
  *
- *  @param success Block with a NSSet of the subscribers(MMXUser objects)
+ *  @param success Block with the total count of subscribers and a NSSet of the subscribers(MMXUser objects)
  *  @param failure Block with an NSError with details about the call failure.
  */
-- (void)subscribersWithSuccess:(void (^)(NSSet *subscribers))success
+- (void)subscribersWithSuccess:(void (^)(int, NSSet *))success
 					   failure:(void (^)(NSError *error))failure;
 
 /**
