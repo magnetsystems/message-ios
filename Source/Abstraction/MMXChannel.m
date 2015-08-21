@@ -304,7 +304,7 @@
 							  endDate:(NSDate *)endDate
 								limit:(int)limit
 							ascending:(BOOL)ascending
-							  success:(void (^)(NSArray *))success
+							  success:(void (^)(int totalCount, NSArray *messages))success
 							  failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
@@ -314,7 +314,11 @@
 		return;
 	}
 	MMXPubSubFetchRequest * fetch = [[MMXPubSubFetchRequest alloc] init];
-	fetch.topic = [MMXTopic topicWithName:self.name];
+	MMXTopic *topic = [MMXTopic topicWithName:self.name];
+	if (!self.isPublic) {
+		topic.nameSpace = self.ownerUsername;
+	}
+	fetch.topic = topic;
 	fetch.since = startDate;
 	fetch.until = endDate;
 	fetch.maxItems = limit;
@@ -325,11 +329,21 @@
 			MMXMessage *msg = [MMXMessage messageFromPubSubMessage:message];
 			[msgArray addObject:msg];
 		}
-		if (success) {
-			success(msgArray);
-		}
+		[[MMXClient sharedClient].pubsubManager summaryOfTopics:@[topic] since:startDate until:endDate success:^(NSArray *summaries) {
+			int count = 0;
+			if (summaries.count) {
+				MMXTopicSummary *sum = summaries[0];
+				count =  sum.numItemsPublished;
+			}
+			if (success) {
+				success(count, msgArray);
+			}
+		} failure:^(NSError *error) {
+			if (failure) {
+				failure(error);
+			}
+		}];
 	} failure:^(NSError *error) {
-		NSLog(@"Fail error = %@",error);
 		if (failure) {
 			failure(error);
 		}
