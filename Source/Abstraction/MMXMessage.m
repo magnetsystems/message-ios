@@ -48,6 +48,7 @@
 	msg.channel = [MMXChannel channelWithName:pubSubMessage.topic.topicName summary:pubSubMessage.topic.topicDescription];
 	msg.messageContent = pubSubMessage.metaData;
 	msg.timestamp = pubSubMessage.timestamp;
+	msg.messageType = MMXMessageTypeChannel;
 	return msg;
 }
 
