@@ -28,6 +28,8 @@
 
 @property(nonatomic, readwrite) MMXUser *sender;
 
+@property(nonatomic, copy) NSString *senderDeviceID;
+
 @property (nonatomic, readwrite) MMXChannel *channel;
 
 @property(nonatomic, readwrite) NSSet *recipients;

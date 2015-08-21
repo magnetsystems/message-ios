@@ -118,5 +118,9 @@
 						  success:(void (^)(void))success
 						  failure:(void (^)(NSError * error))failure;
 
+/**
+ *  Send a delivery confimation message to the sender of the message.
+ */
+- (void)sendDeliveryConfirmation;
 
 @end

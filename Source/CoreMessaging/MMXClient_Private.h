@@ -50,4 +50,8 @@ extern int const kTempVersionMinor;
 - (NSString *)sendMMXMessage:(MMXInternalMessageAdaptor *)outboundMessage
 				 withOptions:(MMXMessageOptions *)options;
 
+- (NSString *)sendDeliveryConfirmationForAddress:(MMXInternalAddress *)address
+									   messageID:(NSString *)messageID
+									  toDeviceID:(NSString *)deviceID;
+
 @end

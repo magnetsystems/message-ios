@@ -440,9 +440,13 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (NSString *)sendDeliveryConfirmationForMessage:(MMXInboundMessage *)message {
-	NSString *sender = [NSString stringWithFormat:@"%@%%%@@%@", [message.senderUserID address], self.configuration.appID, self.configuration.domain];
-	if (message.senderEndpoint.deviceID != nil && ![message.senderEndpoint.deviceID isEqualToString:@""]) {
-		sender = [NSString stringWithFormat:@"%@/%@", sender, message.senderEndpoint.deviceID];
+	return [self sendDeliveryConfirmationForAddress:message.senderUserID.address messageID:message.messageID toDeviceID:message.senderEndpoint.deviceID];
+}
+
+- (NSString *)sendDeliveryConfirmationForAddress:(MMXInternalAddress *)address messageID:(NSString *)messageID toDeviceID:(NSString *)deviceID {
+	NSString *sender = [NSString stringWithFormat:@"%@%%%@@%@", address.username, self.configuration.appID, self.configuration.domain];
+	if (deviceID) {
+		sender = [NSString stringWithFormat:@"%@/%@", sender, deviceID];
 	}
     XMPPJID *respondToAddress = [XMPPJID jidWithString:sender];
     
@@ -451,13 +455,13 @@ int const kReconnectionTimerInterval = 4;
 	[confirmationMessage addBody:@"."];
 
     NSXMLElement *receivedElement = [[NSXMLElement alloc] initWithName:MXreceivedElement xmlns:MXnsDeliveryReceipt];
-    NSString *sourceMessageId = message.messageID;
+    NSString *sourceMessageId = messageID;
     [receivedElement addAttributeWithName:@"id" stringValue:sourceMessageId];
     [confirmationMessage addChild:receivedElement];
     
-    NSString *messageID = [self generateMessageID];
+    NSString *confirmationMessageID = [self generateMessageID];
     //id for this message
-    [confirmationMessage addAttributeWithName:@"id" stringValue:messageID];
+    [confirmationMessage addAttributeWithName:@"id" stringValue:confirmationMessageID];
     [[MMXLogger sharedLogger] verbose:@"About to send the delivery confirmation message %@", confirmationMessage];
     
     [self.xmppStream sendElement:confirmationMessage];

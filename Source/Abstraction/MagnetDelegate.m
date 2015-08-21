@@ -274,6 +274,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	msg.sender = user;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
+	msg.senderDeviceID = message.senderEndpoint.deviceID;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
 														object:nil
 													  userInfo:@{MagnetMessageKey:msg}];
