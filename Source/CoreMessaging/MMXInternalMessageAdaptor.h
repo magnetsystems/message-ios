@@ -17,7 +17,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MMXAddressable.h"
-#import "Mantle.h"
+#import <Mantle/Mantle.h>
 
 @class CLLocation;
 @class MMXUserID;

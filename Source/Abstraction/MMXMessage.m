@@ -146,44 +146,4 @@
 	[[MMXClient sharedClient] sendDeliveryConfirmationForAddress:self.sender.address messageID:self.messageID toDeviceID:self.senderDeviceID];
 }
 
-#pragma mark - NSCoding
-
-- (id)initWithCoder:(NSCoder *)coder {
-	self = [super init];
-	if (self) {
-		_messageID = [coder decodeObjectForKey:@"_messageID"];
-		_timestamp = [coder decodeObjectForKey:@"_timestamp"];
-		_sender = [coder decodeObjectForKey:@"_sender"];
-		_channel = [coder decodeObjectForKey:@"_channel"];
-		_recipients = [coder decodeObjectForKey:@"_recipients"];
-		_messageContent = [coder decodeObjectForKey:@"_messageContent"];
-	}
-	
-	return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)coder {
-	[coder encodeObject:self.messageID forKey:@"_messageID"];
-	[coder encodeObject:self.timestamp forKey:@"_timestamp"];
-	[coder encodeObject:self.sender forKey:@"_sender"];
-	[coder encodeObject:self.channel forKey:@"_channel"];
-	[coder encodeObject:self.recipients forKey:@"_recipients"];
-	[coder encodeObject:self.messageContent forKey:@"_messageContent"];
-}
-
-- (id)copyWithZone:(NSZone *)zone {
-	MMXMessage *copy = [[[self class] allocWithZone:zone] init];
-	
-	if (copy != nil) {
-		copy.messageID = self.messageID;
-		copy.timestamp = self.timestamp;
-		copy.sender = self.sender;
-		copy.channel = self.channel;
-		copy.recipients = self.recipients;
-		copy.messageContent = self.messageContent;
-	}
-	
-	return copy;
-}
-
 @end

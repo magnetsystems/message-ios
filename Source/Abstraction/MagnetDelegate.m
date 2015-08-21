@@ -290,6 +290,10 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	msg.messageContent = message.metaData;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
+	MMXUser *user = [MMXUser new];
+	user.username = message.senderUserID.username;
+	user.displayName = message.senderUserID.displayName;
+	msg.sender = user;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
 														object:nil
 													  userInfo:@{MMXMessageKey:msg}];

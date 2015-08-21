@@ -17,7 +17,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import "Mantle.h"
+#import <Mantle/Mantle.h>
 @class MMXUser;
 @class MMXMessage;
 @class MMXInvite;

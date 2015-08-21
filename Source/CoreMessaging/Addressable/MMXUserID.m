@@ -39,6 +39,7 @@
 - (MMXInternalAddress *)address {
 	MMXInternalAddress *address = [MMXInternalAddress new];
 	address.username = [self.username jidEscapedString];
+	address.displayName = self.displayName;
 	return address;
 }
 
