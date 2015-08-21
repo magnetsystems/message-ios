@@ -128,12 +128,12 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 
 + (instancetype)inviteResponseMessageToUser:(MMXUser *)recipient
 								 forChannel:(MMXChannel *)channel
-								textMessage:(NSString *)textMessage
+								   comments:(NSString *)comments
 								   response:(BOOL)response {
 	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor new];
 	msg.mType = @"invitationResponse";
 	msg.recipients = @[recipient];
-	msg.metaData = @{@"text":textMessage ?: [NSNull null],
+	msg.metaData = @{@"text":comments ?: [NSNull null],
 					 @"channelIsPrivate":@(!channel.isPublic),
 					 @"channelName":channel.name,
 					 @"channelSummary":channel.summary ?: [NSNull null],
@@ -142,11 +142,11 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 	return msg;
 }
 
-+ (instancetype)inviteMessageToUser:(MMXUser *)recipient forChannel:(MMXChannel *)channel textMessage:(NSString *)textMessage {
++ (instancetype)inviteMessageToUser:(MMXUser *)recipient forChannel:(MMXChannel *)channel comments:(NSString *)comments {
 	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor new];
 	msg.mType = @"invitation";
 	msg.recipients = @[recipient];
-	msg.metaData = @{@"text":textMessage ?: [NSNull null],
+	msg.metaData = @{@"text":comments ?: [NSNull null],
 					 @"channelIsPrivate":@(!channel.isPublic),
 					 @"channelName":channel.name,
 					 @"channelSummary":channel.summary ?: [NSNull null],

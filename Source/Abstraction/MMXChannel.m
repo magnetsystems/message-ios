@@ -352,7 +352,7 @@
 }
 
 - (NSString *)inviteUser:(MMXUser *)user
-			 textMessage:(NSString *)textMessage
+			 comments:(NSString *)comments
 				 success:(void (^)(MMXInvite *))success
 				 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
@@ -361,11 +361,11 @@
 		}
 		return nil;
 	}
-	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor inviteMessageToUser:user forChannel:self.copy textMessage:textMessage];
+	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor inviteMessageToUser:user forChannel:self.copy comments:comments];
 	NSString *messageID = [[MagnetDelegate sharedDelegate] sendInternalMessageFormat:msg success:^{
 		if (success) {
 			MMXInvite *invite = [MMXInvite new];
-			invite.textMessage = textMessage;
+			invite.comments = comments;
 			invite.channel = self.copy;
 			invite.sender = [MMXUser currentUser];
 			invite.timestamp = [NSDate date];

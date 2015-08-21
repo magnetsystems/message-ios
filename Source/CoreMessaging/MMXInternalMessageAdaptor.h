@@ -57,10 +57,10 @@
 
 + (instancetype)inviteMessageToUser:(MMXUser *)recipient
 						 forChannel:(MMXChannel *)channel
-						textMessage:(NSString *)textMessage;
+						   comments:(NSString *)comments;
 
 + (instancetype)inviteResponseMessageToUser:(MMXUser *)recipient
 								 forChannel:(MMXChannel *)channel
-								textMessage:(NSString *)textMessage
+								   comments:(NSString *)comments
 								   response:(BOOL)response;
 @end
