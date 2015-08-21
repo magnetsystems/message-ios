@@ -424,7 +424,7 @@ int const kReconnectionTimerInterval = 4;
 	
 	if (![MMXMessageUtils isValidMetaData:outboundMessage.metaData]) {
 		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipients:error:)]) {
-			NSError * error = [MMXClient errorWithTitle:@"Meta Data Not Valid" message:@"Meta Data dictionary must be JSON serializable." code:401];
+			NSError * error = [MMXClient errorWithTitle:@"Not Valid" message:@"All values must be strings." code:401];
 			[self.delegate client:self didFailToSendMessage:outboundMessage.messageID recipients:outboundMessage.recipients error:error];
 		}
 		return NO;

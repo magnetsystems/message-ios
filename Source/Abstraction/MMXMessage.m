@@ -55,7 +55,7 @@
 	//FIXME: Handle case that user is not logged in
 	//FIXME: Make sure that the content is JSON serializable
 	if (![MMXMessageUtils isValidMetaData:self.messageContent]) {
-		NSError * error = [MMXClient errorWithTitle:@"Message Content Not Valid" message:@"Message Content dictionary must be JSON serializable." code:401];
+		NSError * error = [MMXClient errorWithTitle:@"Not Valid" message:@"All values must be strings." code:401];
 		if (failure) {
 			failure(error);
 		}
