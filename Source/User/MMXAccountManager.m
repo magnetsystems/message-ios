@@ -155,7 +155,7 @@
 	
 	NSURLSession * session = [NSURLSession sessionWithConfiguration:config];
 	
-	NSString *usersURLString = [NSString stringWithFormat:@"http://%@:%li/mmxmgmt/api/v1/users",self.delegate.configuration.baseURL.host,(long)self.delegate.configuration.publicAPIPort];
+	NSString *usersURLString = [NSString stringWithFormat:@"https://%@:%li/mmxmgmt/api/v1/users",self.delegate.configuration.baseURL.host,(long)self.delegate.configuration.publicAPIPort + 1];
 	
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:usersURLString]];
 	
