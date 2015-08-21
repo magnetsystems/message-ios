@@ -293,7 +293,7 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 }
 
 + (MMXUserID *)extractSenderFromMMXMetaDict:(NSDictionary *)mmxMetaDict {
-	if (mmxMetaDict && mmxMetaDict[@"From"]) {
+	if (mmxMetaDict && mmxMetaDict[@"From"] && mmxMetaDict[@"From"] != [NSNull null]) {
 		NSDictionary *senderDict = mmxMetaDict[@"From"];
 		if (senderDict) {
 			MMXInternalAddress *address = [MMXInternalAddress new];
@@ -307,7 +307,7 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 }
 
 + (NSArray *)extractRecipientsFromMMXMetaDict:(NSDictionary *)mmxMetaDict {
-	if (mmxMetaDict && mmxMetaDict[@"To"]) {
+	if (mmxMetaDict && mmxMetaDict[@"To"] && mmxMetaDict[@"To"] != [NSNull null]) {
 		NSArray *tempRecipientArray = mmxMetaDict[@"To"];
 		NSMutableArray *recipientOutputArray = [NSMutableArray arrayWithCapacity:tempRecipientArray.count];
 		for (NSDictionary *userDict in tempRecipientArray) {
