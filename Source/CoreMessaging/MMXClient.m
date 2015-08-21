@@ -765,7 +765,8 @@ int const kReconnectionTimerInterval = 4;
                 }];
             }
         } else {
-            [self updateConnectionStatus:MMXConnectionStatusAuthenticationFailure error:nil];
+			NSError *authError = [MMXClient errorWithTitle:@"Authentication Failure" message:@"Not Authorized. Please check your credentials and try again." code:401];
+            [self updateConnectionStatus:MMXConnectionStatusAuthenticationFailure error:authError];
         }
 }
 
