@@ -167,15 +167,17 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 								failure:(void (^)(NSError *error))failure {
 
 	NSString *messageID = [[MMXClient sharedClient] sendMMXMessage:message withOptions:nil];
-	if (success || failure) {
-		NSMutableDictionary *blockDict = [NSMutableDictionary dictionary];
-		if (success) {
-			[blockDict setObject:success forKey:MMXMessageSuccessBlockKey];
+	if (messageID) {
+		if (success || failure) {
+			NSMutableDictionary *blockDict = [NSMutableDictionary dictionary];
+			if (success) {
+				[blockDict setObject:success forKey:MMXMessageSuccessBlockKey];
+			}
+			if (failure) {
+				[blockDict setObject:failure forKey:MMXMessageFailureBlockKey];
+			}
+			[self.messageBlockQueue setObject:blockDict forKey:messageID];
 		}
-		if (failure) {
-			[blockDict setObject:failure forKey:MMXMessageFailureBlockKey];
-		}
-		[self.messageBlockQueue setObject:blockDict forKey:messageID];
 	}
 	return messageID;
 }

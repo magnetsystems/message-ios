@@ -359,7 +359,7 @@
 }
 
 - (NSString *)inviteUser:(MMXUser *)user
-			 comments:(NSString *)comments
+				comments:(NSString *)comments
 				 success:(void (^)(MMXInvite *))success
 				 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
