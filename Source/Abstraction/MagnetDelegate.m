@@ -73,8 +73,13 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 
 - (void)startMMXClientWithConfiguration:(NSString *)name {
 	//You must include your Configurations.plist file in the project. You can download this file on the Settings page of the Magnet Message Console
+	
 	NSString *pathAndFileName = [[NSBundle bundleForClass:[self class]] pathForResource:@"Configurations" ofType:@"plist"];
-	NSAssert([[NSFileManager defaultManager] fileExistsAtPath:pathAndFileName], @"You must include your Configurations.plist file in the project. You can download this file on the Settings page of the Magnet Message Web Interface");
+	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:pathAndFileName];
+	if (!exists) {
+		NSAssert(exists, @"You must include your Configurations.plist file in the project. You can download this file on the Settings page of the Magnet Message Web Interface");
+	}
+	
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated &&
 		[MMXClient sharedClient].connectionStatus != MMXConnectionStatusConnected) {
 		[MMXClient sharedClient].shouldSuspendIncomingMessages = YES;
