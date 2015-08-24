@@ -27,6 +27,7 @@
 #import "MMXClient_Private.h"
 #import "MMXAddressable.h"
 #import "MMXInternalMessageAdaptor.h"
+#import "MMXInboundMessage_Private.h"
 #import "MMXClient_Private.h"
 #import "MMXUserID_Private.h"
 #import "MMXTopic_Private.h"
@@ -271,11 +272,15 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 
 - (void)client:(MMXClient *)client didReceiveMessage:(MMXInboundMessage *)message deliveryReceiptRequested:(BOOL)receiptRequested {
 
-	MMXMessage *msg = [MMXMessage messageToRecipients:[self usersFromInboundRecipients:message.otherRecipients]
+	NSMutableArray *recipients = [NSMutableArray arrayWithArray:message.otherRecipients ?: @[]];
+	if (message.targetUserID) {
+		[recipients addObject:message.targetUserID];
+	}
+	MMXMessage *msg = [MMXMessage messageToRecipients:[self usersFromInboundRecipients:recipients.copy]
 									   messageContent:message.metaData];
 
-	MMXUser *user = [MMXUser new];
 	msg.messageType = MMXMessageTypeDefault;
+	MMXUser *user = [MMXUser new];
 	user.username = message.senderUserID.username;
 	user.displayName = message.senderUserID.displayName;
 	msg.sender = user;

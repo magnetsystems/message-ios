@@ -127,9 +127,8 @@
 - (NSString *)replyWithContent:(NSDictionary *)content
 				 success:(void (^)(void))success
 				 failure:(void (^)(NSError *))failure {
-	//FIXME: Handle case that user is not logged in
 	MMXMessage *msg = [MMXMessage messageToRecipients:[NSSet setWithObjects:self.sender, nil] messageContent:content];
-	NSString * messageID = [[MagnetDelegate sharedDelegate] sendMessage:msg success:^() {
+	NSString * messageID = [msg sendWithSuccess:^{
 		if (success) {
 			success();
 		}
@@ -144,11 +143,14 @@
 - (NSString *)replyAllWithContent:(NSDictionary *)content
 					success:(void (^)(void))success
 					failure:(void (^)(NSError *))failure {
-	//FIXME: Handle case that user is not logged in
 	NSMutableSet *newSet = [NSMutableSet setWithSet:self.recipients];
 	[newSet addObject:self.sender];
+	MMXUser *currentUser = [MMXUser currentUser];
+	if (currentUser) {
+		[newSet removeObject:currentUser];
+	}
 	MMXMessage *msg = [MMXMessage messageToRecipients:newSet messageContent:content];
-	NSString * messageID = [[MagnetDelegate sharedDelegate] sendMessage:msg success:^() {
+	NSString * messageID = [msg sendWithSuccess:^{
 		if (success) {
 			success();
 		}
