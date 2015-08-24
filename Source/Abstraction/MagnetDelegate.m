@@ -271,11 +271,13 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 
 - (void)client:(MMXClient *)client didReceiveMessage:(MMXInboundMessage *)message deliveryReceiptRequested:(BOOL)receiptRequested {
 
-	MMXMessage *msg = [MMXMessage messageToRecipients:[self usersFromInboundRecipients:message.otherRecipients]
+	NSMutableArray *recipients = [NSMutableArray arrayWithArray:message.otherRecipients ?: @[]];
+	[recipients addObject:message.senderUserID];
+	MMXMessage *msg = [MMXMessage messageToRecipients:[self usersFromInboundRecipients:recipients.copy]
 									   messageContent:message.metaData];
 
-	MMXUser *user = [MMXUser new];
 	msg.messageType = MMXMessageTypeDefault;
+	MMXUser *user = [MMXUser new];
 	user.username = message.senderUserID.username;
 	user.displayName = message.senderUserID.displayName;
 	msg.sender = user;
