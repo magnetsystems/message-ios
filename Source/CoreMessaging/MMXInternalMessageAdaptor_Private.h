@@ -14,14 +14,14 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-#import "MMXMessage.h"
+#import "MMXInternalMessageAdaptor.h"
 
 @class NSXMLElement;
 @class XMPPMessage;
 @class MMXTopic;
 @class XMPPIQ;
 
-@interface MMXMessage ()
+@interface MMXInternalMessageAdaptor ()
 
 @property (nonatomic, strong, readwrite) NSString *messageContent;
 
@@ -38,8 +38,8 @@
 @property(nonatomic, strong, readwrite) MMXUserID *senderUserID;
 @property(nonatomic, strong, readwrite) MMXUserID *targetUserID;
 @property(nonatomic, strong, readwrite) MMXEndpoint *senderEndpoint;
-@property(nonatomic, strong, readwrite) NSString* receiverUsername;
 @property(nonatomic, readwrite) CLLocation *location;
+@property(nonatomic, readwrite) NSArray *recipients;
 
 @property (nonatomic, strong) MMXTopic * topic;
 
@@ -48,8 +48,7 @@
              messageType:(NSString *)messageType
                 metaData:(NSDictionary *)metaData;
 
-- (instancetype)initWithXMPPMessage:(XMPPMessage*)xmppMessage;
-- (instancetype)initWithPubSubMessage:(XMPPMessage*)xmppMessage;
++ (instancetype)initWithXMPPMessage:(XMPPMessage*)xmppMessage;
 
 + (NSArray *)pubsubMessagesFromFetchResponseIQ:(XMPPIQ *)iq
                                          topic:(MMXTopic *)topic
@@ -57,6 +56,13 @@
 
 - (NSXMLElement *)contentToXML;
 - (NSXMLElement *)metaDataToXML;
-- (NSXMLElement *)recipientsAsXML;
++ (NSXMLElement *)xmlFromRecipients:(NSArray *)recipients senderAddress:(MMXInternalAddress *)address;
+
++ (NSString *)extractPayload:(NSArray *)payLoadElements;
++ (NSDictionary *)extractMetaData:(NSArray *)metaElements;
++ (NSDictionary *)extractMMXMetaData:(NSArray *)metaElements;
++ (MMXUserID *)extractSenderFromMMXMetaDict:(NSDictionary *)mmxMetaDict;
++ (NSArray *)extractRecipientsFromMMXMetaDict:(NSDictionary *)mmxMetaDict;
+
 
 @end

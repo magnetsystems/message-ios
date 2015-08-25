@@ -17,7 +17,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Kiwi/Kiwi.h>
-#import "MMX.h"
+#import "MMX_Private.h"
 #import "MMXClientDelegateSpy.h"
 #import "MMXUtils.h"
 #import "MMXTestingUtils.h"

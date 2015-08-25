@@ -27,7 +27,7 @@
 #import "MMXTopicListResponse.h"
 #import "MMXTopicSummaryRequestResponse.h"
 #import "MMXTopicSubscription_Private.h"
-#import "MMXMessage_Private.h"
+#import "MMXInternalMessageAdaptor_Private.h"
 #import "MMXQuery_Private.h"
 #import "MMXEndpoint_Private.h"
 #import "MMXTopicQueryResponse_Private.h"
@@ -38,6 +38,7 @@
 #import "MMXDataModel.h"
 #import "MMXLogger.h"
 #import "MMXAssert.h"
+#import "MMXTopicSubscribersResponse.h"
 
 #import "XMPP.h"
 #import "XMPPIQ+MMX.h"
@@ -112,7 +113,7 @@
             if ([iq isErrorIQ]) {
                 if (failure) {
 					dispatch_async(self.callbackQueue, ^{
-						failure([iq errorWithTitle:@"Topic Creation Failure."]);
+						failure([iq errorWithTitle:@"Channel Creation Failure."]);
 					});
                 }
             } else {
@@ -131,7 +132,7 @@
                 } else {
                     if (failure) {
 						dispatch_async(self.callbackQueue, ^{
-							failure([response errorFromResponse:@"Topic Creation Failure"]);
+							failure([response errorFromResponse:@"Channel Creation Failure"]);
 						});
                     }
                 }
@@ -188,7 +189,7 @@
             if ([iq isErrorIQ]) {
                 if (failure) {
 					dispatch_async(self.callbackQueue, ^{
-						failure([iq errorWithTitle:@"Topic Delete Failure."]);
+						failure([iq errorWithTitle:@"Channel Delete Failure."]);
 					});
                 }
             } else {
@@ -204,7 +205,7 @@
                 } else {
                     if (failure) {
 						dispatch_async(self.callbackQueue, ^{
-							failure([response errorFromResponse:@"Topic Delete Failure"]);
+							failure([response errorFromResponse:@"Channel Delete Failure"]);
 						});
                     }
                 }
@@ -264,7 +265,7 @@
             if ([iq isErrorIQ]) {
                 if (failure) {
 					dispatch_async(self.callbackQueue, ^{
-						failure([iq errorWithTitle:@"Topic Subscribe Failure."]);
+						failure([iq errorWithTitle:@"Channel Subscribe Failure."]);
 					});
                 }
             } else {
@@ -284,7 +285,7 @@
                 } else {
                     if (failure) {
 						dispatch_async(self.callbackQueue, ^{
-							failure([response errorFromResponse:@"Topic Subscribe Failure"]);
+							failure([response errorFromResponse:@"Channel Subscribe Failure"]);
 						});
                     }
                 }
@@ -328,7 +329,7 @@
             if ([iq isErrorIQ]) {
                 if (failure) {
 					dispatch_async(self.callbackQueue, ^{
-						failure([iq errorWithTitle:@"Topic Subscribe Failure."]);
+						failure([iq errorWithTitle:@"Channel Subscribe Failure."]);
 					});
                 }
             } else {
@@ -348,7 +349,7 @@
                 } else {
                     if (failure) {
 						dispatch_async(self.callbackQueue, ^{
-							failure([response errorFromResponse:@"Topic Subscribe Failure"]);
+							failure([response errorFromResponse:@"Channel Subscribe Failure"]);
 						});
                     }
                 }
@@ -395,7 +396,7 @@
 		if ([iq isErrorIQ]) {
 			if (failure) {
 				dispatch_async(self.callbackQueue, ^{
-					failure([iq errorWithTitle:@"Topic List Request Failure."]);
+					failure([iq errorWithTitle:@"Channel List Request Failure."]);
 				});
 			}
 		} else {
@@ -442,7 +443,7 @@
                 }
             } else {
                 NSError * parsingError;
-                NSArray * messageArray = [MMXMessage pubsubMessagesFromFetchResponseIQ:iq topic:query.topic error:&parsingError];
+                NSArray * messageArray = [MMXInternalMessageAdaptor pubsubMessagesFromFetchResponseIQ:iq topic:query.topic error:&parsingError];
 				if (parsingError) {
 					if (failure) {
 						dispatch_async(self.callbackQueue, ^{
@@ -517,7 +518,7 @@
             if ([iq isErrorIQ]) {
                 if (failure) {
 					dispatch_async(self.callbackQueue, ^{
-						failure([iq errorWithTitle:@"Topic Unsubscribe Failure."]);
+						failure([iq errorWithTitle:@"Channel Unsubscribe Failure."]);
 					});
                 }
             } else {
@@ -533,7 +534,7 @@
                 } else {
                     if (failure) {
 						dispatch_async(self.callbackQueue, ^{
-							failure([response errorFromResponse:@"Topic Unsubscribe Failure"]);
+							failure([response errorFromResponse:@"Channel Unsubscribe Failure"]);
 						});
                     }
                 }
@@ -604,7 +605,7 @@
             if ([iq isErrorIQ]) {
                 if (failure) {
 					dispatch_async(self.callbackQueue, ^{
-						failure([iq errorWithTitle:@"Topic Unsubscribe Failure."]);
+						failure([iq errorWithTitle:@"Channel Unsubscribe Failure."]);
 					});
                 }
             } else {
@@ -634,6 +635,82 @@
         }
     }
 }
+
+#pragma mark - Subscribers
+
+- (XMPPIQ *)subscribersForTopicIQ:(MMXTopic *)topic
+							limit:(int)limit
+							error:(NSError**)error {
+	NSDictionary * topicDictionary = @{@"userId":topic.inUserNameSpace ? topic.nameSpace : [NSNull null],
+									   @"topicName":topic.topicName,
+									   @"limit":@(limit)};
+	
+	NSError * parsingError;
+	NSXMLElement *mmxElement = [MMXUtils mmxElementFromValidJSONObject:topicDictionary xmlns:MXnsPubSub commandStringValue:MXcommandGetSubscribers error:&parsingError];
+	if (parsingError) {
+		*error = parsingError;
+		return nil;
+	} else {
+		XMPPIQ *topicIQ = [[XMPPIQ alloc] initWithType:@"get" child:mmxElement];
+		[topicIQ addAttributeWithName:@"from" stringValue: [[self.delegate currentJID] full]];
+		[topicIQ addAttributeWithName:@"id" stringValue:[self.delegate generateMessageID]];
+		return topicIQ;
+	}
+}
+
+- (void)subscribersForTopic:(MMXTopic *)topic
+					  limit:(int)limit
+					success:(void (^)(int,NSArray *))success
+					failure:(void (^)(NSError *))failure {
+	[[MMXLogger sharedLogger] verbose:@"MMXPubSubManager subscribersForTopic. Topic = %@", topic.topicName];
+	if (![self hasActiveConnection]) {
+		if (failure) {
+			dispatch_async(self.callbackQueue, ^{
+				failure([self connectionStatusError]);
+			});
+		}
+		return;
+	}
+	NSError * parsingError;
+	XMPPIQ *topicIQ = [self subscribersForTopicIQ:topic limit:limit error:&parsingError];
+	if (!parsingError) {
+		[self.delegate sendIQ:topicIQ completion:^ (id obj, id <XMPPTrackingInfo> info) {
+			XMPPIQ * iq = (XMPPIQ *)obj;
+			if ([iq isErrorIQ]) {
+				if (failure) {
+					dispatch_async(self.callbackQueue, ^{
+						failure([iq errorWithTitle:@"Subscribers Failure."]);
+					});
+				}
+			} else {
+				MMXTopicSubscribersResponse *response = [[MMXTopicSubscribersResponse alloc] initWithIQ:iq];
+				NSString* iqId = [iq elementID];
+				[self.delegate stopTrackingIQWithID:iqId];
+				if (response) {
+					if (success) {
+						dispatch_async(self.callbackQueue, ^{
+							success(response.totalCount,response.subscribers);
+						});
+					}
+				} else {
+					if (failure) {
+						dispatch_async(self.callbackQueue, ^{
+							failure([MMXClient errorWithTitle:@"Subscribers Error" message:@"An unknown error occured" code:500]);
+						});
+					}
+				}
+			}
+		}];
+	} else {
+		if (failure) {
+			dispatch_async(self.callbackQueue, ^{
+				failure(parsingError);
+			});
+		}
+	}
+
+}
+
 
 #pragma mark - Retract Published Items from Topic
 
@@ -786,7 +863,7 @@
             if ([iq isErrorIQ]) {
                 if (failure) {
 					dispatch_async(self.callbackQueue, ^{
-						failure([iq errorWithTitle:@"Topic List Failure."]);
+						failure([iq errorWithTitle:@"Channel List Failure."]);
 					});
                 }
             } else {
@@ -866,7 +943,7 @@
             if ([iq isErrorIQ]) {
                 if (failure) {
 					dispatch_async(self.callbackQueue, ^{
-						failure([iq errorWithTitle:@"Topic Summary Failure."]);
+						failure([iq errorWithTitle:@"Channel Summary Failure."]);
 					});
                 }
             } else {
@@ -910,7 +987,7 @@
 	if (![MMXMessageUtils isValidMetaData:message.metaData]) {
 		if (failure) {
 			dispatch_async(self.callbackQueue, ^{
-				failure([MMXClient errorWithTitle:@"Meta Data Not Valid" message:@"Meta Data dictionary must be JSON serializable." code:401]);
+				failure([MMXClient errorWithTitle:@"Not Valid" message:@"All values must be strings." code:401]);
 			});
 		}
 		
@@ -957,7 +1034,7 @@
             if ([iq isErrorIQ]) {
                 if (failure) {
 					dispatch_async(self.callbackQueue, ^{
-						failure([iq errorWithTitle:@"Publish to Topic Failure."]);
+						failure([iq errorWithTitle:@"Publish to Channel Failure."]);
 					});
                 }
             } else {
@@ -1005,7 +1082,7 @@
 			XMPPIQ * returnIQ = (XMPPIQ *)obj;
 			if ([returnIQ isErrorIQ]) {
 				dispatch_async(self.callbackQueue, ^{
-					failure([returnIQ errorWithTitle:@"Topic Query Error"]);
+					failure([returnIQ errorWithTitle:@"Channel Query Error"]);
 				});
 			} else {
 				MMXTopicQueryResponse *response = [MMXTopicQueryResponse responseFromIQ:returnIQ];
@@ -1019,7 +1096,7 @@
 			[self.delegate stopTrackingIQWithID:iqId];
 		} else {
 			if (failure) {
-				failure([MMXClient errorWithTitle:@"Topic Query Error" message:@"An unknown error occured" code:500]);
+				failure([MMXClient errorWithTitle:@"Channel Query Error" message:@"An unknown error occured" code:500]);
 			}
 		}
     }];
@@ -1076,7 +1153,7 @@
 				}
 			} else {
 				NSError * parsingError;
-				NSArray * messageArray = [MMXMessage pubsubMessagesFromFetchResponseIQ:iq topic:topic error:&parsingError];
+				NSArray * messageArray = [MMXInternalMessageAdaptor pubsubMessagesFromFetchResponseIQ:iq topic:topic error:&parsingError];
 				if (parsingError) {
 					if (failure) {
 						dispatch_async(self.callbackQueue, ^{
@@ -1299,7 +1376,7 @@
             if ([iq isErrorIQ]) {
                 if (failure) {
 					dispatch_async(self.callbackQueue, ^{
-						failure([iq errorWithTitle:@"Topic Tags Request Failure."]);
+						failure([iq errorWithTitle:@"Channel Tags Request Failure."]);
 					});
                 }
             } else {
@@ -1380,7 +1457,7 @@
             if ([iq isErrorIQ]) {
                 if (failure) {
 					dispatch_async(self.callbackQueue, ^{
-						failure([iq errorWithTitle:[NSString stringWithFormat:@"%@ Topic Tags Failure.",[updateType capitalizedString]]]);
+						failure([iq errorWithTitle:[NSString stringWithFormat:@"%@ Channel Tags Failure.",[updateType capitalizedString]]]);
 					});
                 }
             } else {
@@ -1396,7 +1473,7 @@
                 } else {
                     if (failure) {
 						dispatch_async(self.callbackQueue, ^{
-							failure([response errorFromResponse:[NSString stringWithFormat:@"%@ Topic Tags Failure.",[updateType capitalizedString]]]);
+							failure([response errorFromResponse:[NSString stringWithFormat:@"%@ Channel Tags Failure.",[updateType capitalizedString]]]);
 						});
                     }
                 }

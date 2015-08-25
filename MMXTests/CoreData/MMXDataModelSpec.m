@@ -17,7 +17,7 @@
  
 #import <Kiwi/Kiwi.h>
 #import "MMXDataModel.h"
-#import "MMXMessage_Private.h"
+#import "MMXInternalMessageAdaptor_Private.h"
 #import "MMXOutboxEntry.h"
 #import "MMXMessageOptions.h"
 #import "MMXUtils.h"
@@ -38,13 +38,13 @@ describe(@"MMXDataModel", ^{
 
     context(@"addOutboxEntryWithMessage", ^{
 
-        __block MMXMessage *_message;
+        __block MMXInternalMessageAdaptor *_message;
         __block MMXMessageOptions *_messageOptions;
         __block MMXUserID *_testuser;
 
         beforeEach(^{
 			_testuser = [MMXUserID userIDWithUsername:@"testuser"];
-            _message = [MMXMessage messageTo:@[_testuser]
+            _message = [MMXInternalMessageAdaptor messageTo:@[_testuser]
                                  withContent:@"Hello World"
                                  messageType:@"text/plain"
                                     metaData:@{@"foo" : @"bar"}];
@@ -72,7 +72,7 @@ describe(@"MMXDataModel", ^{
             it(@"when all required parameters are passed", ^{
                 MMXOutboxEntry *outboxEntry = [[MMXDataModel sharedDataModel] addOutboxEntryWithMessage:_message options:nil username:_testuser.username];
                 [[outboxEntry should] beNonNil];
-                MMXMessage *message = [[MMXDataModel sharedDataModel] extractMessageFromOutboxEntry:outboxEntry];
+                MMXInternalMessageAdaptor *message = [[MMXDataModel sharedDataModel] extractMessageFromOutboxEntry:outboxEntry];
                 [[message shouldNot] beNil];
                 MMXMessageOptions *messageOptions = [[MMXDataModel sharedDataModel] extractMessageOptionsFromOutboxEntry:outboxEntry];
                 [[messageOptions should] beNil];
@@ -87,7 +87,7 @@ describe(@"MMXDataModel", ^{
                                                                                                 options:_messageOptions
                                                                                                username:_testuser.username];
                 [[outboxEntry should] beNonNil];
-                MMXMessage *message = [[MMXDataModel sharedDataModel] extractMessageFromOutboxEntry:outboxEntry];
+                MMXInternalMessageAdaptor *message = [[MMXDataModel sharedDataModel] extractMessageFromOutboxEntry:outboxEntry];
                 [[message shouldNot] beNil];
                 MMXMessageOptions *messageOptions = [[MMXDataModel sharedDataModel] extractMessageOptionsFromOutboxEntry:outboxEntry];
                 [[messageOptions shouldNot] beNil];
@@ -101,12 +101,12 @@ describe(@"MMXDataModel", ^{
 
     context(@"outboxEntriesForUser", ^{
 
-        __block MMXMessage *_message;
+        __block MMXInternalMessageAdaptor *_message;
         __block MMXUserID *_testuser;
 
         beforeEach(^{
 			_testuser = [MMXUserID userIDWithUsername:@"testuser"];
-            _message = [MMXMessage messageTo:@[_testuser]
+            _message = [MMXInternalMessageAdaptor messageTo:@[_testuser]
                                  withContent:@"Hello World"
                                  messageType:@"text/plain"
                                     metaData:@{@"foo" : @"bar"}];
@@ -133,12 +133,12 @@ describe(@"MMXDataModel", ^{
 
     context(@"deleteOutboxEntryForMessage", ^{
 
-        __block MMXMessage *_message;
+        __block MMXInternalMessageAdaptor *_message;
         __block MMXUserID *_testuser;
 
         beforeEach(^{
 			_testuser = [MMXUserID userIDWithUsername:@"testuser"];
-            _message = [MMXMessage messageTo:@[_testuser]
+            _message = [MMXInternalMessageAdaptor messageTo:@[_testuser]
                                  withContent:@"Hello World"
                                  messageType:@"text/plain"
                                     metaData:@{@"foo" : @"bar"}];
@@ -159,12 +159,12 @@ describe(@"MMXDataModel", ^{
 
     context(@"extractMessageFromOutboxEntry", ^{
 
-        __block MMXMessage *_message;
+        __block MMXInternalMessageAdaptor *_message;
         __block MMXUserID *_testuser;
 
         beforeEach(^{
 			_testuser = [MMXUserID userIDWithUsername:@"testuser"];
-            _message = [MMXMessage messageTo:@[_testuser]
+            _message = [MMXInternalMessageAdaptor messageTo:@[_testuser]
                                  withContent:@"Hello World"
                                  messageType:@"text/plain"
                                     metaData:@{@"foo" : @"bar"}];
@@ -174,7 +174,7 @@ describe(@"MMXDataModel", ^{
         context(@"should return 0 items", ^{
             it(@"when the entry is deleted", ^{
                 MMXOutboxEntry *outboxEntry = [[MMXDataModel sharedDataModel] addOutboxEntryWithMessage:_message options:nil username:_testuser.username];
-                MMXMessage *message = [[MMXDataModel sharedDataModel] extractMessageFromOutboxEntry:outboxEntry];
+                MMXInternalMessageAdaptor *message = [[MMXDataModel sharedDataModel] extractMessageFromOutboxEntry:outboxEntry];
                 [[message.messageID shouldNot] beNil];
                 [[message.messageContent should] equal:@"Hello World"];
                 [[message.metaData should] equal:@{@"foo" : @"bar"}];
@@ -186,13 +186,13 @@ describe(@"MMXDataModel", ^{
 
     context(@"extractMessageOptionsFromOutboxEntry", ^{
 
-        __block MMXMessage *_message;
+        __block MMXInternalMessageAdaptor *_message;
         __block MMXMessageOptions *_messageOptions;
         __block MMXUserID *_testuser;
 
         beforeEach(^{
 			_testuser = [MMXUserID userIDWithUsername:@"testuser"];
-            _message = [MMXMessage messageTo:@[_testuser]
+            _message = [MMXInternalMessageAdaptor messageTo:@[_testuser]
                                  withContent:@"Hello World"
                                  messageType:@"text/plain"
                                     metaData:@{@"foo" : @"bar"}];
