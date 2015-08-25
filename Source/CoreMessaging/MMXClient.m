@@ -41,7 +41,7 @@
 
 #import "MMXInvite_Private.h"
 #import "MMXInviteResponse_Private.h"
-#import "MagnetConstants.h"
+#import "MMXNotificationConstants.h"
 
 #import "MMXUtils.h"
 #import "MMXMessageUtils.h"

@@ -15,9 +15,9 @@
  * permissions and limitations under the License.
  */
 
-#import "MagnetConstants.h"
+#import "MMXNotificationConstants.h"
 
-@implementation MagnetConstants
+@implementation MMXNotificationConstants
 
 NSString * const MMXDidReceiveMessageNotification = @"com.magnet.mmx.message.receive";
 NSString * const MMXMessageKey = @"com.magnet.message.key";

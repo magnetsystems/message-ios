@@ -17,7 +17,7 @@
 
 #import "MagnetDelegate.h"
 #import "MMXMessage_Private.h"
-#import "MagnetConstants.h"
+#import "MMXNotificationConstants.h"
 #import "MMXUser.h"
 #import "MMXMessageTypes.h"
 #import "MMX_Private.h"
