@@ -21,7 +21,7 @@
 #import "MMXInvite.h"
 #import "MMXInviteResponse.h"
 #import "MMXUser.h"
-#import "MagnetConstants.h"
+#import "MMXNotificationConstants.h"
 #import "MMXMessageTypes.h"
 #import "MMXLogger.h"
 #import "MMXRemoteNotification.h"

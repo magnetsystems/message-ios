@@ -17,7 +17,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MagnetConstants : NSObject
+@interface MMXNotificationConstants : NSObject
 
 extern NSString * const MMXDidReceiveMessageNotification;
 extern NSString * const MMXMessageKey;
