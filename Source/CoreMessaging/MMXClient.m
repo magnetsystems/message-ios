@@ -339,6 +339,7 @@ int const kReconnectionTimerInterval = 4;
 									withContent:outboundMessage.messageContent
 									messageType:nil
 									   metaData:outboundMessage.metaData];
+	message.messageID = outboundMessage.messageID;
 	return [self sendMMXMessage:message withOptions:options shouldValidate:YES];
 }
 
