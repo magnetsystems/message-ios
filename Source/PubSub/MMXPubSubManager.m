@@ -1069,11 +1069,19 @@
             success:(void (^)(int, NSArray * topics))success
             failure:(void (^)(NSError *))failure {
 	[[MMXLogger sharedLogger] verbose:@"MMXPubSubManager queryTopics. MMXQuery = %@", topicQuery];
-	NSError *error;
 	if (topicQuery == nil) {
 		topicQuery = [[MMXQuery alloc] init];
 	}
-	NSXMLElement *mmxElement = [MMXUtils mmxElementFromValidJSONObject:[topicQuery dictionaryRepresentation] xmlns:MXnsPubSub commandStringValue:@"searchTopic" error:&error];
+	
+	NSDictionary *queryDict = [topicQuery dictionaryRepresentation];
+	[self queryTopicsWithDictionary:queryDict success:success failure:failure];
+}
+
+- (void)queryTopicsWithDictionary:(NSDictionary *)queryDict
+			success:(void (^)(int, NSArray * topics))success
+			failure:(void (^)(NSError *))failure {
+	NSError *error;
+	NSXMLElement *mmxElement = [MMXUtils mmxElementFromValidJSONObject:queryDict xmlns:MXnsPubSub commandStringValue:@"searchTopic" error:&error];
 	
 	XMPPIQ *queryIQ = [[XMPPIQ alloc] initWithType:@"get" child:mmxElement];
 	[queryIQ addAttributeWithName:@"id" stringValue:[[NSUUID UUID] UUIDString]];
