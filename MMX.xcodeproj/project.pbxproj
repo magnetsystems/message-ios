@@ -21,6 +21,7 @@
 		0E1B57661B8D2EA7009C7204 /* MMXMessageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B57641B8D2EA7009C7204 /* MMXMessageSpec.m */; };
 		0E1B57671B8D2EA7009C7204 /* MMXUserSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B57651B8D2EA7009C7204 /* MMXUserSpec.m */; };
 		0E47F4FC1B069EF20089E887 /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E47F4FB1B069EF20089E887 /* Configurations.plist */; };
+		0E4EDD7A1B8E341C00532128 /* MMXChannelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E4EDD791B8E341C00532128 /* MMXChannelSpec.m */; };
 		0E54CFC81AFAA1B3000326D7 /* MMXClient.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0EA2022B1AF838E1004018AE /* MMXClient.h */; };
 		0E54CFC91AFAA1C1000326D7 /* MMXDeviceManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0EA202401AF838E1004018AE /* MMXDeviceManager.h */; };
 		0E54CFCA1AFAA1CC000326D7 /* MMXDeviceProfile.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0EA202431AF838E1004018AE /* MMXDeviceProfile.h */; };
@@ -189,6 +190,7 @@
 		0E1B57651B8D2EA7009C7204 /* MMXUserSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXUserSpec.m; sourceTree = "<group>"; };
 		0E47F4FB1B069EF20089E887 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Configurations.plist; path = Configuration/Configurations.plist; sourceTree = "<group>"; };
 		0E4DB1191B84E032000B73DD /* MMXChannel_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMXChannel_Private.h; sourceTree = "<group>"; };
+		0E4EDD791B8E341C00532128 /* MMXChannelSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXChannelSpec.m; sourceTree = "<group>"; };
 		0E5F2D8A1A76B99F00396DF4 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
 		0E7F1EA41B742373003808B4 /* MagnetDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagnetDelegate.h; sourceTree = "<group>"; };
 		0E7F1EA51B742373003808B4 /* MagnetDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagnetDelegate.m; sourceTree = "<group>"; };
@@ -471,6 +473,7 @@
 				21540E631A799DD4004E961D /* MMXClientDelegateSpy.m */,
 				0E1B57641B8D2EA7009C7204 /* MMXMessageSpec.m */,
 				0E1B57651B8D2EA7009C7204 /* MMXUserSpec.m */,
+				0E4EDD791B8E341C00532128 /* MMXChannelSpec.m */,
 				66021AA935FA8E7EECCCF7D0 /* CoreData */,
 				660210CF931C18F4540212EC /* MMXRemoteNotificationSpec.m */,
 				0E98DC211AE087BC00C1A519 /* MMXTests-Bridging-Header.h */,
@@ -1069,6 +1072,7 @@
 				0E19FD161B8D24FE000CD428 /* MMXNotificationConstants.m in Sources */,
 				0E19FD1E1B8D258D000CD428 /* MMXLogger.m in Sources */,
 				0E19FD171B8D24FE000CD428 /* MMXUser.m in Sources */,
+				0E4EDD7A1B8E341C00532128 /* MMXChannelSpec.m in Sources */,
 				21540E641A799DD4004E961D /* MMXClientDelegateSpy.m in Sources */,
 				0E19FD111B8D24FE000CD428 /* MMX.m in Sources */,
 				0EB377551ACDFA5000137977 /* MMXAccountManagerSpec.m in Sources */,
