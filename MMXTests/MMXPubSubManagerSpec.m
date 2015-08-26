@@ -107,14 +107,25 @@ describe(@"MMXPubSubManager", ^{
                     case MMXConnectionStatusDisconnected:
                         break;
                     case MMXConnectionStatusAuthenticated:{
-                        MMXTopic * topic = [MMXTopic topicWithName:@"my_test_topic7" maxItemsToPersist:-1 permissionsLevel:MMXPublishPermissionsLevelAnyone];
-                        [mmxClient.pubsubManager createTopic:topic success:^(BOOL success) {
-                            _testFinished = YES;
-                        } failure:^(NSError *error) {
+						[mmxClient.pubsubManager listTopics:1 success:^(int totalCount, NSArray *topics) {
+							MMXTopic *topic = topics.count ? topics[0] : nil;
+							if (topic) {
+								[mmxClient.pubsubManager createTopic:topic success:^(BOOL success) {
+									_testFinished = YES;
+								} failure:^(NSError *error) {
+									_errorCode = error.code;
+									_failed = YES;
+									_testFinished = YES;
+								}];
+							} else {
+								_failed = YES;
+								_testFinished = YES;
+							}
+						} failure:^(NSError *error) {
 							_errorCode = error.code;
-                            _failed = YES;
-                            _testFinished = YES;
-                        }];
+							_failed = YES;
+							_testFinished = YES;
+						}];
                         break;
                     }
                     case MMXConnectionStatusAuthenticationFailure:break;

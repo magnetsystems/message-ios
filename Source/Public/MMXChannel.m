@@ -56,7 +56,14 @@
 	query.queryFilters = @[tFilter];
 	query.compoundPredicateType = MMXAndPredicateType;
 	query.limit = limit;
-	[MMXChannel findChannelsWithQuery:query success:success failure:failure];
+	
+	NSDictionary *queryDict = @{@"operator" : @"AND",
+								@"limit" : @(limit),
+								@"tags" : [NSNull null],
+								@"topicName": @{
+									@"match": @"PREFIX",
+									@"value": name}};
+	[MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
 }
 
 + (void)findByTags:(NSSet *)tags
@@ -69,16 +76,39 @@
 		}
 		return;
 	}
-	MMXQuery * query =  [[MMXQuery alloc] init];
-	query.tags = [tags allObjects];
-	[MMXChannel findChannelsWithQuery:query success:success failure:failure];
+	
+	if (tags.count < 1) {
+		if (failure) {
+			NSError * error = [MMXClient errorWithTitle:@"Tags Empty" message:@"You must specify at least one tag." code:400];
+			failure(error);
+		}
+		return;
+	}
+
+	for (id tag in tags) {
+		if (![tag isKindOfClass:[NSString class]]) {
+			if (failure) {
+				NSError * error = [MMXClient errorWithTitle:@"Tags Empty" message:@"You must specify at least one tag." code:400];
+				failure(error);
+			}
+			return;
+		}
+	}
+	
+	NSDictionary *queryDict = @{@"operator" : @"AND",
+								@"limit" : @(-1),
+								@"tags": @{
+										@"match": @"EXACT",
+										@"value": [tags allObjects]}};
+	
+	[MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
 }
 
-+ (void)findChannelsWithQuery:(MMXQuery *)query
++ (void)findChannelsWithDictionary:(NSDictionary *)queryDict
 					  success:(void (^)(int, NSArray *))success
 					  failure:(void (^)(NSError *))failure {
 	
-	[[MMXClient sharedClient].pubsubManager queryTopics:query success:^(int totalCount, NSArray *topics) {
+	[[MMXClient sharedClient].pubsubManager queryTopicsWithDictionary:queryDict success:^(int totalCount, NSArray *topics) {
 		[[MMXClient sharedClient].pubsubManager summaryOfTopics:topics since:nil until:nil success:^(NSArray *summaries) {
 			[[MMXClient sharedClient].pubsubManager listSubscriptionsWithSuccess:^(NSArray *subscriptions) {
 				NSArray *channelArray = [MMXChannel channelsFromTopics:topics summaries:summaries subscriptions:subscriptions];
@@ -441,6 +471,7 @@
 
 - (MMXTopic *)asTopic {
 	MMXTopic *newTopic = [MMXTopic topicWithName:self.name];
+	newTopic.topicDescription = self.summary;
 	if (!self.isPublic) {
 		MMXUser *currentUser = [MMXUser currentUser];
 		if (currentUser) {
