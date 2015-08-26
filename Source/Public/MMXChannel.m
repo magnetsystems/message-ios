@@ -97,7 +97,6 @@
 	
 	NSDictionary *queryDict = @{@"operator" : @"AND",
 								@"limit" : @(-1),
-								@"tags" : [NSNull null],
 								@"tags": @{
 										@"match": @"EXACT",
 										@"value": [tags allObjects]}};
