@@ -49,6 +49,7 @@
 #import "XMPP.h"
 #import "XMPPJID+MMX.h"
 #import "XMPPReconnect.h"
+#import "XMPPIDTracker.h"
 #import "MMXConfiguration.h"
 #import "NSString+XEP_0106.h"
 
