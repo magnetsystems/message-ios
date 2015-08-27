@@ -12,7 +12,6 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Source/**/*.{h,m}'
   s.resources    = 'Source/CoreData/MMX.xcdatamodeld'
-  s.module_map   = 'Xcode Build Configuration/module.modulemap'
 
   s.frameworks     =  'Foundation', 'UIKit'
   s.xcconfig       =  { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2', 'OTHER_LDFLAGS' => '-ObjC', 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES'}
