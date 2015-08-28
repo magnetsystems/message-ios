@@ -1,1 +1,0 @@
-../../../Magnet_XMPPFramework/Extensions/Roster/XMPPRosterPrivate.h

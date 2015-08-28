@@ -1,0 +1,1 @@
+../../../Magnet-XMPPFramework/Magnet-XMPPFramework-umbrella.h

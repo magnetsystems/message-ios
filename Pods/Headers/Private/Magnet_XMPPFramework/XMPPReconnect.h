@@ -1,1 +1,0 @@
-../../../Magnet_XMPPFramework/Extensions/Reconnect/XMPPReconnect.h

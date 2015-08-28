@@ -1,1 +1,0 @@
-../../../Magnet_XMPPFramework/Core/XMPPParser.h
