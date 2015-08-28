@@ -99,7 +99,7 @@
 								@"limit" : @(-1),
 								@"tags": @{
 										@"match": @"EXACT",
-										@"value": [tags allObjects]}};
+										@"values": [tags allObjects]}};
 	
 	[MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
 }
