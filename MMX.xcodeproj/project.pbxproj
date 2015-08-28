@@ -110,6 +110,7 @@
 		21540E641A799DD4004E961D /* MMXClientDelegateSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 21540E631A799DD4004E961D /* MMXClientDelegateSpy.m */; };
 		660216A5CA22964263058C72 /* MMXRemoteNotificationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 660210CF931C18F4540212EC /* MMXRemoteNotificationSpec.m */; };
 		9883C47C8B415D9FCA446E6E /* libPods-MMXTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CD8F7441BDCF3041B7EA66D6 /* libPods-MMXTests.a */; };
+		E7743556AF22272F536C1F09 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BC4E4B121CF5E8A98B9E907 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -367,6 +368,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7743556AF22272F536C1F09 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

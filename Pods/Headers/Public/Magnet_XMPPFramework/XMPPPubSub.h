@@ -1,0 +1,1 @@
+../../../Magnet_XMPPFramework/Extensions/XEP-0060/XMPPPubSub.h

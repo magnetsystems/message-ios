@@ -1,0 +1,1 @@
+../../../Magnet_XMPPFramework/Authentication/Deprecated-Digest/XMPPDeprecatedDigestAuthentication.h

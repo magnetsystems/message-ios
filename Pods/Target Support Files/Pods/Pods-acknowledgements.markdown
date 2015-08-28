@@ -55,7 +55,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-## Magnet-XMPPFramework
+## Magnet_XMPPFramework
 
 GCDAsyncSocket: (Public Domain)
 

@@ -1,0 +1,1 @@
+../../../Magnet_XMPPFramework/Extensions/CoreDataStorage/XMPPCoreDataStorage.h

@@ -1,0 +1,1 @@
+../../../Magnet_XMPPFramework/Core/XMPPMessage.h

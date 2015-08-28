@@ -1,0 +1,1 @@
+../../../Magnet_XMPPFramework/Authentication/X-Facebook-Platform/XMPPXFacebookPlatformAuthentication.h

@@ -1,0 +1,1 @@
+../../../Magnet_XMPPFramework/Extensions/Roster/XMPPResource.h
