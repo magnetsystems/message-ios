@@ -15,7 +15,7 @@
  * permissions and limitations under the License.
  */
 
-#import <Magnet-XMPPFramework/XMPPJID.h>
+#import <MMXXMPPFramework/XMPPJID.h>
 
 @interface XMPPJID (MMX)
 

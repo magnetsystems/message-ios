@@ -15,7 +15,7 @@
  * permissions and limitations under the License.
  */
 
-#import <Magnet-XMPPFramework/XMPPIQ.h>
+#import <MMXXMPPFramework/XMPPIQ.h>
 
 @interface XMPPIQ (MMX)
 
