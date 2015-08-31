@@ -1,10 +1,13 @@
 PODS:
   - CocoaAsyncSocket (7.4.2)
-  - CocoaLumberjack (1.9.2):
-    - CocoaLumberjack/Extensions (= 1.9.2)
-  - CocoaLumberjack/Core (1.9.2)
-  - CocoaLumberjack/Extensions (1.9.2):
+  - CocoaLumberjack (2.0.1):
+    - CocoaLumberjack/Default (= 2.0.1)
+    - CocoaLumberjack/Extensions (= 2.0.1)
+  - CocoaLumberjack/Core (2.0.1)
+  - CocoaLumberjack/Default (2.0.1):
     - CocoaLumberjack/Core
+  - CocoaLumberjack/Extensions (2.0.1):
+    - CocoaLumberjack/Default
   - Kiwi (2.3.1)
   - Mantle (1.5.5):
     - Mantle/extobjc (= 1.5.5)
@@ -12,33 +15,33 @@ PODS:
   - MDMCoreData/MDMCoreDataCore (1.5.0)
   - MDMCoreData/MDMPersistenceController (1.5.0):
     - MDMCoreData/MDMCoreDataCore
-  - MMXXMPPFramework (3.6.11):
-    - MMXXMPPFramework/Core (= 3.6.11)
-    - MMXXMPPFramework/CoreDataStorage (= 3.6.11)
-    - MMXXMPPFramework/Reconnect (= 3.6.11)
-    - MMXXMPPFramework/Roster (= 3.6.11)
-    - MMXXMPPFramework/XEP-0060 (= 3.6.11)
-    - MMXXMPPFramework/XEP-0082 (= 3.6.11)
-    - MMXXMPPFramework/XEP-0106 (= 3.6.11)
-    - MMXXMPPFramework/XEP-0203 (= 3.6.11)
-  - MMXXMPPFramework/Core (3.6.11):
+  - MMXXMPPFramework (3.6.12):
+    - MMXXMPPFramework/Core (= 3.6.12)
+    - MMXXMPPFramework/CoreDataStorage (= 3.6.12)
+    - MMXXMPPFramework/Reconnect (= 3.6.12)
+    - MMXXMPPFramework/Roster (= 3.6.12)
+    - MMXXMPPFramework/XEP-0060 (= 3.6.12)
+    - MMXXMPPFramework/XEP-0082 (= 3.6.12)
+    - MMXXMPPFramework/XEP-0106 (= 3.6.12)
+    - MMXXMPPFramework/XEP-0203 (= 3.6.12)
+  - MMXXMPPFramework/Core (3.6.12):
     - CocoaAsyncSocket (~> 7.4.1)
-    - CocoaLumberjack (~> 1.9)
-  - MMXXMPPFramework/CoreDataStorage (3.6.11):
+    - CocoaLumberjack (~> 2.0)
+  - MMXXMPPFramework/CoreDataStorage (3.6.12):
     - MMXXMPPFramework/Core
-  - MMXXMPPFramework/Reconnect (3.6.11):
+  - MMXXMPPFramework/Reconnect (3.6.12):
     - MMXXMPPFramework/Core
-  - MMXXMPPFramework/Roster (3.6.11):
+  - MMXXMPPFramework/Roster (3.6.12):
     - MMXXMPPFramework/Core
     - MMXXMPPFramework/CoreDataStorage
     - MMXXMPPFramework/XEP-0203
-  - MMXXMPPFramework/XEP-0060 (3.6.11):
+  - MMXXMPPFramework/XEP-0060 (3.6.12):
     - MMXXMPPFramework/Core
-  - MMXXMPPFramework/XEP-0082 (3.6.11):
+  - MMXXMPPFramework/XEP-0082 (3.6.12):
     - MMXXMPPFramework/Core
-  - MMXXMPPFramework/XEP-0106 (3.6.11):
+  - MMXXMPPFramework/XEP-0106 (3.6.12):
     - MMXXMPPFramework/Core
-  - MMXXMPPFramework/XEP-0203 (3.6.11):
+  - MMXXMPPFramework/XEP-0203 (3.6.12):
     - MMXXMPPFramework/Core
     - MMXXMPPFramework/XEP-0082
 
@@ -46,14 +49,25 @@ DEPENDENCIES:
   - Kiwi (~> 2.3.1)
   - Mantle (~> 1.4)
   - MDMCoreData/MDMPersistenceController (~> 1.4)
-  - MMXXMPPFramework (= 3.6.11)
+  - MMXXMPPFramework (from `https://github.com/magnetsystems/XMPPFramework.git`, branch
+    `upgrade_cocoalumberjack`)
+
+EXTERNAL SOURCES:
+  MMXXMPPFramework:
+    :branch: upgrade_cocoalumberjack
+    :git: https://github.com/magnetsystems/XMPPFramework.git
+
+CHECKOUT OPTIONS:
+  MMXXMPPFramework:
+    :commit: b95d25c27a344bc4082c288827152f52537320ee
+    :git: https://github.com/magnetsystems/XMPPFramework.git
 
 SPEC CHECKSUMS:
   CocoaAsyncSocket: f5783bdedd232d91b89769bc4b5a1580aed518ad
-  CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
+  CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
   Kiwi: f038a6c61f7a9e4d7766bff5717aa3b3fdb75f55
   Mantle: 1b29072a707453975b200a173cf77ec1e2810b75
   MDMCoreData: 402f754cda90865026a209243f1667824e775649
-  MMXXMPPFramework: 27a5deb1cf7accfb4fec3313ce458d6834a37667
+  MMXXMPPFramework: 0c292be5e14ca9e25f1075013ce6aa01748c739c
 
 COCOAPODS: 0.38.2
