@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>default</key>
-	<dict>
-		<key>BaseURL</key>
-		<string>mmx://localhost:5222</string>
-		<key>DomainName</key>
-		<string>mmx</string>
-		<key>AppId</key>
-		<string>n9ci8ffoitr</string>
-		<key>ApiKey</key>
-		<string>55cff1f0-be33-4ba5-b76f-231954ab369f</string>
-		<key>AnonymousSecret</key>
-		<string>3c27efc5-0bfe-40f5-aa47-f600910aff12</string>
-		<key>ShouldForceTLS</key>
-		<false/>
-		<key>PublicAPIPort</key>
-		<real>5220</real>
-		<key>AllowInvalidCertificates</key>
-		<false/>
-	</dict>
-</dict>
+    <dict>
+        <key>default</key>
+        <dict>
+            <key>BaseURL</key>
+            <string>mmx://localhost:5222</string>
+            <key>DomainName</key>
+            <string>mmx</string>
+            <key>AppId</key>
+            <string>c3die34g1fx</string>
+            <key>ApiKey</key>
+            <string>4e610f6e-d1e7-469d-81b9-1572c69d182a</string>
+            <key>AnonymousSecret</key>
+            <string>1b6d4f81-6596-4ae7-af0f-f26c41769cba</string>
+            <key>ShouldForceTLS</key>
+            <true/>
+            <key>PublicAPIPort</key>
+            <integer>5221</integer>
+            <key>AllowInvalidCertificates</key>
+            <true/>
+        </dict>
+    </dict>
 </plist>
