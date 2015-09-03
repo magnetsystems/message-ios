@@ -23,7 +23,7 @@
 #define DEFAULT_TEST_TIMEOUT 15.0
 
 SPEC_BEGIN(MMXPubSubManagerSpec)
-
+/*
 describe(@"MMXPubSubManager", ^{
     
     __block id clientDelegateMock;
@@ -430,5 +430,5 @@ describe(@"MMXPubSubManager", ^{
 	
 
 });
-
+*/
 SPEC_END
