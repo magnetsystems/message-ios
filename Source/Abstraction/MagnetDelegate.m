@@ -340,8 +340,10 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	MMXUser *user = [MMXUser new];
 	MMXInternalAddress *address = recipient.address;
 	if (address) {
-		user.username = address.username;
-		user.displayName = address.displayName;
+		//Converting to MMXUserID will handle any exscaping needed
+		MMXUserID *userID = [MMXUserID userIDFromAddress:address];
+		user.username = userID.username;
+		user.displayName = userID.displayName;
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveDeliveryConfirmationNotification
 														object:nil
@@ -361,8 +363,10 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	for (id<MMXAddressable> recipient in recipients) {
 		MMXInternalAddress *address = recipient.address;
 		MMXUser *user = [MMXUser new];
-		user.username = address.username;
-		user.displayName = address.displayName;
+		//Converting to MMXUserID will handle any exscaping needed
+		MMXUserID *userID = [MMXUserID userIDFromAddress:address];
+		user.username = userID.username;
+		user.displayName = userID.displayName;
 		[set addObject:user];
 	}
 	return set.copy;
