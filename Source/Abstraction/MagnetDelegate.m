@@ -91,7 +91,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 		 credentials:(NSURLCredential *)credential
 			 success:(void (^)(void))success
 			 failure:(void (^)(NSError *))failure {
-	[[MMXClient sharedClient].accountManager createAccountForUsername:user.username displayName:user.displayName email:user.email password:credential.password success:^(MMXUserProfile *userProfile) {
+	[[MMXClient sharedClient].accountManager createAccountForUsername:user.username displayName:user.displayName email:nil password:credential.password success:^(MMXUserProfile *userProfile) {
 		if (success) {
 			success();
 		}
@@ -193,7 +193,6 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 				MMXUser *user = [MMXUser new];
 				user.username = userProfile.userID.username;
 				user.displayName = userProfile.displayName;
-				user.email = userProfile.email;
 				self.currentUser = user.copy;
 				if (self.logInSuccessBlock) {
 					self.logInSuccessBlock(user);
