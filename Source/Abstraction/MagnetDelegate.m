@@ -148,7 +148,6 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	//FIXME: Needs to properly handle failure and success blocks
 	MMXOutboundMessage *msg = [MMXOutboundMessage messageTo:[message.recipients allObjects] withContent:nil metaData:message.messageContent];
 	msg.messageID = message.messageID;
-	NSString *messageID = [[MMXClient sharedClient] sendMessage:msg];
 	
 	if (success || failure) {
 		NSMutableDictionary *blockDict = [NSMutableDictionary dictionary];
@@ -158,8 +157,11 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 		if (failure) {
 			[blockDict setObject:failure forKey:MMXMessageFailureBlockKey];
 		}
-		[self.messageBlockQueue setObject:blockDict forKey:messageID];
+		[self.messageBlockQueue setObject:blockDict forKey:msg.messageID];
 	}
+	
+	NSString *messageID = [[MMXClient sharedClient] sendMessage:msg];
+
 	return messageID;
 }
 
