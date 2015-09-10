@@ -73,6 +73,13 @@
 		}
 		return nil;
 	}
+	if ([MMXUser currentUser] == nil) {
+		NSError * error = [MMXClient errorWithTitle:@"Not Logged In" message:@"You must be logged in to send a message." code:401];
+		if (failure) {
+			failure(error);
+		}
+		return nil;
+	}
 	if (self.channel) {
 		NSString *messageID = [[MMXClient sharedClient] generateMessageID];
 		MMXPubSubMessage *msg = [MMXPubSubMessage pubSubMessageToTopic:[self.channel asTopic] content:nil metaData:self.messageContent];
@@ -90,6 +97,8 @@
 			}
 		}
 		[[MMXClient sharedClient].pubsubManager publishPubSubMessage:msg success:^(BOOL successful, NSString *messageID) {
+			self.sender = [MMXUser currentUser];
+			self.timestamp = [NSDate date];
 			if (success) {
 				success();
 			}
@@ -114,6 +123,8 @@
 			}
 		}
 		[[MagnetDelegate sharedDelegate] sendMessage:self.copy success:^(void) {
+			self.sender = [MMXUser currentUser];
+			self.timestamp = [NSDate date];
 			if (success) {
 				success();
 			}
