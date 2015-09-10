@@ -1,4 +1,3 @@
-source 'https://bitbucket.org/magneteng/ios-distribution.git'
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 
