@@ -151,7 +151,10 @@ describe(@"MMXMessage", ^{
 				[channel createWithSuccess:^{
 					[MMXChannel channelsStartingWith:channelName limit:10 success:^(int totalCount, NSArray *channels) {
 						MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
-						if (totalCount == 1 && returnedChannel && [channelSummary isEqualToString:returnedChannel.summary]) {
+						if (totalCount == 1 &&
+							returnedChannel &&
+							[channelSummary isEqualToString:returnedChannel.summary] &&
+							[returnedChannel.ownerUsername isEqualToString:[MMXUser currentUser].username]) {
 							_isSuccess = YES;
 						} else {
 							_isSuccess = NO;
