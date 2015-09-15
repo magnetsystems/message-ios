@@ -21,6 +21,7 @@
 #import "MMXUserID_Private.h"
 #import "MMXUser.h"
 #import "MagnetDelegate.h"
+#import "MMXUtils.h"
 
 @implementation MMXInvite
 
@@ -75,9 +76,11 @@
 
 + (MMXChannel *)channelFromMessageMetaData:(NSDictionary *)metaData {
 	if (metaData) {
-		MMXChannel *channel = [MMXChannel channelWithName:metaData[@"channelName"] summary:metaData[@"channelSummary"]];
+		NSString *summary = [MMXUtils objectIsValidString:metaData[@"channelSummary"]] ? metaData[@"channelSummary"] : @"";
+		MMXChannel *channel = [MMXChannel channelWithName:metaData[@"channelName"] summary:summary];
 		channel.isPublic = ![metaData[@"channelIsPublic"] boolValue];
-		channel.ownerUsername = metaData[@"channelCreatorUsername"];
+		NSString * ownerUsername = [MMXUtils objectIsValidString:metaData[@"channelCreatorUsername"]] ? metaData[@"channelCreatorUsername"] : @"";
+		channel.ownerUsername = ownerUsername;
 		return channel;
 	}
 	return nil;
