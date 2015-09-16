@@ -11,16 +11,16 @@ SPEC_BEGIN(MMXUserSpec)
 
     describe(@"MMXUser", ^{
 
-        NSString *janeDoeUsername = @"z.jane.doe";
+        NSString *janeDoeUsername = @"jane.doe";
         NSString *janeDoePassword = @"magnet";
-        NSString *janeDoeName = @"Z Jane Doe";
+        NSString *janeDoeName = @"Jane Doe";
         NSURLCredential *janeDoeCredential = [NSURLCredential credentialWithUser:janeDoeUsername
                                                                  password:janeDoePassword
                                                               persistence:NSURLCredentialPersistenceNone];
 
-        NSString *johnDoeUsername = @"z.john.doe";
+        NSString *johnDoeUsername = @"john.doe";
         NSString *johnDoePassword = @"magnet";
-        NSString *johnDoeName = @"Z John Doe";
+        NSString *johnDoeName = @"John Doe";
         NSURLCredential *johnDoeCredential = [NSURLCredential credentialWithUser:johnDoeUsername
                                                                         password:johnDoePassword
                                                                      persistence:NSURLCredentialPersistenceNone];
@@ -224,7 +224,7 @@ SPEC_BEGIN(MMXUserSpec)
                 __block int _totalCount;
 
                 [MMXUser logInWithCredential:janeDoeCredential success:^(MMXUser *user) {
-                    [MMXUser findByDisplayName:@"z" limit:100 success:^(int totalCount, NSArray *users) {
+                    [MMXUser findByDisplayName:@"j" limit:100 success:^(int totalCount, NSArray *users) {
                         _fetchedUsers = users;
                         _totalCount = totalCount;
                     } failure:^(NSError *error) {
@@ -262,7 +262,7 @@ SPEC_BEGIN(MMXUserSpec)
                 __block int _totalCount;
 
                 [MMXUser logInWithCredential:janeDoeCredential success:^(MMXUser *user) {
-                    [MMXUser findByDisplayName:@"z" limit:1 success:^(int totalCount, NSArray *users) {
+                    [MMXUser findByDisplayName:@"j" limit:1 success:^(int totalCount, NSArray *users) {
                         _fetchedUsers = users;
                         _totalCount = totalCount;
                     } failure:^(NSError *error) {
@@ -275,7 +275,101 @@ SPEC_BEGIN(MMXUserSpec)
                 [[expectFutureValue(_fetchedUsers) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] haveCountOf:1];
                 [[expectFutureValue(theValue(_totalCount)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:(theValue(2))];
             });
+			
         });
+		
+		context(@"when fetching all users", ^{
+			it(@"should return more than one user", ^{
+				__block NSArray *_fetchedUsers = @[]; // Set should start empty
+				__block int _totalCount = 0; // Start value at zero
+				
+				[MMXUser logInWithCredential:janeDoeCredential success:^(MMXUser *user) {
+					[MMXUser allUsersWithLimit:100 success:^(int totalCount, NSArray *users) {
+						_fetchedUsers = users;
+						_totalCount = totalCount;
+					} failure:^(NSError *error) {
+						
+					}];
+				}                    failure:^(NSError *error) {
+				}];
+				
+				// Assert
+				[[expectFutureValue(_fetchedUsers) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] haveCountOfAtLeast:1];
+				[[expectFutureValue(theValue(_totalCount)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beBetween:theValue(3) and:theValue(15)];
+			});
+		});
+		
+		context(@"when creating a user without setting the displayName", ^{
+
+			it(@"should have the same value for username and displayName after login", ^{
+				__block BOOL _isSuccess = NO;
+				
+				MMXUser *testUser = [MMXUser new];
+				NSString *testUsername = @"testingusername";
+				NSString *testPassword = @"magnet";
+				NSURLCredential *testCredential = [NSURLCredential credentialWithUser:testUsername
+																				password:testPassword
+																			 persistence:NSURLCredentialPersistenceNone];
+				
+				testUser.username = testUsername;
+				
+				[testUser registerWithCredential:testCredential success:^{
+					[MMXUser logInWithCredential:testCredential success:^(MMXUser *user) {
+						[[theValue([user.username isEqualToString:user.displayName]) should] beYes];
+						_isSuccess = YES;
+					} failure:^(NSError *error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+				
+				// Assert
+				[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+				
+			});
+		});
+		
+		context(@"when updating a user displayName", ^{
+			it(@"should have a new value when calling currentUser", ^{
+				__block BOOL _isSuccess = NO;
+				
+				MMXUser *testUser = [MMXUser new];
+				NSString *testUsername = @"testingusername2";
+				NSString *testPassword = @"magnet";
+				NSURLCredential *testCredential = [NSURLCredential credentialWithUser:testUsername
+																				password:testPassword
+																			 persistence:NSURLCredentialPersistenceNone];
+				
+				testUser.username = testUsername;
+				
+				[testUser registerWithCredential:testCredential success:^{
+					[MMXUser logInWithCredential:testCredential success:^(MMXUser *user) {
+						// assert
+						[[theValue([user.username isEqualToString:user.displayName]) should] beYes];
+						__block NSString *newDisplayName = @"newDisplayName";
+						[user changeDisplayName:newDisplayName success:^{
+							MMXUser *currentUser = [MMXUser currentUser];
+							// assert
+							[[theValue([newDisplayName isEqualToString:currentUser.displayName]) should] beYes];
+							_isSuccess = YES;
+						} failure:^(NSError *error) {
+							_isSuccess = NO;
+						}];
+
+					} failure:^(NSError *error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+				
+				// Assert
+				[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+				
+			});
+		});
+		
     });
 
 SPEC_END

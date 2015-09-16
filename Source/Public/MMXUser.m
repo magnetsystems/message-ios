@@ -105,6 +105,8 @@
 	}
 	[[MMXClient sharedClient].accountManager updateDisplayName:displayName success:^(BOOL successful) {
 		self.displayName = displayName;
+		//FIXME: add functionality where the current user is updated from the server on user attribute updates
+		[MagnetDelegate sharedDelegate].currentUser.displayName = displayName;
 		if (success) {
 			success();
 		}
