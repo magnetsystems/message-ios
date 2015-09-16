@@ -300,7 +300,7 @@ SPEC_BEGIN(MMXUserSpec)
 		});
 		
 		context(@"when creating a user without setting the displayName", ^{
-
+			
 			it(@"should have the same value for username and displayName after login", ^{
 				__block BOOL _isSuccess = NO;
 				
@@ -316,6 +316,35 @@ SPEC_BEGIN(MMXUserSpec)
 				[testUser registerWithCredential:testCredential success:^{
 					[MMXUser logInWithCredential:testCredential success:^(MMXUser *user) {
 						[[theValue([user.username isEqualToString:user.displayName]) should] beYes];
+						_isSuccess = YES;
+					} failure:^(NSError *error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+				
+				// Assert
+				[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+				
+			});
+		});
+		
+		context(@"when getting user for username", ^{
+			
+			it(@"should return a fully hydrated user object", ^{
+				__block BOOL _isSuccess = NO;
+				
+				NSString *testUsername = @"testuser";
+				NSString *testPassword = @"testuser";
+				NSURLCredential *testCredential = [NSURLCredential credentialWithUser:testUsername
+																				password:testPassword
+																			 persistence:NSURLCredentialPersistenceNone];
+				
+				[MMXUser logInWithCredential:testCredential success:^(MMXUser *user) {
+					[MMXUser userForUsername:testUsername success:^(MMXUser *user2) {
+						[[theValue([user2.username isEqualToString:testUsername]) should] beYes];
+						[[theValue(![user2.displayName isEqualToString:@""]) should] beYes];
 						_isSuccess = YES;
 					} failure:^(NSError *error) {
 						_isSuccess = NO;

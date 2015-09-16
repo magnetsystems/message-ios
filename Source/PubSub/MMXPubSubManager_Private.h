@@ -49,6 +49,11 @@ typedef NS_ENUM(NSInteger, MMXTopicType){
 
 - (instancetype)initWithDelegate:(id<MMXPubSubManagerDelegate>)delegate;
 
+- (void)listTopics:(int)limit
+			  type:(MMXTopicType)type
+		   success:(void (^)(NSArray * topics))success
+		   failure:(void (^)(NSError * error))failure;
+
 - (void)retractItemsFromTopic:(MMXTopic *)topic
                       itemIDs:(NSArray *)itemIDs
                       success:(void (^)(BOOL success))success

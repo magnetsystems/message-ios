@@ -45,6 +45,11 @@
 @property (nonatomic, readonly) NSString *ownerUsername;
 
 /**
+ *  The date the channel was created.
+ */
+@property (nonatomic, readonly) NSDate * creationDate;
+
+/**
  *  The total number of messages that have been posted to the channel.
  */
 @property (nonatomic, readonly) int numberOfMessages;
@@ -72,11 +77,22 @@
 						summary:(NSString *)summary;
 
 /**
+ *  Create a new channel object
+ *
+ *  @param channelName	The exact name of the channel you are searching for.
+ *  @param success		Block with the channel with the name specified if it exists.
+ *  @param failure		Block with an NSError with details about the call failure.
+ */
++ (void)channelForChannelName:(NSString *)channelName
+							  success:(void (^)(MMXChannel *channel))success
+							  failure:(void (^)(NSError *error))failure;
+
+/**
  *  Method used to discover existing channels by name
  *
- *  @param name     The exact name of the channel you are searching for.
+ *  @param name     The begining of the channel name you are searching for.
  *  @param limit	The max number of items you want returned.
- *  @param success  Block with the number of channels that match the query and a NSSet of MMXChannels that match the criteria.
+ *  @param success  Block with the number of channels that match the query and a NSArray of MMXChannels that match the criteria.
  *  @param failure  Block with an NSError with details about the call failure.
  */
 + (void)channelsStartingWith:(NSString *)name

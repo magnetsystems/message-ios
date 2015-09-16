@@ -38,6 +38,46 @@
 	return channel;
 }
 
++ (void)channelForChannelName:(NSString *)channelName
+					  success:(void (^)(MMXChannel *))success
+					  failure:(void (^)(NSError *))failure {
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		return;
+	}
+	if (channelName == nil || [channelName isEqualToString:@""]) {
+		if (failure) {
+			failure([MMXClient errorWithTitle:@"Invalid Search Parameter"
+									  message:@"You must pass at least one valid character to this method."
+										 code:500]);
+		}
+		return;
+	}
+	MMXTopicQueryFilter *tFilter = [[MMXTopicQueryFilter alloc] init];
+	tFilter.topicName = channelName;
+	tFilter.predicateOperatorType = MMXEqualToPredicateOperatorType;
+	
+	MMXQuery * query =  [[MMXQuery alloc] init];
+	query.queryFilters = @[tFilter];
+	query.compoundPredicateType = MMXAndPredicateType;
+	
+	NSDictionary *queryDict = @{@"operator" : @"AND",
+								@"limit" : @(-1),
+								@"tags" : [NSNull null],
+								@"topicName": @{
+										@"match": @"PREFIX",
+										@"value": channelName}};
+	[MMXChannel findChannelsWithDictionary:queryDict success:^(int count, NSArray *topics) {
+		if (count > 0 && topics.count) {
+			if (success) {
+				//FIXME: get full topic
+			}
+		}
+	} failure:failure];
+}
+
 + (void)channelsStartingWith:(NSString *)name
 					   limit:(int)limit
 					 success:(void (^)(int, NSArray *))success
@@ -45,6 +85,14 @@
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
 			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		return;
+	}
+	if (name == nil || [name isEqualToString:@""]) {
+		if (failure) {
+			failure([MMXClient errorWithTitle:@"Invalid Search Parameter"
+									  message:@"You must pass at least one valid character to this method."
+										 code:500]);
 		}
 		return;
 	}
@@ -88,7 +136,7 @@
 	for (id tag in tags) {
 		if (![tag isKindOfClass:[NSString class]]) {
 			if (failure) {
-				NSError * error = [MMXClient errorWithTitle:@"Tags Empty" message:@"You must specify at least one tag." code:400];
+				NSError * error = [MMXClient errorWithTitle:@"Invalid Tags" message:@"Tags can only be strings." code:400];
 				failure(error);
 			}
 			return;
@@ -450,6 +498,7 @@
 		MMXChannel *channel = [MMXChannel channelWithName:topic.topicName summary:topic.topicDescription];
 		channel.ownerUsername = topic.topicCreator.username;
 		channel.isPublic = !topic.inUserNameSpace;
+		channel.creationDate = topic.creationDate;
 		[channelDict setObject:channel forKey:[MMXChannel channelKeyFromTopic:topic]];
 	}
 	for (MMXTopicSummary *sum in summaries) {
