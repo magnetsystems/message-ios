@@ -206,6 +206,31 @@ describe(@"MMXMessage", ^{
 		});
 	});
 	
+	context(@"when finding a channel by tag", ^{
+		it(@"should only return one valid channel for the test tag", ^{
+			__block BOOL _isSuccess = NO;
+			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
+				[MMXChannel findByTags:[NSSet setWithObject:@"test_topic_tag"] success:^(int totalCount, NSArray *channels) {
+					MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
+					[[returnedChannel.creationDate shouldNot] beNil];
+					[[theValue(totalCount) should] equal:theValue(1)];
+					[[returnedChannel shouldNot] beNil];
+					[[theValue([MMXUtils objectIsValidString:returnedChannel.name]) should] beYes];
+					[[theValue([MMXUtils objectIsValidString:returnedChannel.summary]) should] beYes];
+					[[theValue([MMXUtils objectIsValidString:returnedChannel.ownerUsername]) should] beYes];
+					[[theValue(returnedChannel.isPublic) should] beYes];
+					[[returnedChannel.creationDate shouldNot] beNil];
+					_isSuccess = YES;
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+	});
+	
 	context(@"when sending an invite", ^{
 		it(@"should fail if trying to send from a channel object that does not have the ownerUsername set", ^{
 			__block BOOL _isSuccess = NO;
@@ -228,6 +253,9 @@ describe(@"MMXMessage", ^{
 				[MMXChannel channelForChannelName:@"test_topic" success:^(MMXChannel *channel) {
 					[channel inviteUser:[MMXUser currentUser] comments:@"No commment" success:^(MMXInvite *invite) {
 						[[invite shouldNot] beNil];
+						[[theValue([channel isEqual:invite.channel]) should] beYes];
+						[[theValue([[MMXUser currentUser] isEqual:invite.sender]) should] beYes];
+						[[theValue([invite.comments isEqualToString:@""]) should] beNo];
 						_isSuccess = YES;
 					} failure:^(NSError *error) {
 						_isSuccess = NO;

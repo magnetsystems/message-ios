@@ -1212,6 +1212,7 @@ CREATE TABLE `mmxTag` (
 
 LOCK TABLES `mmxTag` WRITE;
 /*!40000 ALTER TABLE `mmxTag` DISABLE KEYS */;
+INSERT INTO `mmxTag` VALUES (1,'test_topic_tag','2015-09-17 11:29:20','c3die34g1fx',NULL,NULL,'pubsub','/c3die34g1fx/*/test_topic');
 /*!40000 ALTER TABLE `mmxTag` ENABLE KEYS */;
 UNLOCK TABLES;
 
