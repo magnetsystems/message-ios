@@ -205,7 +205,57 @@ describe(@"MMXMessage", ^{
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
 	});
+	
+	context(@"when sending an invite", ^{
+		it(@"should fail if trying to send from a channel object that does not have the ownerUsername set", ^{
+			__block BOOL _isSuccess = NO;
+			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
+				MMXChannel *channel = [MMXChannel channelWithName:@"test_topic" summary:@"test_topic"];
+				[channel inviteUser:[MMXUser currentUser] comments:@"No commment" success:^(MMXInvite *invite) {
+					_isSuccess = NO;
+				} failure:^(NSError *error) {
+					_isSuccess = YES;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
 
+		it(@"should succeed if trying to send from a channel object that is fully hydrated", ^{
+			__block BOOL _isSuccess = NO;
+			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
+				[MMXChannel channelForChannelName:@"test_topic" success:^(MMXChannel *channel) {
+					[channel inviteUser:[MMXUser currentUser] comments:@"No commment" success:^(MMXInvite *invite) {
+						[[invite shouldNot] beNil];
+						_isSuccess = YES;
+					} failure:^(NSError *error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+		
+		afterEach(^{
+			
+			__block BOOL _isSuccess = NO;
+			
+			[MMXUser logOutWithSuccess:^{
+				_isSuccess = YES;
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+
+	});
+	
 });
 
 SPEC_END
