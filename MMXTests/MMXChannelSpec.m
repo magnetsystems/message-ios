@@ -152,6 +152,7 @@ describe(@"MMXMessage", ^{
 				[channel createWithSuccess:^{
 					[MMXChannel channelsStartingWith:channelName limit:10 success:^(int totalCount, NSArray *channels) {
 						MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
+						[[returnedChannel.creationDate shouldNot] beNil];
 						[[theValue(totalCount) should] equal:theValue(1)];
 						[[returnedChannel shouldNot] beNil];
 						[[theValue([channelSummary isEqualToString:returnedChannel.summary]) should] beYes];
@@ -193,6 +194,7 @@ describe(@"MMXMessage", ^{
 					[[theValue([MMXUtils objectIsValidString:channel.summary]) should] beYes];
 					[[theValue([MMXUtils objectIsValidString:channel.ownerUsername]) should] beYes];
 					[[theValue(channel.isPublic) should] beYes];
+					[[channel.creationDate shouldNot] beNil];
 					_isSuccess = YES;
 				} failure:^(NSError *error) {
 					_isSuccess = NO;
