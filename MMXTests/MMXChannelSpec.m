@@ -10,6 +10,7 @@
 #import "MMX.h"
 #import "MMXDeviceManager.h"
 #import "MMXDeviceManager_Private.h"
+#import "MMXUtils.h"
 
 #define DEFAULT_TEST_TIMEOUT 10.0
 
@@ -151,14 +152,11 @@ describe(@"MMXMessage", ^{
 				[channel createWithSuccess:^{
 					[MMXChannel channelsStartingWith:channelName limit:10 success:^(int totalCount, NSArray *channels) {
 						MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
-						if (totalCount == 1 &&
-							returnedChannel &&
-							[channelSummary isEqualToString:returnedChannel.summary] &&
-							[returnedChannel.ownerUsername isEqualToString:[MMXUser currentUser].username]) {
-							_isSuccess = YES;
-						} else {
-							_isSuccess = NO;
-						}
+						[[theValue(totalCount) should] equal:theValue(1)];
+						[[returnedChannel shouldNot] beNil];
+						[[theValue([channelSummary isEqualToString:returnedChannel.summary]) should] beYes];
+						[[theValue([returnedChannel.ownerUsername isEqualToString:[MMXUser currentUser].username]) should] beYes];
+						_isSuccess = YES;
 					} failure:^(NSError *error) {
 						_isSuccess = NO;
 					}];
@@ -186,7 +184,26 @@ describe(@"MMXMessage", ^{
 		});
 	});
 	
-	
+	context(@"when finding a channel by name", ^{
+		it(@"should only return one valid channel", ^{
+			__block BOOL _isSuccess = NO;
+			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
+				[MMXChannel channelForChannelName:@"test_topic" success:^(MMXChannel *channel) {
+					[[theValue([MMXUtils objectIsValidString:channel.name]) should] beYes];
+					[[theValue([MMXUtils objectIsValidString:channel.summary]) should] beYes];
+					[[theValue([MMXUtils objectIsValidString:channel.ownerUsername]) should] beYes];
+					[[theValue(channel.isPublic) should] beYes];
+					_isSuccess = YES;
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+	});
+
 });
 
 SPEC_END

@@ -84,8 +84,8 @@
  *  @param failure		Block with an NSError with details about the call failure.
  */
 + (void)channelForChannelName:(NSString *)channelName
-							  success:(void (^)(MMXChannel *channel))success
-							  failure:(void (^)(NSError *error))failure;
+					  success:(void (^)(MMXChannel *channel))success
+					  failure:(void (^)(NSError *error))failure;
 
 /**
  *  Method used to discover existing channels by name

@@ -67,12 +67,19 @@
 								@"limit" : @(-1),
 								@"tags" : [NSNull null],
 								@"topicName": @{
-										@"match": @"PREFIX",
+										@"match": @"EXACT",
 										@"value": channelName}};
-	[MMXChannel findChannelsWithDictionary:queryDict success:^(int count, NSArray *topics) {
-		if (count > 0 && topics.count) {
+	[MMXChannel findChannelsWithDictionary:queryDict success:^(int count, NSArray *channelArray) {
+		if (count == 1 && channelArray.count) {
 			if (success) {
-				//FIXME: get full topic
+				MMXChannel *channel = channelArray.firstObject;
+				success(channel);
+			}
+		} else if (failure) {
+			if (failure) {
+				failure([MMXClient errorWithTitle:@"Unknown Error"
+										  message:@"An unknown error occurred."
+											 code:500]);
 			}
 		}
 	} failure:failure];
