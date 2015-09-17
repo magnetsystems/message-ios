@@ -54,6 +54,8 @@
 	}];
 }
 
+#pragma mark - Connection Lifecycle
+
 + (void)logInWithCredential:(NSURLCredential *)credential
 					success:(void (^)(MMXUser *))success
 					failure:(void (^)(NSError *))failure {
@@ -87,6 +89,8 @@
 		}];
 	}
 }
+
+#pragma mark - Update User
 
 - (void)changeDisplayName:(NSString *)displayName
 				  success:(void (^)(void))success
@@ -138,10 +142,20 @@
 	}];
 }
 
+#pragma mark - User Discovery
+
 + (void)findByDisplayName:(NSString *)displayName
-                    limit:(int)limit
-                  success:(void (^)(int totalCount, NSArray *users))success
-                  failure:(void (^)(NSError *error))failure {
+					limit:(int)limit
+				  success:(void (^)(int totalCount, NSArray *users))success
+				  failure:(void (^)(NSError *error))failure {
+	[MMXUser findByDisplayName:displayName limit:limit offset:0 success:success failure:failure];
+}
+
++ (void)findByDisplayName:(NSString *)displayName
+					limit:(int)limit
+				   offset:(int)offset
+				  success:(void (^)(int totalCount, NSArray *users))success
+				  failure:(void (^)(NSError *error))failure {
 	if (displayName == nil || [displayName isEqualToString:@""]) {
 		if (failure) {
 			failure([MMXClient errorWithTitle:@"Invalid Search Parameter"
@@ -158,6 +172,21 @@
 		}
 		return;
 	}
+	[MMXUser internalFindByDisplayName:displayName limit:limit offset:offset success:success failure:failure];
+}
+
++ (void)allUsersWithLimit:(int)limit
+				   offset:(int)offset
+				  success:(void (^)(int, NSArray *))success
+				  failure:(void (^)(NSError *))failure {
+	[MMXUser internalFindByDisplayName:@"%" limit:limit offset:offset success:success failure:failure];
+}
+
++ (void)internalFindByDisplayName:(NSString *)displayName
+							limit:(int)limit
+						   offset:(int)offset
+						  success:(void (^)(int totalCount, NSArray *users))success
+						  failure:(void (^)(NSError *error))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
 			failure([MagnetDelegate notNotLoggedInError]);
@@ -167,20 +196,22 @@
 	MMXQuery *query = [MMXQuery queryForUserDisplayNameStartsWith:displayName
 															 tags:nil
 															limit:limit];
+	query.offset = offset;
 	[[MMXClient sharedClient].accountManager queryUsers:query
 												success:^(int totalCount, NSArray *users) {
-		NSMutableArray *userArray = [[NSMutableArray alloc] initWithCapacity:users.count];
-		for (MMXUserProfile *profile in users) {
-			[userArray addObject:[MMXUser userFromMMXUserProfile:profile]];
-		}
-		if (success) {
-			success(totalCount, userArray);
-		}
-	} failure:^(NSError *error) {
-		if (failure) {
-			failure(error);
-		}
-	}];
+													NSMutableArray *userArray = [[NSMutableArray alloc] initWithCapacity:users.count];
+													for (MMXUserProfile *profile in users) {
+														[userArray addObject:[MMXUser userFromMMXUserProfile:profile]];
+													}
+													if (success) {
+														success(totalCount, userArray);
+													}
+												} failure:^(NSError *error) {
+													if (failure) {
+														failure(error);
+													}
+												}];
+
 }
 
 + (void)userForUsername:(NSString *)username
@@ -201,34 +232,6 @@
 			failure(error);
 		}
 	}];
-}
-
-+ (void)allUsersWithLimit:(int)limit
-				  success:(void (^)(int, NSArray *))success
-				  failure:(void (^)(NSError *))failure {
-	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
-		}
-		return;
-	}
-	MMXQuery *query = [MMXQuery queryForUserDisplayNameStartsWith:@"%"
-															 tags:nil
-															limit:limit];
-	[[MMXClient sharedClient].accountManager queryUsers:query
-												success:^(int totalCount, NSArray *users) {
-													NSMutableArray *userArray = [[NSMutableArray alloc] initWithCapacity:users.count];
-													for (MMXUserProfile *profile in users) {
-														[userArray addObject:[MMXUser userFromMMXUserProfile:profile]];
-													}
-													if (success) {
-														success(totalCount, userArray);
-													}
-												} failure:^(NSError *error) {
-													if (failure) {
-														failure(error);
-													}
-												}];
 }
 
 + (void)findByTags:(NSSet *)tags

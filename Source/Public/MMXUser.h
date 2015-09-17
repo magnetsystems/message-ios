@@ -105,9 +105,39 @@
  *  @param failure		Block with an NSError with details about the call failure.
  */
 + (void)findByDisplayName:(NSString *)displayName
-                    limit:(int)limit
-                  success:(void (^)(int totalCount, NSArray *users))success
-                  failure:(void (^)(NSError *error))failure;
+					limit:(int)limit
+				  success:(void (^)(int totalCount, NSArray *users))success
+				  failure:(void (^)(NSError *error))failure;
+
+/**
+ *  Method used to discover existing users by displayName.
+ *	You cannot pass an empty string.
+ *  The valid character set is alphanumeric plus period, dash, underscore and "at". .-_@
+ *
+ *  @param displayName	The start of the displayName for the user you are searching for.
+ *  @param limit		The max number of results you want returned. Defaults to 20.
+ *  @param offset		The offset into the results list. Used for pagination.
+ *  @param success		Block with the number of users that match the query and a NSArray of MMXUsers that match the criteria.
+ *  @param failure		Block with an NSError with details about the call failure.
+ */
++ (void)findByDisplayName:(NSString *)displayName
+					limit:(int)limit
+				   offset:(int)offset
+				  success:(void (^)(int totalCount, NSArray *users))success
+				  failure:(void (^)(NSError *error))failure;
+
+/**
+ *  Method used to discover all existing users.
+ *
+ *  @param limit	The max number of results you want returned. Defaults to 20.
+ *  @param offset	The offset into the results list. Used for pagination.
+ *  @param success	Block with the number of users that match the query and a NSArray of MMXUsers that match the criteria.
+ *  @param failure	Block with an NSError with details about the call failure.
+ */
++ (void)allUsersWithLimit:(int)limit
+				   offset:(int)offset
+				  success:(void (^)(int totalCount, NSArray *users))success
+				  failure:(void (^)(NSError *error))failure;
 
 /**
  *  Method for getting the full user object from a username
@@ -119,17 +149,6 @@
 + (void)userForUsername:(NSString *)username
 				success:(void (^)(MMXUser *user))success
 				failure:(void (^)(NSError *error))failure;
-
-/**
- *  Method used to discover all existing users.
- *
- *  @param limit		The max number of results you want returned. Defaults to 20.
- *  @param success		Block with the number of users that match the query and a NSArray of MMXUsers that match the criteria.
- *  @param failure		Block with an NSError with details about the call failure.
- */
-+ (void)allUsersWithLimit:(int)limit
-				  success:(void (^)(int totalCount, NSArray *users))success
-				  failure:(void (^)(NSError *error))failure;
 
 
 //MMXAddressable Protocol
