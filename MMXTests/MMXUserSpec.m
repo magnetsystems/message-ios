@@ -224,7 +224,7 @@ SPEC_BEGIN(MMXUserSpec)
                 __block int _totalCount;
 
                 [MMXUser logInWithCredential:janeDoeCredential success:^(MMXUser *user) {
-                    [MMXUser findByDisplayName:@"j" limit:100 success:^(int totalCount, NSArray *users) {
+					[MMXUser findByDisplayName:@"j" limit:100 offset:0 success:^(int totalCount, NSArray *users) {
                         _fetchedUsers = users;
                         _totalCount = totalCount;
                     } failure:^(NSError *error) {
@@ -243,7 +243,7 @@ SPEC_BEGIN(MMXUserSpec)
                 __block int _totalCount = 1; // Set to have a non-zero value
 
                 [MMXUser logInWithCredential:janeDoeCredential success:^(MMXUser *user) {
-                    [MMXUser findByDisplayName:@"p" limit:100 success:^(int totalCount, NSArray *users) {
+                    [MMXUser findByDisplayName:@"p" limit:100 offset:0 success:^(int totalCount, NSArray *users) {
                         _fetchedUsers = users;
                         _totalCount = totalCount;
                     } failure:^(NSError *error) {
@@ -262,7 +262,7 @@ SPEC_BEGIN(MMXUserSpec)
                 __block int _totalCount;
 
                 [MMXUser logInWithCredential:janeDoeCredential success:^(MMXUser *user) {
-                    [MMXUser findByDisplayName:@"j" limit:1 success:^(int totalCount, NSArray *users) {
+                    [MMXUser findByDisplayName:@"j" limit:1 offset:0 success:^(int totalCount, NSArray *users) {
                         _fetchedUsers = users;
                         _totalCount = totalCount;
                     } failure:^(NSError *error) {
@@ -276,6 +276,30 @@ SPEC_BEGIN(MMXUserSpec)
                 [[expectFutureValue(theValue(_totalCount)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:(theValue(2))];
             });
 			
+			it(@"should have the same user for offset 0 user 1 as offset 1 user 0", ^{
+				__block BOOL _isSuccess = NO;
+				
+				[MMXUser logInWithCredential:janeDoeCredential success:^(MMXUser *user) {
+					[MMXUser findByDisplayName:@"j" limit:2 offset:0 success:^(int totalCount, NSArray *users) {
+						MMXUser *userAtOffset0Position1 = users[1];
+						[MMXUser findByDisplayName:@"j" limit:1 offset:1 success:^(int totalCount, NSArray *users) {
+							MMXUser *userAtOffset1Position0 = users[0];
+							[[theValue([userAtOffset0Position1 isEqual:userAtOffset1Position0]) should] beYes];
+							_isSuccess = YES;
+						} failure:^(NSError *error) {
+							_isSuccess = NO;
+						}];
+					} failure:^(NSError *error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+				
+				// Assert
+				[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+			});
+
         });
 		
 		context(@"when fetching all users", ^{
@@ -284,7 +308,7 @@ SPEC_BEGIN(MMXUserSpec)
 				__block int _totalCount = 0; // Start value at zero
 				
 				[MMXUser logInWithCredential:janeDoeCredential success:^(MMXUser *user) {
-					[MMXUser allUsersWithLimit:100 success:^(int totalCount, NSArray *users) {
+					[MMXUser allUsersWithLimit:100 offset:0 success:^(int totalCount, NSArray *users) {
 						_fetchedUsers = users;
 						_totalCount = totalCount;
 					} failure:^(NSError *error) {
@@ -296,6 +320,30 @@ SPEC_BEGIN(MMXUserSpec)
 				// Assert
 				[[expectFutureValue(_fetchedUsers) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] haveCountOfAtLeast:1];
 				[[expectFutureValue(theValue(_totalCount)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beBetween:theValue(3) and:theValue(15)];
+			});
+			
+			it(@"should have the same user for offset 0 user 1 as offset 1 user 0", ^{
+				__block BOOL _isSuccess = NO;
+				
+				[MMXUser logInWithCredential:janeDoeCredential success:^(MMXUser *user) {
+					[MMXUser allUsersWithLimit:100 offset:0 success:^(int totalCount, NSArray *users) {
+						MMXUser *userAtOffset0Position1 = users[1];
+						[MMXUser allUsersWithLimit:100 offset:1 success:^(int totalCount, NSArray *users) {
+							MMXUser *userAtOffset1Position0 = users[0];
+							[[theValue([userAtOffset0Position1 isEqual:userAtOffset1Position0]) should] beYes];
+							_isSuccess = YES;
+						} failure:^(NSError *error) {
+							_isSuccess = NO;
+						}];
+					} failure:^(NSError *error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+				
+				// Assert
+				[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 			});
 		});
 		

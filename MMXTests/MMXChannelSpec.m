@@ -284,6 +284,51 @@ describe(@"MMXMessage", ^{
 
 	});
 	
+	context(@"when fetching all public channels", ^{
+		it(@"should return more than one channel", ^{
+			__block NSArray *_fetchedChannels = @[]; // Set should start empty
+			__block int _totalCount = 0; // Start value at zero
+			
+			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
+				[MMXChannel allPublicChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
+					_fetchedChannels = channels;
+					_totalCount = totalCount;
+				} failure:^(NSError * error) {
+				}];
+			} failure:^(NSError * error) {
+			}];
+			
+			// Assert
+			[[expectFutureValue(_fetchedChannels) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] haveCountOfAtLeast:1];
+			[[expectFutureValue(theValue(_totalCount)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beBetween:theValue(1) and:theValue(15)];
+		});
+		
+		it(@"should have the same channel for offset 0 channel 1 as offset 1 channel 0", ^{
+			__block BOOL _isSuccess = NO;
+			
+			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
+				[MMXChannel allPublicChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels1) {
+					MMXChannel *channelAtOffset0Position1 = channels1[1];
+					[MMXChannel allPublicChannelsWithLimit:100 offset:1 success:^(int totalCount, NSArray *channels2) {
+						MMXChannel *channelAtOffset1Position0 = channels2[0];
+						[[theValue([channelAtOffset0Position1 isEqual:channelAtOffset1Position0]) should] beYes];
+						_isSuccess = YES;
+					} failure:^(NSError * error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError * error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			
+			// Assert
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+	});
+
+	
 });
 
 SPEC_END
