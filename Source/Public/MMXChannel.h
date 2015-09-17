@@ -66,7 +66,7 @@
 
 
 /**
- *  Method used to get existing channels
+ *  Method used to get existing channels.
  *
  *  @param limit	The max number of items you want returned.
  *  @param offset	The offset into the results list. Used for pagination.
@@ -77,6 +77,19 @@
 							offset:(int)offset
 						   success:(void (^)(int totalCount, NSArray *channels))success
 						   failure:(void (^)(NSError *))failure;
+
+/**
+ *  Method used to get private channels created by the current user.
+ *
+ *  @param limit	The max number of items you want returned.
+ *  @param offset	The offset into the results list. Used for pagination.
+ *  @param success  Block with the number of channels that match the query and a NSArray of MMXChannels that match the criteria.
+ *  @param failure  Block with an NSError with details about the call failure.
+ */
++ (void)allPrivateChannelsWithLimit:(int)limit
+							 offset:(int)offset
+							success:(void (^)(int totalCount, NSArray *channels))success
+							failure:(void (^)(NSError *))failure;
 
 /**
  *  Create a new channel object

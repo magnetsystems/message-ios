@@ -52,12 +52,36 @@
 	NSDictionary *queryDict = @{@"operator" : @"AND",
 								@"limit" : @(limit),
 								@"offset" : @(offset),
+								@"type":@"global",
 								@"tags" : [NSNull null],
 								@"topicName": @{
 										@"match": @"PREFIX",
 										@"value": @""}};
 	[MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
 }
+
++ (void)allPrivateChannelsWithLimit:(int)limit
+							 offset:(int)offset
+							success:(void (^)(int totalCount, NSArray *channels))success
+							failure:(void (^)(NSError *))failure {
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		return;
+	}
+	
+	NSDictionary *queryDict = @{@"operator" : @"AND",
+								@"limit" : @(limit),
+								@"offset" : @(offset),
+								@"type":@"personal",
+								@"tags" : [NSNull null],
+								@"topicName": @{
+										@"match": @"PREFIX",
+										@"value": @""}};
+	[MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
+}
+
 
 + (void)channelForChannelName:(NSString *)channelName
 					  success:(void (^)(MMXChannel *))success
