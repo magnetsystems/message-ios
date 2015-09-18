@@ -189,7 +189,7 @@ describe(@"MMXMessage", ^{
 		it(@"should only return one valid channel", ^{
 			__block BOOL _isSuccess = NO;
 			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-				[MMXChannel channelForChannelName:@"test_topic" success:^(MMXChannel *channel) {
+				[MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
 					[[theValue([MMXUtils objectIsValidString:channel.name]) should] beYes];
 					[[theValue([MMXUtils objectIsValidString:channel.summary]) should] beYes];
 					[[theValue([MMXUtils objectIsValidString:channel.ownerUsername]) should] beYes];
@@ -236,7 +236,7 @@ describe(@"MMXMessage", ^{
 		it(@"should succeed if trying to send from a channel object that is fully hydrated", ^{
 			__block BOOL _isSuccess = NO;
 			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-				[MMXChannel channelForChannelName:@"test_topic" success:^(MMXChannel *channel) {
+				[MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
 					[channel inviteUser:[MMXUser currentUser] comments:@"No commment" success:^(MMXInvite *invite) {
 						[[invite shouldNot] beNil];
 						[[theValue([channel isEqual:invite.channel]) should] beYes];
