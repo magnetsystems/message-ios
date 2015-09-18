@@ -628,7 +628,7 @@
 	}
 	if (nil == self.ownerUsername || [self.ownerUsername isEqualToString:@""]) {
 		if (failure) {
-			NSError * error = [MMXClient errorWithTitle:@"Invalid Channel Invite" message:@"It looks like you are trying to send an invite from an invalid channel. Please user the channelForChannelName:success:failure API to get the valid channel object." code:500];
+			NSError * error = [MMXClient errorWithTitle:@"Invalid Channel Invite" message:@"It looks like you are trying to send an invite from an invalid channel. Please user the channelForName:isPublic:success:failure API to get the valid channel object." code:500];
 			failure(error);
 		}
 		return nil;
