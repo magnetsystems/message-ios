@@ -29,7 +29,7 @@
 }
 
 - (NSDictionary *)dictionaryRepresentation {
-    return @{@"userId": [NSNull null],
+	return @{@"userId": self.topic.inUserNameSpace ? self.topic.nameSpace : [NSNull null],
              @"topicName":self.topic.topicName,
              @"options":[self options]
                  };

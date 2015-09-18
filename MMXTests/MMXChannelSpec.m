@@ -327,6 +327,72 @@ describe(@"MMXMessage", ^{
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
 	});
+	context(@"when fetching messages from a channel", ^{
+		
+		it(@"should return success if the fetch returns valid messages(Public Channel)", ^{
+			
+			NSString *channelName = [NSString stringWithFormat:@"publicChannelName_%f", [[NSDate date] timeIntervalSince1970]];
+			NSString *channelSummary = [NSString stringWithFormat:@"publicChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
+			MMXChannel *channel = [MMXChannel channelWithName:channelName summary:channelSummary];
+			channel.isPublic = YES;
+			__block BOOL _isSuccess = NO;
+			
+			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
+				[channel createWithSuccess:^{
+					[channel publish:@{@"key":@"value"} success:^(MMXMessage *message) {
+						[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
+							MMXMessage *msg = messages[0];
+							[[msg should] beNonNil];
+							[[theValue(totalCount > 0) should] beYes];
+							_isSuccess = YES;
+						} failure:^(NSError *error) {
+							_isSuccess = NO;
+						}];
+					} failure:^(NSError *error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+		
+		it(@"should return success if the fetch returns valid messages(Private Channel)", ^{
+			
+			NSString *channelName = [NSString stringWithFormat:@"privateChannelName_%f", [[NSDate date] timeIntervalSince1970]];
+			NSString *channelSummary = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
+			MMXChannel *channel = [MMXChannel channelWithName:channelName summary:channelSummary];
+			channel.isPublic = NO;
+			__block BOOL _isSuccess = NO;
+			
+			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
+				[channel createWithSuccess:^{
+					[channel publish:@{@"key":@"value"} success:^(MMXMessage *message) {
+						[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
+							MMXMessage *msg = messages[0];
+							[[msg should] beNonNil];
+							[[theValue(totalCount > 0) should] beYes];
+							_isSuccess = YES;
+						} failure:^(NSError *error) {
+							_isSuccess = NO;
+						}];
+					} failure:^(NSError *error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+	});
 
 	
 });
