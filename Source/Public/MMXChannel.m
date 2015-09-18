@@ -461,9 +461,9 @@
 		}
 		return;
 	}
-	[[MMXClient sharedClient].pubsubManager subscribersForTopic:[self asTopic] limit:limit offset:offset success:^(int totalCount, NSArray *subscriptions) {
+	[[MMXClient sharedClient].pubsubManager subscribersForTopic:[self asTopic] limit:limit offset:offset success:^(int totalCount, NSArray *subscribers) {
 		if (success) {
-			success(totalCount, subscriptions);
+			success(totalCount, subscribers);
 		}
 	} failure:^(NSError *error) {
 		if (failure) {
@@ -654,7 +654,15 @@
 			channel.isSubscribed = sub.isSubscribed;
 		}
 	}
-	return [channelDict allValues];
+	NSMutableArray *channelArray = [NSMutableArray arrayWithCapacity:topics.count];
+	for (MMXTopic *topic in topics) {
+		MMXChannel *chan = [channelDict objectForKey:[MMXChannel channelKeyFromTopic:topic]];
+		if (chan) {
+			[channelArray addObject:chan];
+		}
+		
+	}
+	return channelArray.copy;
 }
 
 + (NSString *)channelKeyFromTopic:(MMXTopic *)topic {
@@ -697,7 +705,7 @@
 	if (self.isPublic != channel.isPublic)
 		return NO;
 	if (!self.isPublic && !channel.isPublic && ![self.ownerUsername isEqualToString:channel.ownerUsername])
-			return NO;
+		return NO;
 	return YES;
 }
 

@@ -327,6 +327,67 @@ describe(@"MMXMessage", ^{
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
 	});
+
+	context(@"when fetching all private channels", ^{
+		it(@"should return more than one channel", ^{
+			__block NSArray *_fetchedChannels = @[]; // Set should start empty
+			__block int _totalCount = 0; // Start value at zero
+			
+			NSString *channelName = [NSString stringWithFormat:@"privateChannelName_%f", [[NSDate date] timeIntervalSince1970]];
+			NSString *channelSummary = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
+			MMXChannel *channel = [MMXChannel channelWithName:channelName summary:channelSummary];
+			channel.isPublic = NO;
+
+			NSString *channelName2 = [NSString stringWithFormat:@"privateChannelName_%f", [[NSDate date] timeIntervalSince1970]];
+			NSString *channelSummary2 = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
+			MMXChannel *channel2 = [MMXChannel channelWithName:channelName2 summary:channelSummary2];
+			channel2.isPublic = NO;
+
+			[channel createWithSuccess:^{
+				[channel2 createWithSuccess:^{
+					[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
+						[MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
+							_fetchedChannels = channels;
+							_totalCount = totalCount;
+						} failure:^(NSError * error) {
+						}];
+					} failure:^(NSError * error) {
+					}];
+				} failure:^(NSError * error) {
+				}];
+			} failure:^(NSError * error) {
+			}];
+			
+			// Assert
+			[[expectFutureValue(_fetchedChannels) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] haveCountOfAtLeast:1];
+			[[expectFutureValue(theValue(_totalCount)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beBetween:theValue(1) and:theValue(15)];
+		});
+		
+		it(@"should have the same channel for offset 0 channel 1 as offset 1 channel 0", ^{
+			__block BOOL _isSuccess = NO;
+			
+			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
+				[MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels1) {
+					MMXChannel *channelAtOffset0Position1 = channels1[1];
+					[MMXChannel allPrivateChannelsWithLimit:100 offset:1 success:^(int totalCount, NSArray *channels2) {
+						MMXChannel *channelAtOffset1Position0 = channels2[0];
+						[[theValue([channelAtOffset0Position1 isEqual:channelAtOffset1Position0]) should] beYes];
+						_isSuccess = YES;
+					} failure:^(NSError * error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError * error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			
+			// Assert
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+	});
+	
 	context(@"when fetching messages from a channel", ^{
 		
 		it(@"should return success if the fetch returns valid messages(Public Channel)", ^{
@@ -393,7 +454,31 @@ describe(@"MMXMessage", ^{
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
 	});
-
+	
+	context(@"when getting subscribers to a channel", ^{
+		it(@"should return at least one user", ^{
+			__block BOOL _isSuccess = NO;
+			
+			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
+				[MMXChannel subscribedChannelsWithSuccess:^(NSArray *channels) {
+					MMXChannel *myChannel = channels[0];
+					[[myChannel should] beNonNil];
+					[myChannel subscribersWithLimit:100 offset:0 success:^(int totalCount, NSArray *subscribers) {
+						MMXUser *usr = subscribers[0];
+						[[usr should] beNonNil];
+						[[theValue(totalCount > 0) should] beYes];
+						_isSuccess = YES;
+					} failure:^(NSError *error) {
+					}];
+				} failure:^(NSError *error) {
+				}];
+			} failure:^(NSError * error) {
+			}];
+			
+			// Assert
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+	});
 	
 });
 
