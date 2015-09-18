@@ -126,7 +126,7 @@ describe(@"MMXMessage", ^{
 			__block BOOL _isSuccess = NO;
 			
 			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-				[MMXChannel createChannelWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+				[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
 					[[channel.name shouldNot] beNil];
 					[[channel.summary shouldNot] beNil];
 					[[channel.creationDate shouldNot] beNil];
@@ -149,7 +149,7 @@ describe(@"MMXMessage", ^{
 			__block BOOL _isSuccess = NO;
 			
 			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-				[MMXChannel createChannelWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
+				[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
 					[MMXChannel channelsStartingWith:channelName limit:10 offset:0 success:^(int totalCount, NSArray *channels) {
 						MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
 						[[returnedChannel.creationDate shouldNot] beNil];
@@ -325,8 +325,8 @@ describe(@"MMXMessage", ^{
 			NSString *channelName2 = [NSString stringWithFormat:@"privateChannelName_%f", [[NSDate date] timeIntervalSince1970]];
 			NSString *channelSummary2 = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 
-			[MMXChannel createChannelWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
-				[MMXChannel createChannelWithName:channelName2 summary:channelSummary2 isPublic:NO success:^(MMXChannel *channel) {
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+				[MMXChannel createWithName:channelName2 summary:channelSummary2 isPublic:NO success:^(MMXChannel *channel) {
 					[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
 						[MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
 							_fetchedChannels = channels;
@@ -379,7 +379,7 @@ describe(@"MMXMessage", ^{
 			__block BOOL _isSuccess = NO;
 			
 			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-				[MMXChannel createChannelWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+				[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
 					[channel publish:@{@"key":@"value"} success:^(MMXMessage *message) {
 						[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
 							MMXMessage *msg = messages[0];
@@ -409,7 +409,7 @@ describe(@"MMXMessage", ^{
 			NSString *channelSummary = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 			
 			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-				[MMXChannel createChannelWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+				[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
 					[channel publish:@{@"key":@"value"} success:^(MMXMessage *message) {
 						[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
 							MMXMessage *msg = messages[0];
