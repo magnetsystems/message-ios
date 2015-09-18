@@ -47,7 +47,7 @@ describe(@"MMXMessage", ^{
 		[[MMXLogger sharedLogger] startLogging];
 		
 		[MMX setupWithConfiguration:@"default"];
-		[MMX enableIncomingMessages];
+		[MMX start];
 		
 		__block BOOL _isSuccess = NO;
 		
@@ -123,12 +123,14 @@ describe(@"MMXMessage", ^{
 			
 			NSString *channelName = [NSString stringWithFormat:@"channelName_%f", [[NSDate date] timeIntervalSince1970]];
 			NSString *channelSummary = [NSString stringWithFormat:@"channelSummary_%f", [[NSDate date] timeIntervalSince1970]];
-			MMXChannel *channel = [MMXChannel channelWithName:channelName summary:channelSummary];
-			
 			__block BOOL _isSuccess = NO;
 			
 			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-				[channel createWithSuccess:^{
+				[MMXChannel createChannelWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+					[[channel.name shouldNot] beNil];
+					[[channel.summary shouldNot] beNil];
+					[[channel.creationDate shouldNot] beNil];
+					[[channel.ownerUsername shouldNot] beNil];
 					_isSuccess = YES;
 				} failure:^(NSError *error) {
 					_isSuccess = NO;
@@ -144,13 +146,11 @@ describe(@"MMXMessage", ^{
 			
 			NSString *channelName = [NSString stringWithFormat:@"channelName_%f", [[NSDate date] timeIntervalSince1970]];
 			NSString *channelSummary = [NSString stringWithFormat:@"channelSummary_%f", [[NSDate date] timeIntervalSince1970]];
-			MMXChannel *channel = [MMXChannel channelWithName:channelName summary:channelSummary];
-			channel.isPublic = YES;
 			__block BOOL _isSuccess = NO;
 			
 			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-				[channel createWithSuccess:^{
-					[MMXChannel channelsStartingWith:channelName limit:10 success:^(int totalCount, NSArray *channels) {
+				[MMXChannel createChannelWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
+					[MMXChannel channelsStartingWith:channelName limit:10 offset:0 success:^(int totalCount, NSArray *channels) {
 						MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
 						[[returnedChannel.creationDate shouldNot] beNil];
 						[[theValue(totalCount) should] equal:theValue(1)];
@@ -210,7 +210,7 @@ describe(@"MMXMessage", ^{
 		it(@"should only return one valid channel for the test tag", ^{
 			__block BOOL _isSuccess = NO;
 			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-				[MMXChannel findByTags:[NSSet setWithObject:@"test_topic_tag"] success:^(int totalCount, NSArray *channels) {
+				[MMXChannel findByTags:[NSSet setWithObject:@"test_topic_tag"] limit:100 offset:0 success:^(int totalCount, NSArray *channels) {
 					MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
 					[[returnedChannel.creationDate shouldNot] beNil];
 					[[theValue(totalCount) should] equal:theValue(1)];
@@ -232,20 +232,6 @@ describe(@"MMXMessage", ^{
 	});
 	
 	context(@"when sending an invite", ^{
-		it(@"should fail if trying to send from a channel object that does not have the ownerUsername set", ^{
-			__block BOOL _isSuccess = NO;
-			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-				MMXChannel *channel = [MMXChannel channelWithName:@"test_topic" summary:@"test_topic"];
-				[channel inviteUser:[MMXUser currentUser] comments:@"No commment" success:^(MMXInvite *invite) {
-					_isSuccess = NO;
-				} failure:^(NSError *error) {
-					_isSuccess = YES;
-				}];
-			} failure:^(NSError *error) {
-				_isSuccess = NO;
-			}];
-			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-		});
 
 		it(@"should succeed if trying to send from a channel object that is fully hydrated", ^{
 			__block BOOL _isSuccess = NO;
@@ -335,16 +321,12 @@ describe(@"MMXMessage", ^{
 			
 			NSString *channelName = [NSString stringWithFormat:@"privateChannelName_%f", [[NSDate date] timeIntervalSince1970]];
 			NSString *channelSummary = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
-			MMXChannel *channel = [MMXChannel channelWithName:channelName summary:channelSummary];
-			channel.isPublic = NO;
 
 			NSString *channelName2 = [NSString stringWithFormat:@"privateChannelName_%f", [[NSDate date] timeIntervalSince1970]];
 			NSString *channelSummary2 = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
-			MMXChannel *channel2 = [MMXChannel channelWithName:channelName2 summary:channelSummary2];
-			channel2.isPublic = NO;
 
-			[channel createWithSuccess:^{
-				[channel2 createWithSuccess:^{
+			[MMXChannel createChannelWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+				[MMXChannel createChannelWithName:channelName2 summary:channelSummary2 isPublic:NO success:^(MMXChannel *channel) {
 					[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
 						[MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
 							_fetchedChannels = channels;
@@ -394,12 +376,10 @@ describe(@"MMXMessage", ^{
 			
 			NSString *channelName = [NSString stringWithFormat:@"publicChannelName_%f", [[NSDate date] timeIntervalSince1970]];
 			NSString *channelSummary = [NSString stringWithFormat:@"publicChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
-			MMXChannel *channel = [MMXChannel channelWithName:channelName summary:channelSummary];
-			channel.isPublic = YES;
 			__block BOOL _isSuccess = NO;
 			
 			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-				[channel createWithSuccess:^{
+				[MMXChannel createChannelWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
 					[channel publish:@{@"key":@"value"} success:^(MMXMessage *message) {
 						[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
 							MMXMessage *msg = messages[0];
@@ -423,15 +403,13 @@ describe(@"MMXMessage", ^{
 		});
 		
 		it(@"should return success if the fetch returns valid messages(Private Channel)", ^{
+			__block BOOL _isSuccess = NO;
 			
 			NSString *channelName = [NSString stringWithFormat:@"privateChannelName_%f", [[NSDate date] timeIntervalSince1970]];
 			NSString *channelSummary = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
-			MMXChannel *channel = [MMXChannel channelWithName:channelName summary:channelSummary];
-			channel.isPublic = NO;
-			__block BOOL _isSuccess = NO;
 			
 			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-				[channel createWithSuccess:^{
+				[MMXChannel createChannelWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
 					[channel publish:@{@"key":@"value"} success:^(MMXMessage *message) {
 						[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
 							MMXMessage *msg = messages[0];

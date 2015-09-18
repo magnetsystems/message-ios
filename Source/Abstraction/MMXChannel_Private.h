@@ -30,5 +30,8 @@
 
 - (MMXTopic *)asTopic;
 
++ (instancetype)channelWithName:(NSString *)name
+						summary:(NSString *)summary
+					   isPublic:(BOOL)isPublic;
 
 @end

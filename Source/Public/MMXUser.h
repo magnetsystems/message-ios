@@ -23,13 +23,13 @@
 
 /**
  *  Unique username the user.
- *  The valid character set is alphanumeric plus period, dash, underscore and "at". .-_@
+ *  The valid character set is alphanumeric plus period, dash, underscore and "at".   .-_@
  */
 @property(nonatomic, copy) NSString *username;
 
 /**
  *  The name you want to have publicly displayed for the user.
- *  The valid character set is alphanumeric plus period, dash, underscore and "at". .-_@
+ *  The valid character set is alphanumeric plus period, dash, underscore and "at".   .-_@
  */
 @property  (nonatomic, copy) NSString *displayName;
 
@@ -95,19 +95,13 @@
 							 failure:(void (^)(NSError * error))failure;
 
 /**
- *  Method used to discover existing users by displayName.
- *	You cannot pass an empty string.
- *  The valid character set is alphanumeric plus period, dash, underscore and "at". .-_@
- *
- *  @param displayName	The start of the displayName for the user you are searching for.
- *  @param limit		The max number of results you want returned. Defaults to 20.
- *  @param success		Block with the number of users that match the query and a NSArray of MMXUsers that match the criteria.
- *  @param failure		Block with an NSError with details about the call failure.
+ * @deprecated This method is deprecated starting in version 1.9
+ * @note Please use @code findByDisplayName:limit:offset:success:failure: @code instead.
  */
 + (void)findByDisplayName:(NSString *)displayName
 					limit:(int)limit
 				  success:(void (^)(int totalCount, NSArray *users))success
-				  failure:(void (^)(NSError *error))failure;
+				  failure:(void (^)(NSError *error))failure __attribute__((deprecated));
 
 /**
  *  Method used to discover existing users by displayName.

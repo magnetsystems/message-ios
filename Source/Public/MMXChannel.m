@@ -38,6 +38,16 @@
 	return channel;
 }
 
++ (instancetype)channelWithName:(NSString *)name
+						summary:(NSString *)summary
+					   isPublic:(BOOL)isPublic {
+	MMXChannel *channel = [MMXChannel new];
+	channel.name = name;
+	channel.summary = summary;
+	channel.isPublic = isPublic;
+	return channel;
+}
+
 + (void)allPublicChannelsWithLimit:(int)limit
 							offset:(int)offset
 						   success:(void (^)(int totalCount, NSArray *channels))success
@@ -332,7 +342,7 @@
 
 - (void)createWithSuccess:(void (^)(void))success
 				  failure:(void (^)(NSError *))failure {
-
+	
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
 			failure([MagnetDelegate notNotLoggedInError]);
@@ -347,6 +357,57 @@
 		}
 		if (success) {
 			success();
+		}
+	} failure:^(NSError *error) {
+		if (failure) {
+			failure(error);
+		}
+	}];
+}
+
++ (void)createChannelWithName:(NSString *)name
+					  summary:(NSString *)summary
+					 isPublic:(BOOL)isPublic
+					  success:(void (^)(MMXChannel *channel))success
+					  failure:(void (^)(NSError *))failure {
+	
+	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+		if (failure) {
+			failure([MagnetDelegate notNotLoggedInError]);
+		}
+		
+		return;
+	}
+	MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic];
+	[[MMXClient sharedClient].pubsubManager createTopic:[channel asTopic] success:^(BOOL successful) {
+		if (channel.isPublic) {
+			[MMXChannel channelForChannelName:channel.name success:^(MMXChannel *channel) {
+				if (success) {
+					success(channel);
+				}
+			} failure:^(NSError *error) {
+				if (failure) {
+					failure(error);
+				}
+			}];
+		} else {
+			NSDictionary *queryDict = @{@"operator" : @"AND",
+										@"limit" : @(1),
+										@"offset" : @(0),
+										@"type":@"personal",
+										@"tags" : [NSNull null],
+										@"topicName": @{
+												@"match": @"PREFIX",
+												@"value": @""}};
+			[MMXChannel findChannelsWithDictionary:queryDict success:^(int count, NSArray *channels) {
+				if (success) {
+					success(channels[0]);
+				}
+			} failure:^(NSError * error) {
+				if (failure) {
+					failure(error);
+				}
+			}];
 		}
 	} failure:^(NSError *error) {
 		if (failure) {
@@ -635,7 +696,7 @@
 + (NSArray *)channelsFromTopics:(NSArray *)topics summaries:(NSArray *)summaries subscriptions:(NSArray *)subscriptions {
 	NSMutableDictionary *channelDict = [NSMutableDictionary dictionaryWithCapacity:topics.count];
 	for (MMXTopic *topic in topics) {
-		MMXChannel *channel = [MMXChannel channelWithName:topic.topicName summary:topic.topicDescription];
+		MMXChannel *channel = [MMXChannel channelWithName:topic.topicName summary:topic.topicDescription isPublic:!topic.inUserNameSpace];
 		channel.ownerUsername = topic.topicCreator.username;
 		channel.isPublic = !topic.inUserNameSpace;
 		channel.creationDate = topic.creationDate;
