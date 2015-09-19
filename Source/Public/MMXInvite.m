@@ -77,8 +77,11 @@
 + (MMXChannel *)channelFromMessageMetaData:(NSDictionary *)metaData {
 	if (metaData) {
 		NSString *summary = [MMXUtils objectIsValidString:metaData[@"channelSummary"]] ? metaData[@"channelSummary"] : @"";
-		MMXChannel *channel = [MMXChannel channelWithName:metaData[@"channelName"] summary:summary];
-		channel.isPublic = ![metaData[@"channelIsPublic"] boolValue];
+		MMXChannel *channel = [MMXChannel channelWithName:metaData[@"channelName"] summary:summary isPublic:[metaData[@"channelIsPublic"] boolValue]];
+		if ([MMXUtils objectIsValidString:metaData[@"channelCreationDate"]]) {
+			NSDate *channelCreationDate = [MMXUtils dateFromiso8601Format:metaData[@"channelCreationDate"]];
+			channel.creationDate = channelCreationDate;
+		}
 		NSString * ownerUsername = [MMXUtils objectIsValidString:metaData[@"channelCreatorUsername"]] ? metaData[@"channelCreatorUsername"] : @"";
 		channel.ownerUsername = ownerUsername;
 		return channel;
@@ -86,12 +89,4 @@
 	return nil;
 }
 
-/*
- msg.metaData = @{@"text":textMessage ?: [NSNull null],
- @"channelIsPrivate":@(!channel.isPublic),
- @"channelName":channel.name,
- @"channelSummary":channel.summary ?: [NSNull null],
- @"channelCreatorUsername":channel.ownerUsername ?: [NSNull null]};
-
- */
 @end

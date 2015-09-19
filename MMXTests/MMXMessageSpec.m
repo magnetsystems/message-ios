@@ -48,7 +48,7 @@ SPEC_BEGIN(MMXMessageSpec)
             [[MMXLogger sharedLogger] startLogging];
 
             [MMX setupWithConfiguration:@"default"];
-            [MMX enableIncomingMessages];
+            [MMX start];
 
             __block BOOL _isSuccess = NO;
 
