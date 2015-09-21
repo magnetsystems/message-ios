@@ -11,11 +11,11 @@ Learn more about Magnet Message [here](https://www.magnet.com/developer/magnet-m
 The Magnet Message iOS SDK has these prerequisites:
 
 * Magnet Message Server
-* Xcode 6.3 or Newer
+* Xcode 7.0 or Newer
 
 ## Releases
 
-Current release: 1.5.7
+Current release: 1.6.4
 
 ## Setup
 
@@ -26,7 +26,7 @@ Current release: 1.5.7
 #### Podfile
 
 ```ruby
-pod "MMX", "~> 1.5.7"
+pod "MMX", "~> 1.9.1"
 ```
 
 

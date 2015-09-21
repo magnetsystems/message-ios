@@ -160,7 +160,7 @@ describe(@"MMXPubSubManager", ^{
                     case MMXConnectionStatusDisconnected:
                         break;
                     case MMXConnectionStatusAuthenticated:{
-                        MMXTopic * topic = [MMXTopic topicWithName:@"my_test_topic7" maxItemsToPersist:-1 permissionsLevel:MMXPublishPermissionsLevelAnyone];
+                        MMXTopic * topic = [MMXTopic topicWithName:@"test_topic" maxItemsToPersist:-1 permissionsLevel:MMXPublishPermissionsLevelAnyone];
                         [mmxClient.pubsubManager subscribeToTopic:topic device:nil success:^(MMXTopicSubscription *subscription) {
                             NSLog(@"pubsubManager subscribeToTopic Success!!!!");
                             _subscribeSuccess = YES;
@@ -300,7 +300,7 @@ describe(@"MMXPubSubManager", ^{
 					case MMXConnectionStatusDisconnected:
 						break;
 					case MMXConnectionStatusAuthenticated:{
-						MMXTopic * topic = [MMXTopic topicWithName:@"my_test_topic7" maxItemsToPersist:-1 permissionsLevel:MMXPublishPermissionsLevelAnyone];
+						MMXTopic * topic = [MMXTopic topicWithName:@"test_topic" maxItemsToPersist:-1 permissionsLevel:MMXPublishPermissionsLevelAnyone];
 						MMXPubSubMessage * message = [MMXPubSubMessage pubSubMessageToTopic:topic content:@"My content" metaData:nil];
 						[mmxClient.pubsubManager publishPubSubMessage:message success:^(BOOL success, NSString *messageID) {
 							if (success && messageID.length > 10) {

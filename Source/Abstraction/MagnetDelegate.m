@@ -91,7 +91,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 		 credentials:(NSURLCredential *)credential
 			 success:(void (^)(void))success
 			 failure:(void (^)(NSError *))failure {
-	[[MMXClient sharedClient].accountManager createAccountForUsername:user.username displayName:user.displayName email:user.email password:credential.password success:^(MMXUserProfile *userProfile) {
+	[[MMXClient sharedClient].accountManager createAccountForUsername:user.username displayName:user.displayName email:nil password:credential.password success:^(MMXUserProfile *userProfile) {
 		if (success) {
 			success();
 		}
@@ -148,7 +148,6 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	//FIXME: Needs to properly handle failure and success blocks
 	MMXOutboundMessage *msg = [MMXOutboundMessage messageTo:[message.recipients allObjects] withContent:nil metaData:message.messageContent];
 	msg.messageID = message.messageID;
-	NSString *messageID = [[MMXClient sharedClient] sendMessage:msg];
 	
 	if (success || failure) {
 		NSMutableDictionary *blockDict = [NSMutableDictionary dictionary];
@@ -158,8 +157,11 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 		if (failure) {
 			[blockDict setObject:failure forKey:MMXMessageFailureBlockKey];
 		}
-		[self.messageBlockQueue setObject:blockDict forKey:messageID];
+		[self.messageBlockQueue setObject:blockDict forKey:msg.messageID];
 	}
+	
+	NSString *messageID = [[MMXClient sharedClient] sendMessage:msg];
+
 	return messageID;
 }
 
@@ -193,7 +195,6 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 				MMXUser *user = [MMXUser new];
 				user.username = userProfile.userID.username;
 				user.displayName = userProfile.displayName;
-				user.email = userProfile.email;
 				self.currentUser = user.copy;
 				if (self.logInSuccessBlock) {
 					self.logInSuccessBlock(user);
@@ -294,7 +295,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 - (void)client:(MMXClient *)client didReceivePubSubMessage:(MMXPubSubMessage *)message {
 	MMXMessage *msg = [MMXMessage new];
 	msg.messageType = MMXMessageTypeChannel;
-	MMXChannel *channel = [MMXChannel channelWithName:message.topic.topicName summary:nil];
+	MMXChannel *channel = [MMXChannel channelWithName:message.topic.topicName summary:nil isPublic:YES];
 	if (message.topic.inUserNameSpace) {
 		channel.isPublic = NO;
 		channel.ownerUsername = message.topic.nameSpace;
@@ -340,8 +341,10 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	MMXUser *user = [MMXUser new];
 	MMXInternalAddress *address = recipient.address;
 	if (address) {
-		user.username = address.username;
-		user.displayName = address.displayName;
+		//Converting to MMXUserID will handle any exscaping needed
+		MMXUserID *userID = [MMXUserID userIDFromAddress:address];
+		user.username = userID.username;
+		user.displayName = userID.displayName;
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveDeliveryConfirmationNotification
 														object:nil
@@ -361,8 +364,10 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	for (id<MMXAddressable> recipient in recipients) {
 		MMXInternalAddress *address = recipient.address;
 		MMXUser *user = [MMXUser new];
-		user.username = address.username;
-		user.displayName = address.displayName;
+		//Converting to MMXUserID will handle any exscaping needed
+		MMXUserID *userID = [MMXUserID userIDFromAddress:address];
+		user.username = userID.username;
+		user.displayName = userID.displayName;
 		[set addObject:user];
 	}
 	return set.copy;

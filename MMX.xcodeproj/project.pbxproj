@@ -883,7 +883,7 @@
 		0E8B4DFB1A6F2F370000A7C3 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Magnet Systems, Inc.";
 				TargetAttributes = {
 					0E8B4E021A6F2F370000A7C3 = {
@@ -1115,7 +1115,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 21540E6F1A7ADBD6004E961D /* MMX.framework.xcconfig */;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ENABLE_TESTABILITY = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
@@ -1124,7 +1125,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 21540E6F1A7ADBD6004E961D /* MMX.framework.xcconfig */;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 			};
 			name = Release;
 		};
@@ -1146,6 +1147,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 21540E721A7ADBD6004E961D /* MMXTests.debug.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.magnet.iOS.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
 		};
@@ -1153,6 +1155,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 21540E731A7ADBD6004E961D /* MMXTests.release.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.magnet.iOS.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
 		};
@@ -1192,6 +1195,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.magnet.iOS.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = MMX;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1230,6 +1234,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.magnet.iOS.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = MMX;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
