@@ -154,8 +154,7 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 					 @"channelName":channel.name,
 					 @"channelSummary":channel.summary ?: [NSNull null],
 					 @"channelCreatorUsername":channel.ownerUsername ?: [NSNull null],
-					 @"channelCreationDate":channel.creationDate ? [MMXUtils stringIniso8601Format:channel.creationDate] : [NSNull null],
-};
+					 @"channelCreationDate":channel.creationDate ? [MMXUtils stringIniso8601Format:channel.creationDate] : [NSNull null]};
 	return msg;
 }
 
