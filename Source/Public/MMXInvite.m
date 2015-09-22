@@ -77,7 +77,7 @@
 + (MMXChannel *)channelFromMessageMetaData:(NSDictionary *)metaData {
 	if (metaData) {
 		NSString *summary = [MMXUtils objectIsValidString:metaData[@"channelSummary"]] ? metaData[@"channelSummary"] : @"";
-		MMXChannel *channel = [MMXChannel channelWithName:metaData[@"channelName"] summary:summary isPublic:![metaData[@"channelIsPrivate"] boolValue]];
+		MMXChannel *channel = [MMXChannel channelWithName:metaData[@"channelName"] summary:summary isPublic:[metaData[@"channelIsPublic"] boolValue]];
 		if ([MMXUtils objectIsValidString:metaData[@"channelCreationDate"]]) {
 			NSDate *channelCreationDate = [MMXUtils dateFromiso8601Format:metaData[@"channelCreationDate"]];
 			channel.creationDate = channelCreationDate;

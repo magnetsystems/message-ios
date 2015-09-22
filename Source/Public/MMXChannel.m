@@ -381,6 +381,7 @@
 		return;
 	}
 	MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic];
+	channel.ownerUsername = [MMXUser currentUser].username;
 	[[MMXClient sharedClient].pubsubManager createTopic:[channel asTopic] success:^(BOOL successful) {
 		[MMXChannel channelForName:channel.name isPublic:isPublic success:^(MMXChannel *channel) {
 			if (success) {
@@ -717,9 +718,8 @@
 	MMXTopic *newTopic = [MMXTopic topicWithName:self.name];
 	newTopic.topicDescription = self.summary;
 	if (!self.isPublic) {
-		MMXUser *currentUser = [MMXUser currentUser];
-		if (currentUser) {
-			newTopic.nameSpace = currentUser.username;
+		if (self.ownerUsername) {
+			newTopic.nameSpace = self.ownerUsername;
 		} else {
 			return nil;
 		}
