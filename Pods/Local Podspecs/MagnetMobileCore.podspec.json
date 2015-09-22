@@ -1,0 +1,22 @@
+{
+  "name": "MagnetMobileCore",
+  "version": "1.0",
+  "license": {
+    "type": "Commercial",
+    "text": "See http://www.magnet.com/resources/tos.html"
+  },
+  "summary": "Magnet's platform provides the best framework to deliver enterprise-grade mobile apps.",
+  "homepage": "https://www.magnet.com",
+  "authors": {
+    "Magnet Systems, Inc.": "support@magnet.com"
+  },
+  "source": {
+    "git": "https://github.com/magnetsystems/blowfish-ios-core.git",
+    "tag": "1.0"
+  },
+  "source_files": "MagnetMobileCore",
+  "requires_arc": true,
+  "platforms": {
+    "ios": "8.0"
+  }
+}

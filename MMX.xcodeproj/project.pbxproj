@@ -20,6 +20,7 @@
 		0E19FD1E1B8D258D000CD428 /* MMXLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E19FD1D1B8D258D000CD428 /* MMXLogger.m */; };
 		0E1B57661B8D2EA7009C7204 /* MMXMessageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B57641B8D2EA7009C7204 /* MMXMessageSpec.m */; };
 		0E1B57671B8D2EA7009C7204 /* MMXUserSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B57651B8D2EA7009C7204 /* MMXUserSpec.m */; };
+		0E25EC6C1BB1B14000E54582 /* MMXOAuthPlatformAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E25EC6B1BB1B14000E54582 /* MMXOAuthPlatformAuthentication.m */; settings = {ASSET_TAGS = (); }; };
 		0E47F4FC1B069EF20089E887 /* Configurations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E47F4FB1B069EF20089E887 /* Configurations.plist */; };
 		0E4EDD7A1B8E341C00532128 /* MMXChannelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E4EDD791B8E341C00532128 /* MMXChannelSpec.m */; };
 		0E54CFC81AFAA1B3000326D7 /* MMXClient.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0EA2022B1AF838E1004018AE /* MMXClient.h */; };
@@ -189,6 +190,8 @@
 		0E19FD1D1B8D258D000CD428 /* MMXLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXLogger.m; sourceTree = "<group>"; };
 		0E1B57641B8D2EA7009C7204 /* MMXMessageSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXMessageSpec.m; sourceTree = "<group>"; };
 		0E1B57651B8D2EA7009C7204 /* MMXUserSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXUserSpec.m; sourceTree = "<group>"; };
+		0E25EC6A1BB1B14000E54582 /* MMXOAuthPlatformAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXOAuthPlatformAuthentication.h; sourceTree = "<group>"; };
+		0E25EC6B1BB1B14000E54582 /* MMXOAuthPlatformAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXOAuthPlatformAuthentication.m; sourceTree = "<group>"; };
 		0E47F4FB1B069EF20089E887 /* Configurations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Configurations.plist; path = Configuration/Configurations.plist; sourceTree = "<group>"; };
 		0E4DB1191B84E032000B73DD /* MMXChannel_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMXChannel_Private.h; sourceTree = "<group>"; };
 		0E4EDD791B8E341C00532128 /* MMXChannelSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXChannelSpec.m; sourceTree = "<group>"; };
@@ -418,6 +421,15 @@
 			path = Public;
 			sourceTree = "<group>";
 		};
+		0E25EC691BB1B14000E54582 /* OAuth */ = {
+			isa = PBXGroup;
+			children = (
+				0E25EC6A1BB1B14000E54582 /* MMXOAuthPlatformAuthentication.h */,
+				0E25EC6B1BB1B14000E54582 /* MMXOAuthPlatformAuthentication.m */,
+			);
+			path = OAuth;
+			sourceTree = "<group>";
+		};
 		0E7F1EA01B742373003808B4 /* Abstraction */ = {
 			isa = PBXGroup;
 			children = (
@@ -495,6 +507,7 @@
 		0EA201F91AF838E1004018AE /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				0E25EC691BB1B14000E54582 /* OAuth */,
 				0E19FD021B8D24FE000CD428 /* Public */,
 				0E7F1EA01B742373003808B4 /* Abstraction */,
 				0EA201FA1AF838E1004018AE /* Categories */,
@@ -1084,6 +1097,7 @@
 				21540E5C1A7834B3004E961D /* MathSpec.m in Sources */,
 				660216A5CA22964263058C72 /* MMXRemoteNotificationSpec.m in Sources */,
 				0E19FD151B8D24FE000CD428 /* MMXMessage.m in Sources */,
+				0E25EC6C1BB1B14000E54582 /* MMXOAuthPlatformAuthentication.m in Sources */,
 				0E19FD131B8D24FE000CD428 /* MMXInvite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

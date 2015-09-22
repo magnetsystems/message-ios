@@ -39,6 +39,7 @@
 #import "MMXUserProfile_Private.h"
 #import "MMXEndpoint.h"
 
+#import "MMXOAuthPlatformAuthentication.h"
 #import "MMXInvite_Private.h"
 #import "MMXInviteResponse_Private.h"
 #import "MMXNotificationConstants.h"
@@ -72,6 +73,8 @@ static BOOL MMXServerTrustIsValid(SecTrustRef serverTrust) {
 //FIXME: At some point this should be set in a plist or something.
 int const kTempVersionMajor = 1;
 int const kTempVersionMinor = 0;
+NSString  * const kHost = @"52.8.144.105";
+int const kPort = 5222;
 int const kMaxReconnectionTries = 4;
 int const kReconnectionTimerInterval = 4;
 
@@ -91,6 +94,9 @@ int const kReconnectionTimerInterval = 4;
 
 @implementation MMXClient
 
+@synthesize serviceAdapterDidSendAppToken = _serviceAdapterDidSendAppToken;
+@synthesize serviceAdapterDidSendUserToken = _serviceAdapterDidSendUserToken;
+
 + (instancetype)sharedClient {
 
     static MMXClient *_sharedClient = nil;
@@ -102,7 +108,42 @@ int const kReconnectionTimerInterval = 4;
     return _sharedClient;
 }
 
-- (id)initWithConfiguration:(MMXConfiguration *)configuration delegate:(id <MMXClientDelegate>)delegate {
+- (instancetype)init {
+	if ((self = [super init])) {
+		_delegate = nil;
+		_mmxQueue = dispatch_queue_create("mmxQueue", NULL);
+		_callbackQueue = dispatch_get_main_queue();
+		_connectionStatus = MMXConnectionStatusNotConnected;
+		_messageNumber = 0;
+		_configuration = nil;
+		__weak __typeof__(self) weakSelf = self;
+		_serviceAdapterDidSendAppToken = ^(NSString *appId, NSString *deviceId, NSString *appToken) {
+			__typeof__(self) strongSelf = weakSelf;
+			strongSelf.appID = appId;
+			strongSelf.deviceID = deviceId;
+			strongSelf.username = deviceId;
+			strongSelf.accessToken = appToken;
+			[strongSelf updateConnectionStatus:MMXConnectionStatusAnonReady error:nil];
+			[[MMXLogger sharedLogger] verbose:@"serviceAdapterDidSendAppToken block executed"];
+			if (appId == nil) {
+				[[MMXLogger sharedLogger] error:@"serviceAdapterDidSendAppToken ERROR (appId == nil)"];
+			}
+		};
+		_serviceAdapterDidSendUserToken = ^(NSString *userName, NSString *deviceId, NSString *userToken){
+			__typeof__(self) strongSelf = weakSelf;
+			strongSelf.username = userName;
+			strongSelf.deviceID = deviceId;
+			strongSelf.accessToken = userToken;
+			[strongSelf updateConnectionStatus:MMXConnectionStatusUserReady error:nil];
+			[[MMXLogger sharedLogger] verbose:@"serviceAdapterDidSendUserToken block executed"];
+		};
+	}
+	return self;
+}
+
+
+//FIXME: this method will need to go away as part of blowfish integration
+- (instancetype)initWithConfiguration:(MMXConfiguration *)configuration delegate:(id <MMXClientDelegate>)delegate {
     if ((self = [super init])) {
         _delegate = delegate;
         _mmxQueue = dispatch_queue_create("mmxQueue", NULL);
@@ -111,16 +152,56 @@ int const kReconnectionTimerInterval = 4;
 		_messageNumber = 0;
 		_reconnectionTryCount = 0;
 		_configuration = configuration;
+		__weak __typeof__(self) weakSelf = self;
+		_serviceAdapterDidSendAppToken = ^(NSString *appId, NSString *deviceId, NSString *appToken) {
+			__typeof__(self) strongSelf = weakSelf;
+			strongSelf.appID = appId;
+			strongSelf.deviceID = deviceId;
+			strongSelf.username = deviceId;
+			strongSelf.accessToken = appToken;
+			[strongSelf connect];
+		};
+		_serviceAdapterDidSendUserToken = ^(NSString *userName, NSString *deviceId, NSString *userToken){
+			__typeof__(self) strongSelf = weakSelf;
+			strongSelf.username = userName;
+			strongSelf.deviceID = deviceId;
+			strongSelf.accessToken = userToken;
+			[strongSelf connect];
+		};
 	}
     return self;
+}
+
+
+#pragma mark - MMService Protocol methods
+
+- (NSString *)name {
+	return @"MMXClient";
+}
+
+- (BOOL)allowsMultipleInstances {
+	return NO;
+}
+
+#pragma mark - Current User
+
+- (MMXUserID *)currentUser {
+	if ([MMXUtils objectIsValidString:self.username]) {
+		return [MMXUserID userIDWithUsername:self.username];
+	} else {
+		return nil;
+	}
 }
 
 #pragma mark - Connection Lifecycle
 
 - (BOOL)openStream {
+	[[MMXLogger sharedLogger] verbose:@"MMXClient openStream start"];
     [self disconnect];
     self.xmppStream = [[XMPPStream alloc] init];
     self.iqTracker = [[XMPPIDTracker alloc] initWithStream:self.xmppStream dispatchQueue:self.mmxQueue];
+	//FIXME: Blowfish
+//    NSMutableString *userWithAppId = [[NSMutableString alloc] initWithString:self.username];
 
 	if (self.xmppReconnect != nil) {
 		[self.xmppReconnect removeDelegate:self delegateQueue:self.mmxQueue];
@@ -134,15 +215,19 @@ int const kReconnectionTimerInterval = 4;
 	
 	NSMutableString *userWithAppId = [[NSMutableString alloc] initWithString:[self.configuration.credential.user jidEscapedString]];
     [userWithAppId appendString:@"%"];
-    [userWithAppId appendString:self.configuration.appID];
-    
-    NSString *host = self.configuration.baseURL.host;
+    [userWithAppId appendString:self.appID];
+	
+	//FIXME: Configure the host
+    NSString *host = kHost;
 
     [self.xmppStream setMyJID:[XMPPJID jidWithUser:userWithAppId
-											domain:self.configuration.domain ? self.configuration.domain : host
+											domain:@"mmx"
 										  resource:[MMXDeviceManager deviceUUID]]];
 
     [self.xmppStream setHostName:host];
+	//FIXME: Blowfish
+	//[self.xmppStream setHostPort:kPort];
+
 	[self.xmppStream setHostPort:[self.configuration.baseURL.port integerValue]];
 	
     if (self.configuration.shouldForceTLS) {
@@ -150,9 +235,7 @@ int const kReconnectionTimerInterval = 4;
     }
     
     [self.xmppStream addDelegate:self delegateQueue:self.mmxQueue];
-    
-    self.switchingUser = NO;
-    
+	
     NSError* error;
     BOOL result = [self.xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error];
     if (!result) {
@@ -170,6 +253,21 @@ int const kReconnectionTimerInterval = 4;
 }
 
 #pragma mark - Connection Lifecycle - Public APIs
+
+
+- (void)connect {
+	if (self.username && self.appID && self.accessToken) {
+		[self openStream];
+	} else {
+		if ([self.delegate respondsToSelector:@selector(client:didReceiveConnectionStatusChange:error:)]) {
+			dispatch_async(self.callbackQueue, ^{
+				//FIXME: This is a temporary error while building the new auth mechanism
+				NSError *error = [MMXClient errorWithTitle:@"Missing information" message:@"Missing accessToken, appID or username" code:500];
+				[self.delegate client:self didReceiveConnectionStatusChange:MMXConnectionStatusFailed error:error];
+			});
+		}
+	}
+}
 
 - (void)connectAnonymous {
     self.anonymousConnection = YES;
@@ -196,8 +294,9 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (void)authenticate {
+	[[MMXLogger sharedLogger] verbose:@"MMXClient authenticate start"];
     NSError* error;
-    if ([self.xmppStream authenticateWithPassword:self.configuration.credential.password error:&error]) {
+	if ([self.xmppStream authenticateWithMMXOAuthAccessToken:self.accessToken error:&error]) {
         if (error) {
             [[MMXLogger sharedLogger] verbose:@"ERROR = %@",error];
         }
@@ -367,6 +466,14 @@ int const kReconnectionTimerInterval = 4;
     }
 	
 	XMPPMessage *xmppMessage;
+	//FIXME: Blowfish
+// 	if ([outboundMessage.recipient respondsToSelector:@selector(address)]) {
+// 		NSString *fullUsername = [NSString stringWithFormat:@"%@%%%@",[outboundMessage.recipient address],self.appID];
+// 		XMPPJID *toAddress = [XMPPJID jidWithUser:fullUsername domain:[[self currentJID] domain] resource:[outboundMessage.recipient subAddress]];
+// 		xmppMessage = [[XMPPMessage alloc] initWithType:mType to:toAddress];
+// 		[xmppMessage addAttributeWithName:@"from" stringValue: [[self currentJID] full]];
+// 	} else {
+// 		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipient:error:)]) {
 	NSUInteger sentCount = 0;
 	NSMutableArray *failedList = @[].mutableCopy;
 	for (id<MMXAddressable> recipient in outboundMessage.recipients) {
@@ -411,6 +518,16 @@ int const kReconnectionTimerInterval = 4;
 - (BOOL)validateAndRespondToErrorsForOutboundMessage:(MMXInternalMessageAdaptor *)outboundMessage {
 	MMXAssert(!(outboundMessage.messageContent == nil && outboundMessage.metaData == nil),@"MMXClient sendMessage: messageContent && metaData cannot both be nil");
 	
+	//FIXME: Blowfish
+// 	for (id<MMXAddressable> addressable in recipients) {
+// 		NSXMLElement *address = [[NSXMLElement alloc] initWithName:@"address"];
+// 		[address addAttributeWithName:@"type" stringValue:@"to"];
+// 
+// 		if ([addressable respondsToSelector:@selector(address)]) {
+// 			NSString *fullUsername = [NSString stringWithFormat:@"%@%%%@",[addressable address],self.appID];
+// 			XMPPJID *toAddress = [XMPPJID jidWithUser:fullUsername domain:[[self currentJID] domain] resource:[addressable subAddress]];
+// 			[address addAttributeWithName:@"jid" stringValue:[toAddress full]];
+// 			[addressesElement addChild:address];
 	if (outboundMessage == nil) {
 		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipients:error:)]) {
 			NSError * error = [MMXClient errorWithTitle:@"Message cannot be nil" message:@"Message cannot be nil" code:401];
@@ -444,6 +561,10 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (NSString *)sendDeliveryConfirmationForMessage:(MMXInboundMessage *)message {
+	//FIXME: Blowfish
+// 	NSString *sender = [NSString stringWithFormat:@"%@%%%@@%@", message.senderUserID.username, self.appID, self.configuration.domain];
+// 	if (message.senderEndpoint.deviceID != nil && ![message.senderEndpoint.deviceID isEqualToString:@""]) {
+// 		sender = [NSString stringWithFormat:@"%@/%@", sender, message.senderEndpoint.deviceID];
 	return [self sendDeliveryConfirmationForAddress:message.senderUserID.address messageID:message.messageID toDeviceID:message.senderEndpoint.deviceID];
 }
 
@@ -738,6 +859,7 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error {
+// 	[self updateConnectionStatus:MMXConnectionStatusAuthenticationFailure error:nil];
         if (self.anonymousConnection) {
             __weak __typeof__(self) weakSelf = self;
             [self.accountManager registerAnonymousWithSuccess:^(BOOL success){
@@ -775,18 +897,8 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender {
-    [self.deviceManager registerCurrentDeviceWithSuccess:^(BOOL success) {
-		[self postAuthenticationTasks];
-    } failure:^(NSError *error) {
-		[self postAuthenticationTasks];
-    }];
-	if (self.anonymousConnection) {
-		[self updateConnectionStatus:MMXConnectionStatusConnected error:nil];
-	} else {
-		// Save the credentials
-		[[NSURLCredentialStorage sharedCredentialStorage] setCredential:self.configuration.credential forProtectionSpace:self.protectionSpace];
-		[self updateConnectionStatus:MMXConnectionStatusAuthenticated error:nil];
-	}
+	[self updateConnectionStatus:MMXConnectionStatusAuthenticated error:nil];
+	[self postAuthenticationTasks];
 }
 
 - (void)postAuthenticationTasks {
@@ -998,7 +1110,7 @@ int const kReconnectionTimerInterval = 4;
 
 - (BOOL)areCurrentCredentialsAnonymous {
 	NSString *anonymousUsername = [NSString stringWithFormat:@"_anon-%@",[MMXDeviceManager deviceUUID]];
-	if ([self.configuration.credential.user isEqualToString:anonymousUsername]) {
+	if ([self.username isEqualToString:anonymousUsername]) {
 		return YES;
 	}
 	return NO;

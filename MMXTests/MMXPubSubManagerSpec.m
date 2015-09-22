@@ -58,8 +58,12 @@ describe(@"MMXPubSubManager", ^{
             MMXClientDelegateSpy *spy = [MMXClientDelegateSpy spy];
             spy.receivedConnectionEventBlock = ^(MMXClient *client, MMXConnectionStatus connectionEvent, NSError * error) {
                 switch (connectionEvent) {
-                    case MMXConnectionStatusConnected:
-                        break;
+					case MMXConnectionStatusAnonReady:
+						break;
+					case MMXConnectionStatusUserReady:
+						break;
+					case MMXConnectionStatusConnected:
+						break;
                     case MMXConnectionStatusNotConnected:
                         break;
                     case MMXConnectionStatusDisconnected:
@@ -100,6 +104,10 @@ describe(@"MMXPubSubManager", ^{
             MMXClientDelegateSpy *spy = [MMXClientDelegateSpy spy];
             spy.receivedConnectionEventBlock = ^(MMXClient *client, MMXConnectionStatus connectionEvent, NSError * error) {
                 switch (connectionEvent) {
+					case MMXConnectionStatusAnonReady:
+						break;
+					case MMXConnectionStatusUserReady:
+						break;
                     case MMXConnectionStatusConnected:
                         break;
                     case MMXConnectionStatusNotConnected:
@@ -153,6 +161,10 @@ describe(@"MMXPubSubManager", ^{
             MMXClientDelegateSpy *spy = [MMXClientDelegateSpy spy];
             spy.receivedConnectionEventBlock = ^(MMXClient *client, MMXConnectionStatus connectionEvent, NSError * error) {
                 switch (connectionEvent) {
+					case MMXConnectionStatusAnonReady:
+						break;
+					case MMXConnectionStatusUserReady:
+						break;
                     case MMXConnectionStatusConnected:
                         break;
                     case MMXConnectionStatusNotConnected:
@@ -202,6 +214,10 @@ describe(@"MMXPubSubManager", ^{
 			MMXClientDelegateSpy *spy = [MMXClientDelegateSpy spy];
 			spy.receivedConnectionEventBlock = ^(MMXClient *client, MMXConnectionStatus connectionEvent, NSError * error) {
 				switch (connectionEvent) {
+					case MMXConnectionStatusAnonReady:
+						break;
+					case MMXConnectionStatusUserReady:
+						break;
 					case MMXConnectionStatusConnected:
 						break;
 					case MMXConnectionStatusNotConnected:
@@ -244,6 +260,10 @@ describe(@"MMXPubSubManager", ^{
 			MMXClientDelegateSpy *spy = [MMXClientDelegateSpy spy];
 			spy.receivedConnectionEventBlock = ^(MMXClient *client, MMXConnectionStatus connectionEvent, NSError * error) {
 				switch (connectionEvent) {
+					case MMXConnectionStatusAnonReady:
+						break;
+					case MMXConnectionStatusUserReady:
+						break;
 					case MMXConnectionStatusConnected:
 						break;
 					case MMXConnectionStatusNotConnected:
@@ -293,6 +313,10 @@ describe(@"MMXPubSubManager", ^{
 			MMXClientDelegateSpy *spy = [MMXClientDelegateSpy spy];
 			spy.receivedConnectionEventBlock = ^(MMXClient *client, MMXConnectionStatus connectionEvent, NSError * error) {
 				switch (connectionEvent) {
+					case MMXConnectionStatusAnonReady:
+						break;
+					case MMXConnectionStatusUserReady:
+						break;
 					case MMXConnectionStatusConnected:
 						break;
 					case MMXConnectionStatusNotConnected:
@@ -338,6 +362,10 @@ describe(@"MMXPubSubManager", ^{
 			MMXClientDelegateSpy *spy = [MMXClientDelegateSpy spy];
 			spy.receivedConnectionEventBlock = ^(MMXClient *client, MMXConnectionStatus connectionEvent, NSError * error) {
 				switch (connectionEvent) {
+					case MMXConnectionStatusAnonReady:
+						break;
+					case MMXConnectionStatusUserReady:
+						break;
 					case MMXConnectionStatusConnected:
 						break;
 					case MMXConnectionStatusNotConnected:
@@ -376,6 +404,10 @@ describe(@"MMXPubSubManager", ^{
 			MMXClientDelegateSpy *spy = [MMXClientDelegateSpy spy];
 			spy.receivedConnectionEventBlock = ^(MMXClient *client, MMXConnectionStatus connectionEvent, NSError * error) {
 				switch (connectionEvent) {
+					case MMXConnectionStatusAnonReady:
+						break;
+					case MMXConnectionStatusUserReady:
+						break;
 					case MMXConnectionStatusConnected:
 						break;
 					case MMXConnectionStatusNotConnected:

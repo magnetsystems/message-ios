@@ -232,6 +232,10 @@ describe(@"MMXClient", ^{
             MMXClientDelegateSpy *spy = [MMXClientDelegateSpy spy];
             spy.receivedConnectionEventBlock = ^(MMXClient *client, MMXConnectionStatus connectionEvent, NSError * error) {
                 switch (connectionEvent) {
+					case MMXConnectionStatusAnonReady:
+						break;
+					case MMXConnectionStatusUserReady:
+						break;
                     case MMXConnectionStatusConnected:
                         break;
                     case MMXConnectionStatusNotConnected:
@@ -265,6 +269,10 @@ describe(@"MMXClient", ^{
             MMXClientDelegateSpy *spy = [MMXClientDelegateSpy spy];
             spy.receivedConnectionEventBlock = ^(MMXClient *client, MMXConnectionStatus connectionEvent, NSError * error) {
                 switch (connectionEvent) {
+					case MMXConnectionStatusAnonReady:
+						break;
+					case MMXConnectionStatusUserReady:
+						break;
                     case MMXConnectionStatusConnected:{
                         _testFinished = YES;
                         break;

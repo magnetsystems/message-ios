@@ -18,8 +18,10 @@
 #import <Foundation/Foundation.h>
 #import "MMXErrorSeverityEnum.h"
 #import "MMXAddressable.h"
+#import "MMService_Protocol.h"
 
 @class MMXClient;
+@class MMXUserID;
 @class MMXAccountManager;
 @class MMXDeviceManager;
 @class MMXPubSubManager;
@@ -60,6 +62,14 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 	 *  Something occured which caused the connection to fail.
 	 */
 	MMXConnectionStatusFailed,
+	/**
+	 *  Some occured which caused the connection to fail.
+	 */
+	MMXConnectionStatusAnonReady,
+	/**
+	 *  Some occured which caused the connection to fail.
+	 */
+	MMXConnectionStatusUserReady,
 	/**
 	 *  An accidental disconnect occurred and the SDK will automatically try to reconnect.
 	 */
@@ -158,7 +168,7 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
  *	MMXClient has properties for accessing the manager classes that expose advanced functionality, configuration, connection status and important settings. 
  *	It also contains the majority of the core methods for task like; connection lifecycle, sending messages, message state and queued messages.
  */
-@interface MMXClient : NSObject
+@interface MMXClient : NSObject <MMService>
 
 #pragma mark - MMXClient Properties
 
@@ -232,6 +242,9 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 - (id)initWithConfiguration:(MMXConfiguration *)configuration
                    delegate:(id<MMXClientDelegate>)delegate;
 
+
+- (void)connect;
+
 /**
  *  Creates a session as an anonymous user.
  */
@@ -263,6 +276,13 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
  */
 - (void)disconnectAndDeactivateWithSuccess:(void (^)(BOOL success))success
 								   failure:(void (^)(NSError * error))failure;
+
+/**
+ *  Get the MMXUserID for the current user.
+ *
+ *  @return The MMXUserID for the current user
+ */
+- (MMXUserID *)currentUser;
 
 /**
  *  Sends a message to a desired user. MMXMessageOptions are set to default values.
