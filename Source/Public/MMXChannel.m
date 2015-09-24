@@ -471,12 +471,17 @@
 		return;
 	}
 	[[MMXClient sharedClient].pubsubManager listSubscriptionsWithSuccess:^(NSArray *subscriptions) {
-		NSArray *topics = [MMXChannel topicsFromSubscriptions:subscriptions];
-		[[MMXClient sharedClient].pubsubManager summaryOfTopics:topics since:nil until:nil success:^(NSArray *summaries) {
-			NSArray *channelArray = [MMXChannel channelsFromTopics:topics summaries:summaries subscriptions:subscriptions];
-			if (success) {
-				success(channelArray);
-			}
+		[[MMXClient sharedClient].pubsubManager topicsFromTopicSubscriptions:subscriptions success:^(NSArray * topics) {
+			[[MMXClient sharedClient].pubsubManager summaryOfTopics:topics since:nil until:nil success:^(NSArray *summaries) {
+				NSArray *channelArray = [MMXChannel channelsFromTopics:topics summaries:summaries subscriptions:subscriptions];
+				if (success) {
+					success(channelArray);
+				}
+			} failure:^(NSError *error) {
+				if (failure) {
+					failure(error);
+				}
+			}];
 		} failure:^(NSError *error) {
 			if (failure) {
 				failure(error);
