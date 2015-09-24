@@ -732,6 +732,12 @@
 	return newTopic;
 }
 
+#pragma mark - Override Getters
+
+- (NSDate *)lastTimeActive {
+	return _lastTimeActive ?: self.creationDate;
+}
+
 #pragma mark - Equality
 
 - (BOOL)isEqual:(id)other {
