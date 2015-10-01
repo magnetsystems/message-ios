@@ -381,6 +381,7 @@
 		return;
 	}
 	MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic];
+	channel.ownerUsername = [MMXUser currentUser].username;
 	[[MMXClient sharedClient].pubsubManager createTopic:[channel asTopic] success:^(BOOL successful) {
 		[MMXChannel channelForName:channel.name isPublic:isPublic success:^(MMXChannel *channel) {
 			if (success) {
@@ -430,6 +431,7 @@
 		return;
 	}
 	[[MMXClient sharedClient].pubsubManager subscribeToTopic:[self asTopic] device:nil success:^(MMXTopicSubscription *subscription) {
+		self.isSubscribed = YES;
 		if (success) {
 			success();
 		}
@@ -451,6 +453,7 @@
 		return;
 	}
 	[[MMXClient sharedClient].pubsubManager unsubscribeFromTopic:[self asTopic] subscriptionID:nil success:^(BOOL successful) {
+		self.isSubscribed = NO;
 		if (success) {
 			success();
 		}
@@ -470,12 +473,17 @@
 		return;
 	}
 	[[MMXClient sharedClient].pubsubManager listSubscriptionsWithSuccess:^(NSArray *subscriptions) {
-		NSArray *topics = [MMXChannel topicsFromSubscriptions:subscriptions];
-		[[MMXClient sharedClient].pubsubManager summaryOfTopics:topics since:nil until:nil success:^(NSArray *summaries) {
-			NSArray *channelArray = [MMXChannel channelsFromTopics:topics summaries:summaries subscriptions:subscriptions];
-			if (success) {
-				success(channelArray);
-			}
+		[[MMXClient sharedClient].pubsubManager topicsFromTopicSubscriptions:subscriptions success:^(NSArray * topics) {
+			[[MMXClient sharedClient].pubsubManager summaryOfTopics:topics since:nil until:nil success:^(NSArray *summaries) {
+				NSArray *channelArray = [MMXChannel channelsFromTopics:topics summaries:summaries subscriptions:subscriptions];
+				if (success) {
+					success(channelArray);
+				}
+			} failure:^(NSError *error) {
+				if (failure) {
+					failure(error);
+				}
+			}];
 		} failure:^(NSError *error) {
 			if (failure) {
 				failure(error);
@@ -717,14 +725,19 @@
 	MMXTopic *newTopic = [MMXTopic topicWithName:self.name];
 	newTopic.topicDescription = self.summary;
 	if (!self.isPublic) {
-		MMXUser *currentUser = [MMXUser currentUser];
-		if (currentUser) {
-			newTopic.nameSpace = currentUser.username;
+		if (self.ownerUsername) {
+			newTopic.nameSpace = self.ownerUsername;
 		} else {
 			return nil;
 		}
 	}
 	return newTopic;
+}
+
+#pragma mark - Override Getters
+
+- (NSDate *)lastTimeActive {
+	return _lastTimeActive ?: self.creationDate;
 }
 
 #pragma mark - Equality

@@ -439,8 +439,8 @@ describe(@"MMXMessage", ^{
 			
 			[MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
 				[MMXChannel subscribedChannelsWithSuccess:^(NSArray *channels) {
-					MMXChannel *myChannel = channels[0];
-					[[myChannel should] beNonNil];
+					MMXChannel *myChannel = channels.firstObject;
+					[[myChannel shouldNot] beNil];
 					[myChannel subscribersWithLimit:100 offset:0 success:^(int totalCount, NSArray *subscribers) {
 						MMXUser *usr = subscribers[0];
 						[[usr should] beNonNil];
