@@ -73,7 +73,6 @@ static BOOL MMXServerTrustIsValid(SecTrustRef serverTrust) {
 //FIXME: At some point this should be set in a plist or something.
 int const kTempVersionMajor = 1;
 int const kTempVersionMinor = 0;
-NSString  * const kHost = @"52.8.144.105";
 int const kPort = 5222;
 int const kMaxReconnectionTries = 4;
 int const kReconnectionTimerInterval = 4;
@@ -213,12 +212,12 @@ int const kReconnectionTimerInterval = 4;
 	[self.xmppReconnect activate:self.xmppStream];
 	self.xmppReconnect.reconnectTimerInterval = kReconnectionTimerInterval;
 	
-	NSMutableString *userWithAppId = [[NSMutableString alloc] initWithString:[self.configuration.credential.user jidEscapedString]];
+	NSMutableString *userWithAppId = [[NSMutableString alloc] initWithString:[self.username jidEscapedString]];
     [userWithAppId appendString:@"%"];
     [userWithAppId appendString:self.appID];
 	
 	//FIXME: Configure the host
-    NSString *host = kHost;
+    NSString *host = self.configuration.baseURL.host;
 
     [self.xmppStream setMyJID:[XMPPJID jidWithUser:userWithAppId
 											domain:@"mmx"
@@ -256,6 +255,9 @@ int const kReconnectionTimerInterval = 4;
 
 
 - (void)connect {
+	self.username = @"demouser2";
+	self.accessToken = @"UBUzwxJ_uPDc-XGdm4OpoCPBapqxP0gh7eG97bJbGGthXGbHnZGWSk8TBsX7NVL8ebLVp2xDMXW09z2yL0iE3EoY-E1JrAn96H3YIzUPL0oEs908ZR9u6bh9poyZHyx8M6pxA9-hIm7KhKV6YuaH_6igj5FCeM4UHGN0y2uaAFH9xrKOC3DjR5v_t0l17STgRhJi6I9D-U9groeaK8QchwiMXz00bQf88gnIEmMm4gt_V_L7kBZuhjnyVMAVEbKO_8j0TpW4GmIL4zdRlq8grzpxfp7Ef6yBLJZtcNDQgA7qAeTx1727DffuUDCO6IBk";
+	self.appID = self.configuration.appID;
 	if (self.username && self.appID && self.accessToken) {
 		[self openStream];
 	} else {

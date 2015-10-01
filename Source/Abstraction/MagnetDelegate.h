@@ -18,7 +18,6 @@
 #import <Foundation/Foundation.h>
 @class MMXMessage;
 @class MMXUser;
-@class MMXChannel;
 @class MMXInternalMessageAdaptor;
 
 @interface MagnetDelegate : NSObject
