@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.summary            =  'iOS framework for developing apps using the Magnet Message platform.'
   s.description        =  'Magnet Message is a powerful, open source mobile messaging framework enabling real-time user engagement for your mobile apps. Send relevant and targeted communications to customers or employees. Enhance your mobile app with actionable notifications, alerts, in-app events, two-way interactions and more. Get started and get coding in minutes!'
   s.homepage           =  'https://www.magnet.com/developer/magnet-message/'
-  s.author             =  { 'Magnet Systems, Inc.' => 'support@magnet.com' }
+  s.author             =  { 'Magnet Systems, Inc.' => 'info@magnet.com' }
   s.source             =  { :git => 'https://github.com/magnetsystems/message-ios.git', :tag => '1.10.1'}
   s.platform = :ios, '8.0'
   s.requires_arc = true
