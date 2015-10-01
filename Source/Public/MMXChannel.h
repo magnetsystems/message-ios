@@ -189,7 +189,7 @@
 /**
  *  Method to create a new channel.
  *
- *  @param name		The name you want for the new channel(must be unique. Cannot have spaces.
+ *  @param name		The name you want for the new channel must be unique. Cannot have spaces. The valid character set is alphanumeric plus period, dash and underscore. .-_
  *  @param summary	The summary you want for the channel. (Used to give other users a better idea about the purpose of the channel).
  *  @param isPublic	Set to YES if you want the channel to be discoverable by other users.
  *  @param success	Block called if operation is successful.
