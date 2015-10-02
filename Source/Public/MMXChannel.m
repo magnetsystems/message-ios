@@ -431,6 +431,7 @@
 		return;
 	}
 	[[MMXClient sharedClient].pubsubManager subscribeToTopic:[self asTopic] device:nil success:^(MMXTopicSubscription *subscription) {
+		self.isSubscribed = YES;
 		if (success) {
 			success();
 		}
@@ -452,6 +453,7 @@
 		return;
 	}
 	[[MMXClient sharedClient].pubsubManager unsubscribeFromTopic:[self asTopic] subscriptionID:nil success:^(BOOL successful) {
+		self.isSubscribed = NO;
 		if (success) {
 			success();
 		}
@@ -471,12 +473,17 @@
 		return;
 	}
 	[[MMXClient sharedClient].pubsubManager listSubscriptionsWithSuccess:^(NSArray *subscriptions) {
-		NSArray *topics = [MMXChannel topicsFromSubscriptions:subscriptions];
-		[[MMXClient sharedClient].pubsubManager summaryOfTopics:topics since:nil until:nil success:^(NSArray *summaries) {
-			NSArray *channelArray = [MMXChannel channelsFromTopics:topics summaries:summaries subscriptions:subscriptions];
-			if (success) {
-				success(channelArray);
-			}
+		[[MMXClient sharedClient].pubsubManager topicsFromTopicSubscriptions:subscriptions success:^(NSArray * topics) {
+			[[MMXClient sharedClient].pubsubManager summaryOfTopics:topics since:nil until:nil success:^(NSArray *summaries) {
+				NSArray *channelArray = [MMXChannel channelsFromTopics:topics summaries:summaries subscriptions:subscriptions];
+				if (success) {
+					success(channelArray);
+				}
+			} failure:^(NSError *error) {
+				if (failure) {
+					failure(error);
+				}
+			}];
 		} failure:^(NSError *error) {
 			if (failure) {
 				failure(error);
@@ -725,6 +732,12 @@
 		}
 	}
 	return newTopic;
+}
+
+#pragma mark - Override Getters
+
+- (NSDate *)lastTimeActive {
+	return _lastTimeActive ?: self.creationDate;
 }
 
 #pragma mark - Equality
