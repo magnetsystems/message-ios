@@ -17,10 +17,12 @@
 
 #import "MMXUser.h"
 #import "MagnetDelegate.h"
-#import "MMX_Private.h"
 #import "MMXAccountManager_Private.h"
 #import "NSString+XEP_0106.h"
 #import "MMXUtils.h"
+#import "MMXQuery.h"
+#import "MMXUserProfile.h"
+#import "MMXUserID.h"
 
 @implementation MMXUser
 
