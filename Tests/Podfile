@@ -8,13 +8,13 @@ inhibit_all_warnings!
 def import_pods
   use_frameworks!
   pod 'Kiwi', '~> 2.3'
-  pod 'MMX', :path => '../Source/'
+  pod 'MMX', :path => '../'
   pod 'MagnetMobileServer', '~>3.0'
 end
 
 target :ios do
   platform :ios, '8.0'
-  link_with 'iOS Tests'
+  link_with 'MMX Tests'
   import_pods
 end
 
