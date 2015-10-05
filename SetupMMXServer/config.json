@@ -1,0 +1,80 @@
+{
+    "App": {
+        "port": 3000,
+        "sessionSecret": "secretpass",
+        "appUrl": "http://localhost:3000",
+        "samplesDir": "./",
+        "handleExceptions": true,
+        "configured": true
+    },
+    "Database": {
+        "sync": true,
+        "dbName": "magnetmessagedb",
+        "username": "root",
+        "password": null,
+        "host": "localhost",
+        "port": 3306,
+        "charset": "utf8",
+        "dialect": "mysql"
+    },
+    "Redis": {
+        "enabled": false,
+        "storeConfig": false,
+        "host": "localhost",
+        "port": 6379,
+        "pass": "",
+        "cacheTimeout": 5
+    },
+    "ConsoleLog": {
+        "enabled": true,
+        "level": "info"
+    },
+    "FileLog": {
+        "enabled": true,
+        "level": "info",
+        "folder": "./log",
+        "filename": "server0.log",
+        "maxsize": 100000,
+        "maxFiles": 20
+    },
+    "DatabaseLog": {
+        "enabled": true,
+        "level": "info"
+    },
+    "EmailAlerts": {
+        "enabled": false,
+        "recipient": "",
+        "level": "error"
+    },
+    "Email": {
+        "enabled": false,
+        "host": "",
+        "user": "",
+        "port": 587,
+        "tls": true,
+        "password": "",
+        "sender": "Messaging Admin <no-reply@yourdomain.com>"
+    },
+    "MMX": {
+        "shareDB": true,
+        "host": "localhost",
+        "ssl": false,
+        "webPort": 9090,
+        "publicPort": 5220,
+        "adminPort": 6060,
+        "user": "admin",
+        "password": "admin"
+    },
+    "Geologging": {
+        "enabled": false,
+        "host": "localhost",
+        "jid": "geoservice",
+        "secretkey": "admin",
+        "servername": "mmx",
+        "reconnect": true,
+        "port": 5275,
+        "flushInterval": 30,
+        "expirationTimeout": 1440,
+        "cleanupInterval": 1440
+    }
+}

@@ -137,7 +137,7 @@ describe(@"MMXAccountManager", ^{
 			__block BOOL _testFinished = NO;
 			
 			__block BOOL _result;
-			__block NSString * _randomName = [MMXTestingUtils randomStringWithLength:10];
+			__block NSString * _randomName = [NSString stringWithFormat:@"random_%@",[MMXTestingUtils randomStringWithLength:10]];
 			MMXClientDelegateSpy *spy = [MMXClientDelegateSpy spy];
 			spy.receivedConnectionEventBlock = ^(MMXClient *client, MMXConnectionStatus connectionEvent, NSError * error) {
 				switch (connectionEvent) {

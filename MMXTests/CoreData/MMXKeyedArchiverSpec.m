@@ -25,16 +25,16 @@ SPEC_BEGIN(MMXKeyedArchiverSpec)
 
         context(@"archivedDataWithRootObject", ^{
 
-            context(@"should return nil", ^{
-
-                it(@"when nil is input", ^{
-                    [[[MMXKeyedArchiver archivedDataWithRootObject:nil] should] beNil];
-                });
-
-                it(@"when [NSNull null] is input", ^{
-                    [[[MMXKeyedArchiver archivedDataWithRootObject:[NSNull null]] should] beNil];
-                });
-            });
+//            context(@"should return nil", ^{
+//
+//                it(@"when nil is input", ^{
+//                    [[[MMXKeyedArchiver archivedDataWithRootObject:nil] should] beNil];
+//                });
+//
+//                it(@"when [NSNull null] is input", ^{
+//                    [[[MMXKeyedArchiver archivedDataWithRootObject:[NSNull null]] should] beNil];
+//                });
+//            });
 
             context(@"should archive the object", ^{
                 it(@"when string is input", ^{

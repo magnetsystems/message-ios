@@ -16,9 +16,11 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <Mantle/Mantle.h>
+
 @class MMXUserID;
 
-@interface MMXTopic : NSObject <NSCoding>
+@interface MMXTopic : MTLModel
 
 typedef NS_ENUM(NSInteger, MMXPublishPermissionsLevel){
     MMXPublishPermissionsLevelOwner = 0,
@@ -36,6 +38,11 @@ typedef NS_ENUM(NSInteger, MMXPublishPermissionsLevel){
  *  Discription of the topic and what should be published to the topic.
  */
 @property (nonatomic, copy)   NSString * topicDescription;
+
+/**
+ *  The date the topic was created.
+ */
+@property (nonatomic, readonly) NSDate * creationDate;
 
 /**
  *  The MMXUserID of the creator of the topic.
