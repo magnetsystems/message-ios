@@ -564,6 +564,9 @@
       </Group>
    </Group>
    <FileRef
-      location = "group:Tests/MMX Tests.xcodeproj">
+      location = "group:MMX Tests/MMX Tests.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:MMX Tests/Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

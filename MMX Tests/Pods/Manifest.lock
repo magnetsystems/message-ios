@@ -1,0 +1,142 @@
+PODS:
+  - AFNetworking/NSURLConnection (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - CocoaAsyncSocket (7.4.1)
+  - CocoaLumberjack (2.0.2):
+    - CocoaLumberjack/Default (= 2.0.2)
+    - CocoaLumberjack/Extensions (= 2.0.2)
+  - CocoaLumberjack/Core (2.0.2)
+  - CocoaLumberjack/Default (2.0.2):
+    - CocoaLumberjack/Core
+  - CocoaLumberjack/Extensions (2.0.2):
+    - CocoaLumberjack/Default
+  - Kiwi (2.4.0)
+  - libextobjc (0.4.1):
+    - libextobjc/EXTADT (= 0.4.1)
+    - libextobjc/EXTConcreteProtocol (= 0.4.1)
+    - libextobjc/EXTKeyPathCoding (= 0.4.1)
+    - libextobjc/EXTNil (= 0.4.1)
+    - libextobjc/EXTSafeCategory (= 0.4.1)
+    - libextobjc/EXTScope (= 0.4.1)
+    - libextobjc/EXTSelectorChecking (= 0.4.1)
+    - libextobjc/EXTSynthesize (= 0.4.1)
+    - libextobjc/NSInvocation+EXT (= 0.4.1)
+    - libextobjc/NSMethodSignature+EXT (= 0.4.1)
+    - libextobjc/RuntimeExtensions (= 0.4.1)
+    - libextobjc/UmbrellaHeader (= 0.4.1)
+  - libextobjc/EXTADT (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTConcreteProtocol (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTKeyPathCoding (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTNil (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSafeCategory (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTScope (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSelectorChecking (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSynthesize (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/NSInvocation+EXT (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/NSMethodSignature+EXT (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/RuntimeExtensions (0.4.1)
+  - libextobjc/UmbrellaHeader (0.4.1)
+  - MagnetMobileCore (1.0)
+  - MagnetMobileServer (3.0.9):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - CocoaLumberjack (~> 2.0.2)
+    - libextobjc (~> 0.4)
+    - MagnetMobileCore (~> 1.0)
+    - Mantle (~> 1.5)
+  - Mantle (1.5.4):
+    - Mantle/extobjc (= 1.5.4)
+  - Mantle/extobjc (1.5.4)
+  - MDMCoreData (1.5.0):
+    - MDMCoreData/MDMCoreDataCore (= 1.5.0)
+    - MDMCoreData/MDMFetchedResultsCollectionDataSource (= 1.5.0)
+    - MDMCoreData/MDMFetchedResultsTableDataSource (= 1.5.0)
+    - MDMCoreData/MDMPersistenceController (= 1.5.0)
+    - MDMCoreData/NSManagedObject+MDMCoreDataAdditions (= 1.5.0)
+  - MDMCoreData/MDMCoreDataCore (1.5.0)
+  - MDMCoreData/MDMFetchedResultsCollectionDataSource (1.5.0):
+    - MDMCoreData/MDMCoreDataCore
+  - MDMCoreData/MDMFetchedResultsTableDataSource (1.5.0):
+    - MDMCoreData/MDMCoreDataCore
+  - MDMCoreData/MDMPersistenceController (1.5.0):
+    - MDMCoreData/MDMCoreDataCore
+  - MDMCoreData/NSManagedObject+MDMCoreDataAdditions (1.5.0):
+    - MDMCoreData/MDMCoreDataCore
+  - MMX (1.10.3):
+    - CocoaAsyncSocket (= 7.4.1)
+    - CocoaLumberjack (= 2.0.2)
+    - Mantle (= 1.5.4)
+    - MDMCoreData (= 1.5.0)
+    - MMXXMPPFramework (= 3.6.13)
+  - MMXXMPPFramework (3.6.13):
+    - MMXXMPPFramework/Core (= 3.6.13)
+    - MMXXMPPFramework/CoreDataStorage (= 3.6.13)
+    - MMXXMPPFramework/Reconnect (= 3.6.13)
+    - MMXXMPPFramework/Roster (= 3.6.13)
+    - MMXXMPPFramework/XEP-0060 (= 3.6.13)
+    - MMXXMPPFramework/XEP-0082 (= 3.6.13)
+    - MMXXMPPFramework/XEP-0106 (= 3.6.13)
+    - MMXXMPPFramework/XEP-0203 (= 3.6.13)
+  - MMXXMPPFramework/Core (3.6.13):
+    - CocoaAsyncSocket (~> 7.4.1)
+    - CocoaLumberjack (~> 2.0.2)
+  - MMXXMPPFramework/CoreDataStorage (3.6.13):
+    - MMXXMPPFramework/Core
+  - MMXXMPPFramework/Reconnect (3.6.13):
+    - MMXXMPPFramework/Core
+  - MMXXMPPFramework/Roster (3.6.13):
+    - MMXXMPPFramework/Core
+    - MMXXMPPFramework/CoreDataStorage
+    - MMXXMPPFramework/XEP-0203
+  - MMXXMPPFramework/XEP-0060 (3.6.13):
+    - MMXXMPPFramework/Core
+  - MMXXMPPFramework/XEP-0082 (3.6.13):
+    - MMXXMPPFramework/Core
+  - MMXXMPPFramework/XEP-0106 (3.6.13):
+    - MMXXMPPFramework/Core
+  - MMXXMPPFramework/XEP-0203 (3.6.13):
+    - MMXXMPPFramework/Core
+    - MMXXMPPFramework/XEP-0082
+
+DEPENDENCIES:
+  - Kiwi (~> 2.3)
+  - MagnetMobileServer (~> 3.0)
+  - MMX (from `../`)
+
+EXTERNAL SOURCES:
+  MMX:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
+  CocoaLumberjack: 1a8ad020fb10a62060a64d7aedebce9391aa7fd2
+  Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
+  libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
+  MagnetMobileCore: c7600ba0e7feec1d82bdd3413bfc682bbaa3f5e3
+  MagnetMobileServer: 3cd51529621e1c0b0c9707ff4c710c9986af0346
+  Mantle: 60acd0cd363e27d945bda0a6b8e90577112d28f3
+  MDMCoreData: 402f754cda90865026a209243f1667824e775649
+  MMX: f683d2d35bdef63a9e7bf980698d4b2e76bb55dd
+  MMXXMPPFramework: af652c05a32674c3d0d8631f52f8a3171f42e859
+
+COCOAPODS: 0.38.2

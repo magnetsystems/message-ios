@@ -1,0 +1,1 @@
+MAGNETMOBILESERVER_OTHER_LDFLAGS = -ObjC -all_load -l"icucore" -framework "CFNetwork" -framework "Foundation" -framework "Security" -framework "UIKit"
