@@ -379,4 +379,12 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 				  success:(void (^)(BOOL success))success
 				  failure:(void (^)(NSError * error))failure;
 
+#pragma mark - MMModule Methods
+
+- (void)updateConfiguration:(NSDictionary *)configurationDict;
+
+- (void)updateAppID:(NSString *)appID deviceID:(NSString *)deviceID appToken:(NSString *)appToken;
+
+- (void)updateUsername:(NSString *)username deviceID:(NSString *)deviceID userToken:(NSString *)userToken;
+
 @end

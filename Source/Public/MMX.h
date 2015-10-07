@@ -26,7 +26,9 @@
 #import "MMXLogger.h"
 #import "MMXRemoteNotification.h"
 
-@interface MMX : NSObject
+#import <MagnetMobileServer/MagnetMobileServer-Swift.h>
+
+@interface MMX : NSObject <MMModule>
 
 /**
  *  Initialize MMX with a configuration

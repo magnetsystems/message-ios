@@ -73,6 +73,8 @@ The timeout interval, in seconds, for created requests. The default timeout inte
 
 @property(nonatomic, strong) MMEndPoint *endPoint;
 
+@property(nonatomic, copy) NSString *HATToken;
+
 @property(nonatomic, copy) void (^requestInterceptor)(id<MMRequestFacade> request);
 
 @property(nonatomic, strong) id<MMProfilerConfiguration> profiler;
@@ -80,6 +82,8 @@ The timeout interval, in seconds, for created requests. The default timeout inte
 @property(nonatomic, strong) id<MMClientFacade> client;
 
 - (id)createService:(Class)serviceClass;
+
++ (NSString *)deviceUUID;
 
 + (instancetype)adapter;
 

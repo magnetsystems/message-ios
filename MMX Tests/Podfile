@@ -9,7 +9,6 @@ def import_pods
   use_frameworks!
   pod 'Kiwi', '~> 2.3'
   pod 'MMX', :path => '../'
-  pod 'MagnetMobileServer', '~>3.0'
 end
 
 target :ios do

@@ -61,6 +61,10 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 
 @property(nonatomic, strong) NSOperationQueue *internalQueue;
 
+@property (nonatomic, readwrite) NSError * __nullable (^ __nullable configurationHandler)(NSDictionary * __nonnull);
+@property (nonatomic, readwrite) NSError * __nullable (^ __nullable appTokenHandler)(NSString * __nonnull, NSString * __nonnull, NSString * __nonnull);
+@property (nonatomic, readwrite) NSError * __nullable (^ __nullable userTokenHandler)(NSString * __nonnull, NSString * __nonnull, NSString * __nonnull);
+
 @end
 
 @implementation MagnetDelegate
@@ -72,6 +76,19 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	dispatch_once(&onceToken, ^{
 		_sharedClient = [[MagnetDelegate alloc] init];
 		_sharedClient.messageBlockQueue = [NSMutableDictionary dictionary];
+		_sharedClient.configurationHandler = ^ NSError *(NSDictionary * config) {
+			
+			return nil;
+		};
+		_sharedClient.appTokenHandler = ^ NSError *(NSString *appId, NSString *deviceId, NSString *appToken) {
+			
+			return nil;
+		};
+		_sharedClient.userTokenHandler = ^ NSError *(NSString *userName, NSString *deviceId, NSString *userToken) {
+			
+			return nil;
+		};
+		
 	});
 	return _sharedClient;
 }

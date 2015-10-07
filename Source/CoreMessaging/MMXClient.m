@@ -152,35 +152,31 @@ int const kReconnectionTimerInterval = 4;
 		_messageNumber = 0;
 		_reconnectionTryCount = 0;
 		_configuration = configuration;
-		__weak __typeof__(self) weakSelf = self;
-		_serviceAdapterDidSendAppToken = ^(NSString *appId, NSString *deviceId, NSString *appToken) {
-			__typeof__(self) strongSelf = weakSelf;
-			strongSelf.appID = appId;
-			strongSelf.deviceID = deviceId;
-			strongSelf.username = deviceId;
-			strongSelf.accessToken = appToken;
-			[strongSelf connect];
-		};
-		_serviceAdapterDidSendUserToken = ^(NSString *userName, NSString *deviceId, NSString *userToken){
-			__typeof__(self) strongSelf = weakSelf;
-			strongSelf.username = userName;
-			strongSelf.deviceID = deviceId;
-			strongSelf.accessToken = userToken;
-			[strongSelf connect];
-		};
 	}
     return self;
 }
 
 
-#pragma mark - MMService Protocol methods
+#pragma mark - MMModule methods
 
-- (NSString *)name {
-	return @"MMXClient";
+- (void)updateConfiguration:(NSDictionary *)configurationDict {
+	
 }
 
-- (BOOL)allowsMultipleInstances {
-	return NO;
+- (void)updateAppID:(NSString *)appID
+		   deviceID:(NSString *)deviceID
+		   appToken:(NSString *)appToken {
+	self.appID = appID;
+	self.deviceID = deviceID;
+	self.accessToken = appToken;
+	[self updateConnectionStatus:MMXConnectionStatusAnonReady error:nil];
+}
+
+- (void)updateUsername:(NSString *)username deviceID:(NSString *)deviceID userToken:(NSString *)userToken {
+	self.username = username;
+	self.deviceID = deviceID;
+	self.accessToken = userToken;
+	[self updateConnectionStatus:MMXConnectionStatusUserReady error:nil];
 }
 
 #pragma mark - Current User
@@ -200,8 +196,6 @@ int const kReconnectionTimerInterval = 4;
     [self disconnect];
     self.xmppStream = [[XMPPStream alloc] init];
     self.iqTracker = [[XMPPIDTracker alloc] initWithStream:self.xmppStream dispatchQueue:self.mmxQueue];
-	//FIXME: Blowfish
-//    NSMutableString *userWithAppId = [[NSMutableString alloc] initWithString:self.username];
 
 	if (self.xmppReconnect != nil) {
 		[self.xmppReconnect removeDelegate:self delegateQueue:self.mmxQueue];

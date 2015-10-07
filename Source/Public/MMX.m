@@ -17,7 +17,7 @@
 
 #import "MMX.h"
 #import "MagnetDelegate.h"
-#import "MMX_Private.h"
+#import "MMXClient_Private.h"
 
 @implementation MMX
 
@@ -65,15 +65,15 @@
 #pragma mark - MMModule Protocol methods
 
 - (NSError * _Nullable (^)(NSDictionary * _Nonnull))configurationHandler {
-	
+	return [MagnetDelegate sharedDelegate].configurationHandler;
 }
 
 - (NSError * _Nullable (^)(NSString * _Nonnull, NSString * _Nonnull, NSString * _Nonnull))appTokenHandler {
-	
+	return [MagnetDelegate sharedDelegate].appTokenHandler;
 }
 
 - (NSError * _Nullable (^)(NSString * _Nonnull, NSString * _Nonnull, NSString * _Nonnull))userTokenHandler {
-	
+	return [MagnetDelegate sharedDelegate].userTokenHandler;
 }
 
 - (NSString *)name {

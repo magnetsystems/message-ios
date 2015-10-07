@@ -342,6 +342,7 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
 		AFOAuthCredential *credential;
 		if (responseObject) {
 			credential = [MMServiceAdapter credentialFromResponseObject:responseObject];
+            [self setAppIdFromResponseObject:responseObject];
 		}
 		if (credential) {
 			self.CATToken = credential.accessToken;

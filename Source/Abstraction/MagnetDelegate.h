@@ -87,4 +87,8 @@
 
 + (NSError *)notNotLoggedInError;
 
+@property (nonatomic, readonly, copy) NSError * __nullable (^ __nullable configurationHandler)(NSDictionary * __nonnull);
+@property (nonatomic, readonly, copy) NSError * __nullable (^ __nullable appTokenHandler)(NSString * __nonnull, NSString * __nonnull, NSString * __nonnull);
+@property (nonatomic, readonly, copy) NSError * __nullable (^ __nullable userTokenHandler)(NSString * __nonnull, NSString * __nonnull, NSString * __nonnull);
+
 @end
