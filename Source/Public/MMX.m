@@ -21,6 +21,16 @@
 
 @implementation MMX
 
++ (instancetype)sharedDelegate {
+	
+	static MMX *_sharedInstance = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		_sharedInstance = [[MMX alloc] init];
+	});
+	return _sharedInstance;
+}
+
 + (void)setupWithConfiguration:(NSString *)name {
 	[[MagnetDelegate sharedDelegate] startMMXClientWithConfiguration:name];
 }
@@ -50,6 +60,28 @@
 
 + (void)setRemoteNotificationDeviceToken:(NSData *)deviceToken {
 	[[MMXClient sharedClient] updateRemoteNotificationDeviceToken:deviceToken];
+}
+
+#pragma mark - MMModule Protocol methods
+
+- (NSError * _Nullable (^)(NSDictionary * _Nonnull))configurationHandler {
+	
+}
+
+- (NSError * _Nullable (^)(NSString * _Nonnull, NSString * _Nonnull, NSString * _Nonnull))appTokenHandler {
+	
+}
+
+- (NSError * _Nullable (^)(NSString * _Nonnull, NSString * _Nonnull, NSString * _Nonnull))userTokenHandler {
+	
+}
+
+- (NSString *)name {
+	return @"MMX";
+}
+
+- (BOOL)allowsMultipleInstances {
+	return NO;
 }
 
 @end

@@ -116,7 +116,10 @@ NSString *const kMMXDeviceName = @"kMMXDeviceName";
 - (void)registerDevice:(MMXDeviceProfile *)device
                success:(void (^)(BOOL success))success
                failure:(void (^)(NSError * error))failure {
-    
+	if (success) {
+		success(YES);
+	}
+	return;
     NSError * parsingError;
     XMPPIQ *devRegIQ = [self deviceRegistationIQ:device error:&parsingError];
     if (!parsingError) {

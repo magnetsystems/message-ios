@@ -16,22 +16,26 @@
  */
 
 #import "MagnetDelegate.h"
-#import "MMXMessage_Private.h"
 #import "MMXNotificationConstants.h"
 #import "MMXUser.h"
 #import "MMXMessageTypes.h"
-#import "MMX_Private.h"
 #import "MMXChannel_Private.h"
+#import "MMXConfiguration.h"
+#import "MMXAccountManager_Private.h"
 #import "MMXLogInOperation.h"
 #import "MMXConnectionOperation.h"
 #import "MMXClient_Private.h"
 #import "MMXAddressable.h"
 #import "MMXInternalMessageAdaptor.h"
 #import "MMXInboundMessage_Private.h"
+#import "MMXPubSubMessage.h"
 #import "MMXClient_Private.h"
 #import "MMXUserID_Private.h"
+#import "MMXEndpoint.h"
+#import "MMXUserProfile.h"
 #import "MMXTopic_Private.h"
 #import "MMXOutboundMessage_Private.h"
+#import "MMXMessage_Private.h"
 
 typedef void(^MessageSuccessBlock)(void);
 typedef void(^MessageFailureBlock)(NSError *);

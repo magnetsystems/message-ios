@@ -135,6 +135,7 @@ int const kReconnectionTimerInterval = 4;
 			strongSelf.accessToken = userToken;
 			[strongSelf updateConnectionStatus:MMXConnectionStatusUserReady error:nil];
 			[[MMXLogger sharedLogger] verbose:@"serviceAdapterDidSendUserToken block executed"];
+			[strongSelf connect];
 		};
 	}
 	return self;
@@ -255,9 +256,6 @@ int const kReconnectionTimerInterval = 4;
 
 
 - (void)connect {
-	self.username = @"demouser2";
-	self.accessToken = @"UBUzwxJ_uPDc-XGdm4OpoCPBapqxP0gh7eG97bJbGGthXGbHnZGWSk8TBsX7NVL8ebLVp2xDMXW09z2yL0iE3EoY-E1JrAn96H3YIzUPL0oEs908ZR9u6bh9poyZHyx8M6pxA9-hIm7KhKV6YuaH_6igj5FCeM4UHGN0y2uaAFH9xrKOC3DjR5v_t0l17STgRhJi6I9D-U9groeaK8QchwiMXz00bQf88gnIEmMm4gt_V_L7kBZuhjnyVMAVEbKO_8j0TpW4GmIL4zdRlq8grzpxfp7Ef6yBLJZtcNDQgA7qAeTx1727DffuUDCO6IBk";
-	self.appID = self.configuration.appID;
 	if (self.username && self.appID && self.accessToken) {
 		[self openStream];
 	} else {
@@ -468,20 +466,12 @@ int const kReconnectionTimerInterval = 4;
     }
 	
 	XMPPMessage *xmppMessage;
-	//FIXME: Blowfish
-// 	if ([outboundMessage.recipient respondsToSelector:@selector(address)]) {
-// 		NSString *fullUsername = [NSString stringWithFormat:@"%@%%%@",[outboundMessage.recipient address],self.appID];
-// 		XMPPJID *toAddress = [XMPPJID jidWithUser:fullUsername domain:[[self currentJID] domain] resource:[outboundMessage.recipient subAddress]];
-// 		xmppMessage = [[XMPPMessage alloc] initWithType:mType to:toAddress];
-// 		[xmppMessage addAttributeWithName:@"from" stringValue: [[self currentJID] full]];
-// 	} else {
-// 		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipient:error:)]) {
 	NSUInteger sentCount = 0;
 	NSMutableArray *failedList = @[].mutableCopy;
 	for (id<MMXAddressable> recipient in outboundMessage.recipients) {
 		MMXInternalAddress *address = recipient.address;
 		if (address) {
-			NSString *fullUsername = [NSString stringWithFormat:@"%@%%%@",address.username,self.configuration.appID];
+			NSString *fullUsername = [NSString stringWithFormat:@"%@%%%@",address.username,self.appID];
 			XMPPJID *toAddress = [XMPPJID jidWithUser:fullUsername domain:[[self currentJID] domain] resource:address.deviceID];
 			xmppMessage = [[XMPPMessage alloc] initWithType:mType to:toAddress];
 			[xmppMessage addAttributeWithName:@"from" stringValue: [[self currentJID] full]];
