@@ -1,1 +1,1 @@
-../../../MagnetMobileServer/MagnetMobileServer/Internal/MMHTTPRequestOperationManager.h
+../../../MagnetMobileServer/MagnetMobileServer/MMHTTPRequestOperationManager.h

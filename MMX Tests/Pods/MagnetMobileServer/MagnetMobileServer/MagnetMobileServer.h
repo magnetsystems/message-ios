@@ -22,5 +22,6 @@
     #import "MMLogEvent.h"
     #import "MMAsynchronousOperation.h"
     #import "MMCall.h"
+    #import "MMDevice.h"
 
 #endif /* _MAGNETMOBILESERVER_ */

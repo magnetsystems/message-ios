@@ -117,6 +117,21 @@ The timeout interval, in seconds, for created requests. The default timeout inte
 - (void)cancelAllOperations;
 
 /**
+ * Posted when (additional) configuration is received.
+ */
+extern NSString *const MMServiceAdapterDidReceiveConfigurationNotification;
+
+/**
+ * Posted when an app (CAT) token is received.
+ */
+extern NSString *const MMServiceAdapterDidReceiveCATTokenNotification;
+
+/**
+ * Posted when an user (HAT) token is received.
+ */
+extern NSString *const MMServiceAdapterDidReceiveHATTokenNotification;
+
+/**
  * Posted when an OAuth Login Exception is received.
  */
 extern NSString *const MMServiceAdapterDidReceiveAuthenticationChallengeNotification;

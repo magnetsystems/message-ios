@@ -53,6 +53,7 @@ code_sign_if_enabled() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods-ios/AFNetworking.framework'
+  install_framework 'Pods-ios/AFOAuth2Manager.framework'
   install_framework 'Pods-ios/CocoaAsyncSocket.framework'
   install_framework 'Pods-ios/CocoaLumberjack.framework'
   install_framework 'Pods-ios/Kiwi.framework'
@@ -65,6 +66,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods-ios/AFNetworking.framework'
+  install_framework 'Pods-ios/AFOAuth2Manager.framework'
   install_framework 'Pods-ios/CocoaAsyncSocket.framework'
   install_framework 'Pods-ios/CocoaLumberjack.framework'
   install_framework 'Pods-ios/Kiwi.framework'

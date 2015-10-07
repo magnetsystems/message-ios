@@ -9,6 +9,8 @@
 #import "MMUserRealm.h"
 #import "MMUserStatus.h"
 
+@class MMCall;
+
 @interface MMUser : MMModel
 
 
@@ -24,11 +26,11 @@
 
 @property (nonatomic, copy) NSString *otpCode;
 
-@property (nonatomic, assign) MMUserStatus  userStatus;
+@property (nonatomic, assign) MMUserStatus userStatus;
 
 @property (nonatomic, copy) NSString *userName;
 
-@property (nonatomic, assign) MMUserRealm  userRealm;
+@property (nonatomic, assign) MMUserRealm userRealm;
 
 @property (nonatomic, copy) NSString *firstName;
 

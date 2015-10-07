@@ -1,1 +1,0 @@
-../../../MagnetMobileServer/MagnetMobileServer/Internal/AFOAuth2Manager/AFHTTPRequestSerializer+OAuth2.h

@@ -3,7 +3,7 @@
  */
 
 #import <AFNetworking/AFSecurityPolicy.h>
-#import "AFOAuth2Manager.h"
+#import <AFOAuth2Manager/AFOAuth2Manager.h>
 #import "MMServiceAdapter_Private.h"
 #import "MMService_Protocol.h"
 #import "MMService.h"
@@ -32,6 +32,9 @@
 
 @end
 
+NSString * const MMServiceAdapterDidReceiveConfigurationNotification = @"com.magnet.networking.configuration.receive";
+NSString * const MMServiceAdapterDidReceiveCATTokenNotification = @"com.magnet.networking.cattoken.receive";
+NSString * const MMServiceAdapterDidReceiveHATTokenNotification = @"com.magnet.networking.hattoken.receive";
 NSString * const MMServiceAdapterDidReceiveAuthenticationChallengeNotification = @"com.magnet.networking.challenge.receive";
 NSString * const MMServiceAdapterDidReceiveAuthenticationChallengeURLKey = @"com.magnet.networking.challenge.receive.url";
 
@@ -408,6 +411,8 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
 //	if (!refreshToken || [refreshToken isEqual:[NSNull null]]) {
 //	 refreshToken = [parameters valueForKey:@"refresh_token"];
 //	}
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:MMServiceAdapterDidReceiveConfigurationNotification object:self userInfo:jsonDictionary[@"config"]];
 
 	AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:[jsonDictionary valueForKey:@"access_token"] tokenType:[jsonDictionary valueForKey:@"token_type"]];
 
@@ -449,7 +454,7 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
 
     MMCall *call = [self.userService register:user success:^(MMUser *registeredUser) {
         if (success) {
-            success(user);
+            success(registeredUser);
         }
     } failure:^(NSError *error) {
         if (failure) {
@@ -669,19 +674,37 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
 }
 
 - (void)passAppTokenToRegisteredServices {
+    
+    NSString *deviceID = [MMServiceAdapter deviceUUID];
+    
     [self notifyRegisteredServicesWithBlock:^(id<MMService> service){
         if (service.serviceAdapterDidSendAppToken) {
-            service.serviceAdapterDidSendAppToken(self.mmxAppId, [MMServiceAdapter deviceUUID], self.CATToken);
+            service.serviceAdapterDidSendAppToken(self.mmxAppId, deviceID, self.CATToken);
         }
     }];
+    NSDictionary *userInfo = @{
+                               @"appID" : @"appID"/*self.mmxAppId*/,
+                               @"deviceID" : deviceID,
+                               @"token" : self.CATToken
+                               };
+    [[NSNotificationCenter defaultCenter] postNotificationName:MMServiceAdapterDidReceiveCATTokenNotification object:self userInfo:userInfo];
 }
 
 - (void)passUserTokenToRegisteredServices {
+    
+    NSString *deviceID = [MMServiceAdapter deviceUUID];
+    
     [self notifyRegisteredServicesWithBlock:^(id<MMService> service){
         if (service.serviceAdapterDidSendUserToken) {
-            service.serviceAdapterDidSendUserToken(self.username, [MMServiceAdapter deviceUUID], self.HATToken);
+            service.serviceAdapterDidSendUserToken(self.username, deviceID, self.HATToken);
         }
     }];
+    NSDictionary *userInfo = @{
+                               @"userID" : self.username,
+                               @"deviceID" : deviceID,
+                               @"token" : self.CATToken
+                               };
+    [[NSNotificationCenter defaultCenter] postNotificationName:MMServiceAdapterDidReceiveHATTokenNotification object:self userInfo:userInfo];
 }
 
 @end

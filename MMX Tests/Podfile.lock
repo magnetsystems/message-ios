@@ -10,6 +10,8 @@ PODS:
   - AFNetworking/Reachability (2.5.4)
   - AFNetworking/Security (2.5.4)
   - AFNetworking/Serialization (2.5.4)
+  - AFOAuth2Manager (2.2.1):
+    - AFNetworking/NSURLConnection (~> 2.2)
   - CocoaAsyncSocket (7.4.1)
   - CocoaLumberjack (2.0.2):
     - CocoaLumberjack/Default (= 2.0.2)
@@ -59,6 +61,7 @@ PODS:
   - MagnetMobileServer (3.0.9):
     - AFNetworking/NSURLConnection (= 2.5.4)
     - AFNetworking/NSURLSession (= 2.5.4)
+    - AFOAuth2Manager (~> 2.2.1)
     - CocoaLumberjack (~> 2.0.2)
     - libextobjc (~> 0.4)
     - MagnetMobileCore (~> 1.0)
@@ -128,12 +131,13 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  AFOAuth2Manager: 9efc94eb158fbfca13e685c22d91721c7a64fc8c
   CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
   CocoaLumberjack: 1a8ad020fb10a62060a64d7aedebce9391aa7fd2
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MagnetMobileCore: c7600ba0e7feec1d82bdd3413bfc682bbaa3f5e3
-  MagnetMobileServer: 3cd51529621e1c0b0c9707ff4c710c9986af0346
+  MagnetMobileServer: c3c31f4e9e9c2d1015ab9d8eca1772f71471cbe6
   Mantle: 60acd0cd363e27d945bda0a6b8e90577112d28f3
   MDMCoreData: 402f754cda90865026a209243f1667824e775649
   MMX: f683d2d35bdef63a9e7bf980698d4b2e76bb55dd
