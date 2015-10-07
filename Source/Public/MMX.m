@@ -21,7 +21,7 @@
 
 @implementation MMX
 
-+ (instancetype)sharedDelegate {
++ (instancetype)sharedInstance {
 	
 	static MMX *_sharedInstance = nil;
 	static dispatch_once_t onceToken;
