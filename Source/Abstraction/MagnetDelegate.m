@@ -77,15 +77,16 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 		_sharedClient = [[MagnetDelegate alloc] init];
 		_sharedClient.messageBlockQueue = [NSMutableDictionary dictionary];
 		_sharedClient.configurationHandler = ^ NSError *(NSDictionary * config) {
-			
+			[[MMXClient sharedClient] updateConfiguration:config];
 			return nil;
 		};
-		_sharedClient.appTokenHandler = ^ NSError *(NSString *appId, NSString *deviceId, NSString *appToken) {
-			
+		_sharedClient.appTokenHandler = ^ NSError *(NSString *appID, NSString *deviceID, NSString *appToken) {
+			[[MMXClient sharedClient] updateAppID:appID deviceID:deviceID appToken:appToken];
 			return nil;
 		};
-		_sharedClient.userTokenHandler = ^ NSError *(NSString *userName, NSString *deviceId, NSString *userToken) {
-			
+		_sharedClient.userTokenHandler = ^ NSError *(NSString *username, NSString *deviceID, NSString *userToken) {
+			[[MMXClient sharedClient] updateUsername:username deviceID:deviceID userToken:userToken];
+			[[MMXClient sharedClient] connect];
 			return nil;
 		};
 		
