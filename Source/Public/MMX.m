@@ -80,8 +80,4 @@
 	return @"MMX";
 }
 
-- (BOOL)allowsMultipleInstances {
-	return NO;
-}
-
 @end
