@@ -60,7 +60,7 @@ SPEC_BEGIN(MMXMessageSpec)
 
             [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
         });
-
+/*
         context(@"when pre-registering the users", ^{
 
             it(@"should return success for sender", ^{
@@ -117,7 +117,7 @@ SPEC_BEGIN(MMXMessageSpec)
                 [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
             });
         });
-
+*/
         context(@"when sending a message", ^{
 
             it(@"should return success if the user is valid", ^{

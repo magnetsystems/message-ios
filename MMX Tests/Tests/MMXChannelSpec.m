@@ -59,7 +59,8 @@ describe(@"MMXMessage", ^{
 		
 		[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 	});
-	
+
+	/*
 	context(@"when pre-registering the users", ^{
 		
 		it(@"should return success for sender", ^{
@@ -116,7 +117,7 @@ describe(@"MMXMessage", ^{
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
 	});
-	
+	*/
 	context(@"when creating a channel", ^{
 		
 		it(@"should return success if the channel is valid", ^{

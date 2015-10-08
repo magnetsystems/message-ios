@@ -160,7 +160,16 @@ int const kReconnectionTimerInterval = 4;
 #pragma mark - MMModule methods
 
 - (void)updateConfiguration:(NSDictionary *)configurationDict {
-	
+	if (configurationDict[@"mmx-host"]) {
+		MMXConfiguration *config = [MMXConfiguration new];
+		NSString *urlString = [NSString stringWithFormat:@"mmx://%@:%@",configurationDict[@"mmx-host"],configurationDict[@"mmx-port"]];
+		config.baseURL = [NSURL URLWithString:urlString];
+		config.shouldForceTLS = [configurationDict[@"tls-enabled"] boolValue];
+		config.allowInvalidCertificates = [configurationDict[@"security-policy"] isEqualToString:@"NONE"];
+		self.configuration = config;
+	} else {
+		[[MMXLogger sharedLogger] error:@"Configuration ERROR (mmx-host == nil)"];
+	}
 }
 
 - (void)updateAppID:(NSString *)appID
@@ -173,6 +182,25 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (void)updateUsername:(NSString *)username deviceID:(NSString *)deviceID userToken:(NSString *)userToken {
+	if (self.configuration == nil) {
+		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: Configuration ERROR (self.configuration == nil)"];
+		return;
+	} else if (self.configuration.baseURL == nil) {
+		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: Configuration ERROR (self.configuration.baseURL == nil)"];
+		return;
+	} else if (username == nil) {
+		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: username ERROR (username == nil)"];
+		return;
+	} else if (deviceID == nil) {
+		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: deviceID ERROR (deviceID == nil)"];
+		return;
+	} else if (userToken == nil) {
+		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: userToken ERROR (userToken == nil)"];
+		return;
+	} else if (self.appID == nil) {
+		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: self.appID ERROR (self.appID == nil)"];
+		return;
+	}
 	self.username = username;
 	self.deviceID = deviceID;
 	self.accessToken = userToken;

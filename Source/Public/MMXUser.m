@@ -30,32 +30,6 @@
 	return [MagnetDelegate sharedDelegate].currentUser;
 }
 
-- (void)registerWithCredential:(NSURLCredential *)credential
-					   success:(void (^)(void))success
-					   failure:(void (^)(NSError *))failure {
-	if (![MMXUser credentialIsValid:credential]) {
-		if (failure) {
-			failure([MMXUser invalidCredentialError]);
-		}
-		return;
-	}
-	if (![MMXUtils objectIsValidString:self.displayName]) {
-		self.displayName = credential.user;
-	}
-	[[MMXClient sharedClient].accountManager createAccountForUsername:credential.user
-														  displayName:self.displayName
-																email:nil password:credential.password
-															  success:^(MMXUserProfile *userProfile) {
-		if (success) {
-			success();
-		}
-	} failure:^(NSError *error) {
-		if (failure) {
-			failure(error);
-		}
-	}];
-}
-
 #pragma mark - Connection Lifecycle
 
 + (void)logInWithCredential:(NSURLCredential *)credential

@@ -126,6 +126,7 @@
 	}
 }
 
+/*
 - (void)createAccountForUsername:(NSString *)username
 					 displayName:(NSString *)displayName
 						   email:(NSString *)email
@@ -203,6 +204,7 @@
 		}
 	}] resume];
 }
+ */
 
 - (void)registerAnonymousWithSuccess:(void (^)(BOOL success))success
                              failure:(void (^)(NSError * error))failure {

@@ -48,9 +48,9 @@
  *  @param success 	  - Block called if operation is successful.
  *  @param failure    - Block with an NSError with details about the call failure.
  */
-- (void)registerWithCredential:(NSURLCredential *)credential
-					   success:(void (^)(void))success
-					   failure:(void (^)(NSError * error))failure;
+//- (void)registerWithCredential:(NSURLCredential *)credential
+//					   success:(void (^)(void))success
+//					   failure:(void (^)(NSError * error))failure;
 
 /**
  *  Method to log in to Magnet Message

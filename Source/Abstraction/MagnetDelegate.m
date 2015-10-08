@@ -89,7 +89,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 			[[MMXClient sharedClient] connect];
 			return nil;
 		};
-		
+		[MMXClient sharedClient].delegate = _sharedClient;
 	});
 	return _sharedClient;
 }
@@ -109,20 +109,20 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	[self.internalQueue addOperation:op];
 }
 
-- (void)registerUser:(MMXUser *)user
-		 credentials:(NSURLCredential *)credential
-			 success:(void (^)(void))success
-			 failure:(void (^)(NSError *))failure {
-	[[MMXClient sharedClient].accountManager createAccountForUsername:user.username displayName:user.displayName email:nil password:credential.password success:^(MMXUserProfile *userProfile) {
-		if (success) {
-			success();
-		}
-	} failure:^(NSError *error) {
-		if (failure) {
-			failure(error);
-		}
-	}];
-}
+//- (void)registerUser:(MMXUser *)user
+//		 credentials:(NSURLCredential *)credential
+//			 success:(void (^)(void))success
+//			 failure:(void (^)(NSError *))failure {
+//	[[MMXClient sharedClient].accountManager createAccountForUsername:user.username displayName:user.displayName email:nil password:credential.password success:^(MMXUserProfile *userProfile) {
+//		if (success) {
+//			success();
+//		}
+//	} failure:^(NSError *error) {
+//		if (failure) {
+//			failure(error);
+//		}
+//	}];
+//}
 
 - (void)connectWithSuccess:(void (^)(void))success
 				   failure:(void (^)(NSError *error))failure {

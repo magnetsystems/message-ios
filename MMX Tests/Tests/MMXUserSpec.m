@@ -8,7 +8,7 @@
 #define DEFAULT_TEST_TIMEOUT 5.0
 
 SPEC_BEGIN(MMXUserSpec)
-
+/*
     describe(@"MMXUser", ^{
 
         NSString *janeDoeUsername = @"jane.doe";
@@ -448,5 +448,5 @@ SPEC_BEGIN(MMXUserSpec)
 		});
 		
     });
-
+*/
 SPEC_END

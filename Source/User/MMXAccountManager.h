@@ -39,12 +39,12 @@
  *  @param success		- Block with MMXUserProfile for the newly created user.
  *  @param failure		- Block with an NSError with details about the call failure.
  */
-- (void)createAccountForUsername:(NSString *)username
-					 displayName:(NSString *)displayName
-						   email:(NSString *)email
-						password:(NSString *)password
-						 success:(void (^)(MMXUserProfile *userProfile))success
-						 failure:(void (^)(NSError * error))failure;
+//- (void)createAccountForUsername:(NSString *)username
+//					 displayName:(NSString *)displayName
+//						   email:(NSString *)email
+//						password:(NSString *)password
+//						 success:(void (^)(MMXUserProfile *userProfile))success
+//						 failure:(void (^)(NSError * error))failure;
 
 /**
  *  The callback dispatch queue. Value is initially set to the main queue.
