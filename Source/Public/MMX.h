@@ -30,6 +30,8 @@
 
 @interface MMX : NSObject <MMModule>
 
++ (id <MMModule> __nonnull)sharedInstance;
+
 /**
  *  Initialize MMX with a configuration
  *

@@ -21,7 +21,7 @@
 
 @implementation MMX
 
-+ (instancetype)sharedInstance {
++ (id <MMModule> __nonnull)sharedInstance {
 	
 	static MMX *_sharedInstance = nil;
 	static dispatch_once_t onceToken;

@@ -18,7 +18,7 @@
 #import "MMXMessage_Private.h"
 #import "MagnetDelegate.h"
 #import "MMXUser.h"
-#import "MMX_Private.h"
+#import "MMXInternal_Private.h"
 #import "MMXMessageUtils.h"
 #import "MMXClient_Private.h"
 #import "MMXChannel_Private.h"

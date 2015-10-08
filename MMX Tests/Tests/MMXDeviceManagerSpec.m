@@ -16,7 +16,7 @@
  */
 
 #import <Kiwi/Kiwi.h>
-#import "MMX_Private.h"
+#import "MMXInternal_Private.h"
 #import "MMXClientDelegateSpy.h"
 #import "MMXUtils.h"
 #import "MMXTestingUtils.h"

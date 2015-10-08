@@ -49,7 +49,7 @@
 #import "MMXDeviceProfile.h"
 #import "MMXDeviceProfile_Private.h"
 #import "MMXDeviceQueryResponse.h"
-#import "MMX_Private.h"
+#import "MMXInternal_Private.h"
 #import "MMXOAuthPlatformAuthentication.h"
 #import "MMX.h"
 #import "MMXChannel.h"

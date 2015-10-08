@@ -4,6 +4,9 @@
    <Group
       location = "group:Source"
       name = "Source">
+      <FileRef
+         location = "group:MMXInternal_Private.h">
+      </FileRef>
       <Group
          location = "group:Abstraction"
          name = "Abstraction">
@@ -287,9 +290,6 @@
             location = "group:MMXDeviceQueryResponse.m">
          </FileRef>
       </Group>
-      <FileRef
-         location = "group:MMX_Private.h">
-      </FileRef>
       <Group
          location = "group:OAuth"
          name = "OAuth">

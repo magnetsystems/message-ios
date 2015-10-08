@@ -15,8 +15,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef MMX_MMX_Private_h
-	#define MMX_MMX_Private_h
+#ifndef MMXINTERNAL_Private_h
+	#define MMXINTERNAL_Private_h
 
 	#import "MMXClient.h"
 	#import "MMXDeviceManager.h"
