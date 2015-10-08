@@ -18,7 +18,6 @@
 #import <Foundation/Foundation.h>
 #import "MMXErrorSeverityEnum.h"
 #import "MMXAddressable.h"
-#import "MMService_Protocol.h"
 
 @class MMXClient;
 @class MMXUserID;
@@ -168,7 +167,7 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
  *	MMXClient has properties for accessing the manager classes that expose advanced functionality, configuration, connection status and important settings. 
  *	It also contains the majority of the core methods for task like; connection lifecycle, sending messages, message state and queued messages.
  */
-@interface MMXClient : NSObject <MMService>
+@interface MMXClient : NSObject
 
 #pragma mark - MMXClient Properties
 

@@ -93,9 +93,6 @@ int const kReconnectionTimerInterval = 4;
 
 @implementation MMXClient
 
-@synthesize serviceAdapterDidSendAppToken = _serviceAdapterDidSendAppToken;
-@synthesize serviceAdapterDidSendUserToken = _serviceAdapterDidSendUserToken;
-
 + (instancetype)sharedClient {
 
     static MMXClient *_sharedClient = nil;
@@ -115,28 +112,6 @@ int const kReconnectionTimerInterval = 4;
 		_connectionStatus = MMXConnectionStatusNotConnected;
 		_messageNumber = 0;
 		_configuration = nil;
-		__weak __typeof__(self) weakSelf = self;
-		_serviceAdapterDidSendAppToken = ^(NSString *appId, NSString *deviceId, NSString *appToken) {
-			__typeof__(self) strongSelf = weakSelf;
-			strongSelf.appID = appId;
-			strongSelf.deviceID = deviceId;
-			strongSelf.username = deviceId;
-			strongSelf.accessToken = appToken;
-			[strongSelf updateConnectionStatus:MMXConnectionStatusAnonReady error:nil];
-			[[MMXLogger sharedLogger] verbose:@"serviceAdapterDidSendAppToken block executed"];
-			if (appId == nil) {
-				[[MMXLogger sharedLogger] error:@"serviceAdapterDidSendAppToken ERROR (appId == nil)"];
-			}
-		};
-		_serviceAdapterDidSendUserToken = ^(NSString *userName, NSString *deviceId, NSString *userToken){
-			__typeof__(self) strongSelf = weakSelf;
-			strongSelf.username = userName;
-			strongSelf.deviceID = deviceId;
-			strongSelf.accessToken = userToken;
-			[strongSelf updateConnectionStatus:MMXConnectionStatusUserReady error:nil];
-			[[MMXLogger sharedLogger] verbose:@"serviceAdapterDidSendUserToken block executed"];
-			[strongSelf connect];
-		};
 	}
 	return self;
 }
