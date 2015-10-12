@@ -20,7 +20,6 @@
 #import "MMXTopic_Private.h"
 #import "MMXTopicSummary.h"
 #import "MMXTopicSubscription.h"
-#import "MMXUser.h"
 #import "MMXUserID.h"
 #import "MMXClient_Private.h"
 #import "MMXPubSubManager_Private.h"
@@ -30,6 +29,7 @@
 #import "MMXInternalMessageAdaptor.h"
 #import "MMXDataModel.h"
 #import "MMXPubSubMessage_Private.h"
+#import <MagnetMobileServer/MagnetMobileServer-Swift.h>
 
 @implementation MMXChannel
 
@@ -356,9 +356,9 @@
 		return;
 	}
 	[[MMXClient sharedClient].pubsubManager createTopic:[self asTopic] success:^(BOOL successful) {
-		MMXUser *creator = [MMXUser currentUser];
+		MMUser *creator = [MMUser currentUser];
 		if (creator) {
-			self.ownerUsername = creator.username;
+			self.ownerUsername = creator.userName;
 		}
 		if (success) {
 			success();
@@ -384,7 +384,7 @@
 		return;
 	}
 	MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic];
-	channel.ownerUsername = [MMXUser currentUser].username;
+	channel.ownerUsername = [MMUser currentUser].userName;
 	[[MMXClient sharedClient].pubsubManager createTopic:[channel asTopic] success:^(BOOL successful) {
 		[MMXChannel channelForName:channel.name isPublic:isPublic success:^(MMXChannel *channel) {
 			if (success) {

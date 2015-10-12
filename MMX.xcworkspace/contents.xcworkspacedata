@@ -354,12 +354,6 @@
          <FileRef
             location = "group:MMXRemoteNotification.m">
          </FileRef>
-         <FileRef
-            location = "group:MMXUser.h">
-         </FileRef>
-         <FileRef
-            location = "group:MMXUser.m">
-         </FileRef>
       </Group>
       <Group
          location = "group:PubSub"

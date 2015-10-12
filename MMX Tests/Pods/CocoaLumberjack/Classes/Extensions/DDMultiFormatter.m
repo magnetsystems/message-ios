@@ -16,16 +16,13 @@
 #import "DDMultiFormatter.h"
 
 
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
 // Compiling for iOS
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000 // iOS 6.0 or later
 #define NEEDS_DISPATCH_RETAIN_RELEASE 0
 #else                                         // iOS 5.X or earlier
 #define NEEDS_DISPATCH_RETAIN_RELEASE 1
 #endif
-#elif TARGET_OS_WATCH
-// Compiling for watchOS
-#define NEEDS_DISPATCH_RETAIN_RELEASE 0
 #else
 // Compiling for Mac OS X
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1080     // Mac OS X 10.8 or later

@@ -131,7 +131,7 @@ SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   AFOAuth2Manager: 9efc94eb158fbfca13e685c22d91721c7a64fc8c
   CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
-  CocoaLumberjack: 1a8ad020fb10a62060a64d7aedebce9391aa7fd2
+  CocoaLumberjack: dc96bf6c430c5a1a57cff0e90df0640f76cac8b2
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MagnetMobileServer: ca1770abf99ca5156942af93cacd68514cdefcca

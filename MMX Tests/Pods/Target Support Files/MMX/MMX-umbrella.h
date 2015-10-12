@@ -60,7 +60,6 @@
 #import "MMXMessageTypes.h"
 #import "MMXNotificationConstants.h"
 #import "MMXRemoteNotification.h"
-#import "MMXUser.h"
 #import "MMXGeoLocationMessage.h"
 #import "MMXGeoLocationMessage_Private.h"
 #import "MMXPubSubFetchRequest.h"
