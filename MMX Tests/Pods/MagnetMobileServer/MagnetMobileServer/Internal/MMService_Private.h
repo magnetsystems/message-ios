@@ -3,12 +3,11 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "MMService.h"
 
-@class MMServiceAdapter;
 
+@interface MMService ()
 
-@interface MMService : NSObject
-
-+ (NSDictionary *)metaData;
+@property(nonatomic, strong) MMServiceAdapter *serviceAdapter;
 
 @end

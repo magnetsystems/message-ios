@@ -65,6 +65,21 @@
              success:(void (^)(MMUser *response))success
              failure:(void (^)(NSError *error))failure;
 
+/**
+ 
+ GET /com.magnet.server/user/query
+ @param q style:QUERY
+ @param take style:QUERY
+ @param skip style:QUERY
+ @param sort style:QUERY
+ @return A 'MMCall' object.
+ */
+- (MMCall *)searchUsers:(NSString *)q
+                   take:(int)take
+                   skip:(int)skip
+                   sort:(NSString *)sort
+                success:(void (^)(NSArray <MMUser *>*response))success
+                failure:(void (^)(NSError *error))failure;
 @end
 
 @interface MMUserService : MMService<MMUserServiceProtocol>

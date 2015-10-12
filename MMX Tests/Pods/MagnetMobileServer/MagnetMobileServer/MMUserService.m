@@ -139,8 +139,50 @@
         registerSuccessFailure.returnType = MMServiceIOTypeMagnetNode;
         registerSuccessFailure.returnTypeClass = MMUser.class;
         serviceMetaData[NSStringFromSelector(@selector(register:success:failure:))] = registerSuccessFailure;
-
-
+        
+        // schema for service method searchUsers:take:skip:sort:success:failure:
+        MMServiceMethod *searchUsersTakeSkipSortSuccessFailure = [[MMServiceMethod alloc] init];
+        searchUsersTakeSkipSortSuccessFailure.clazz = [self class];
+        searchUsersTakeSkipSortSuccessFailure.selector = @selector(searchUsers:take:skip:sort:success:failure:);
+        searchUsersTakeSkipSortSuccessFailure.path = @"com.magnet.server/user/query";
+        searchUsersTakeSkipSortSuccessFailure.requestMethod = MMRequestMethodGET;
+        searchUsersTakeSkipSortSuccessFailure.produces = [NSSet setWithObjects:@"application/json", nil];
+        
+        NSMutableArray *searchUsersTakeSkipSortSuccessFailureParams = [NSMutableArray array];
+        MMServiceMethodParameter *searchUsersTakeSkipSortSuccessFailureParam0 = [[MMServiceMethodParameter alloc] init];
+        searchUsersTakeSkipSortSuccessFailureParam0.name = @"q";
+        searchUsersTakeSkipSortSuccessFailureParam0.requestParameterType = MMServiceMethodParameterTypeQuery;
+        searchUsersTakeSkipSortSuccessFailureParam0.type = MMServiceIOTypeString;
+        searchUsersTakeSkipSortSuccessFailureParam0.isOptional = NO;
+        [searchUsersTakeSkipSortSuccessFailureParams addObject:searchUsersTakeSkipSortSuccessFailureParam0];
+        
+        MMServiceMethodParameter *searchUsersTakeSkipSortSuccessFailureParam1 = [[MMServiceMethodParameter alloc] init];
+        searchUsersTakeSkipSortSuccessFailureParam1.name = @"take";
+        searchUsersTakeSkipSortSuccessFailureParam1.requestParameterType = MMServiceMethodParameterTypeQuery;
+        searchUsersTakeSkipSortSuccessFailureParam1.type = MMServiceIOTypeInteger;
+        searchUsersTakeSkipSortSuccessFailureParam1.isOptional = NO;
+        [searchUsersTakeSkipSortSuccessFailureParams addObject:searchUsersTakeSkipSortSuccessFailureParam1];
+        
+        MMServiceMethodParameter *searchUsersTakeSkipSortSuccessFailureParam2 = [[MMServiceMethodParameter alloc] init];
+        searchUsersTakeSkipSortSuccessFailureParam2.name = @"skip";
+        searchUsersTakeSkipSortSuccessFailureParam2.requestParameterType = MMServiceMethodParameterTypeQuery;
+        searchUsersTakeSkipSortSuccessFailureParam2.type = MMServiceIOTypeInteger;
+        searchUsersTakeSkipSortSuccessFailureParam2.isOptional = NO;
+        [searchUsersTakeSkipSortSuccessFailureParams addObject:searchUsersTakeSkipSortSuccessFailureParam2];
+        
+        MMServiceMethodParameter *searchUsersTakeSkipSortSuccessFailureParam3 = [[MMServiceMethodParameter alloc] init];
+        searchUsersTakeSkipSortSuccessFailureParam3.name = @"sort";
+        searchUsersTakeSkipSortSuccessFailureParam3.requestParameterType = MMServiceMethodParameterTypeQuery;
+        searchUsersTakeSkipSortSuccessFailureParam3.type = MMServiceIOTypeString;
+        searchUsersTakeSkipSortSuccessFailureParam3.isOptional = NO;
+        [searchUsersTakeSkipSortSuccessFailureParams addObject:searchUsersTakeSkipSortSuccessFailureParam3];
+        
+        searchUsersTakeSkipSortSuccessFailure.parameters = searchUsersTakeSkipSortSuccessFailureParams;
+        searchUsersTakeSkipSortSuccessFailure.returnType = MMServiceIOTypeArray;
+        searchUsersTakeSkipSortSuccessFailure.returnComponentType = MMServiceIOTypeMagnetNode;
+        searchUsersTakeSkipSortSuccessFailure.returnTypeClass = MMUser.class;
+        serviceMetaData[NSStringFromSelector(searchUsersTakeSkipSortSuccessFailure.selector)] = searchUsersTakeSkipSortSuccessFailure;
+        
         __metaData = serviceMetaData;
     });
 

@@ -33,7 +33,6 @@
 #import "MMUserInfoService.h"
 #import "MMUserRealm.h"
 #import "MMUserService.h"
-#import "MMUserStatus.h"
 
 FOUNDATION_EXPORT double MagnetMobileServerVersionNumber;
 FOUNDATION_EXPORT const unsigned char MagnetMobileServerVersionString[];

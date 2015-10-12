@@ -57,14 +57,12 @@ PODS:
     - libextobjc/RuntimeExtensions
   - libextobjc/RuntimeExtensions (0.4.1)
   - libextobjc/UmbrellaHeader (0.4.1)
-  - MagnetMobileCore (1.0)
   - MagnetMobileServer (3.0.9):
     - AFNetworking/NSURLConnection (= 2.5.4)
     - AFNetworking/NSURLSession (= 2.5.4)
     - AFOAuth2Manager (~> 2.2.1)
     - CocoaLumberjack (~> 2.0.2)
     - libextobjc (~> 0.4)
-    - MagnetMobileCore (~> 1.0)
     - Mantle (~> 1.5)
   - Mantle (1.5.5):
     - Mantle/extobjc (= 1.5.5)
@@ -136,8 +134,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 1a8ad020fb10a62060a64d7aedebce9391aa7fd2
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
-  MagnetMobileCore: c7600ba0e7feec1d82bdd3413bfc682bbaa3f5e3
-  MagnetMobileServer: c3c31f4e9e9c2d1015ab9d8eca1772f71471cbe6
+  MagnetMobileServer: ca1770abf99ca5156942af93cacd68514cdefcca
   Mantle: 1b29072a707453975b200a173cf77ec1e2810b75
   MDMCoreData: 402f754cda90865026a209243f1667824e775649
   MMX: dacad08a53d5e19dc5776f2777a8e9e633d4acc7

@@ -31,7 +31,6 @@
 + (NSDictionary *)enumAttributeTypes {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
         @"userRealm" : MMUserRealmContainer.class,
-        @"userStatus" : MMUserStatusContainer.class,
     }];
     [dictionary addEntriesFromDictionary:[super enumAttributeTypes]];
     return dictionary;

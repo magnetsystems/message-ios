@@ -5,7 +5,6 @@
 #import <AFNetworking/AFSecurityPolicy.h>
 #import <AFOAuth2Manager/AFOAuth2Manager.h>
 #import "MMServiceAdapter_Private.h"
-#import "MMService_Protocol.h"
 #import "MMService.h"
 #import "MMEndPoint.h"
 #import "MMWebSocketRequestOperationManager.h"
@@ -147,9 +146,7 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
 
 - (id)createService:(Class)serviceClass {
 
-    BOOL conformsToServiceProtocol = [serviceClass conformsToProtocol:@protocol(MMService)];
-
-    NSAssert(conformsToServiceProtocol || [serviceClass isSubclassOfClass:[MMService class]], @"");
+    NSAssert([serviceClass isSubclassOfClass:[MMService class]], @"");
 
     if (self.requestInterceptor) {
         MMRequestFacadeImpl *requestFacade = [[MMRequestFacadeImpl alloc] init];
@@ -158,35 +155,8 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
 //        requestFacade.allPathParameterFields;
 //        requestFacade.allQueryParameterFields;
     }
-    if (conformsToServiceProtocol) {
-        NSString *className = NSStringFromClass(serviceClass);
-        id<MMService> service = [self.services[className] firstObject];
-        if (!service || [service allowsMultipleInstances]) {
-            id serviceToCreate = [[serviceClass alloc] init];
-            if (!service) {
-                self.services[className] = [NSMutableArray arrayWithCapacity:1];
-            }
-            [self.services[className] addObject:serviceToCreate];
-			//FIXME: Not sure if this is the right place to do this
-			if (self.currentCATTokenRequestStatus == MMCATTokenRequestStatusDone) {
-				[self passAppTokenToRegisteredServices];
-			}
-			if (self.HATToken) {
-				[self passUserTokenToRegisteredServices];
-			}
-            return serviceToCreate;
-        } else {
-			//FIXME: Not sure if this is the right place to do this
-			if (self.currentCATTokenRequestStatus == MMCATTokenRequestStatusDone) {
-				[self passAppTokenToRegisteredServices];
-			}
-			if (self.HATToken) {
-				[self passUserTokenToRegisteredServices];
-			}
-            return service;
-        }
-    }
-    return [serviceClass serviceWithServiceAdapter:self];
+    
+    return [[serviceClass alloc] init];
 }
 
 + (instancetype)adapter {
@@ -449,9 +419,6 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
     if(!user.userRealm) {
         user.userRealm = MMUserRealmDB;
     }
-    if(!user.clientId) {
-        user.clientId = self.clientID;
-    }
 
     MMCall *call = [self.userService register:user success:^(MMUser *registeredUser) {
         if (success) {
@@ -490,7 +457,9 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
                                                                         success:^(AFOAuthCredential *credential) {
                                                                             self.username = username;
                                                                             self.HATToken = credential.accessToken;
-                                                                            [self passUserTokenToRegisteredServices];
+                                                                            if (self.HATToken) {
+                                                                                [self passUserTokenToRegisteredServices];
+                                                                            }
                                                                             [self registerDeviceAuthString:[NSString stringWithFormat:@"Bearer %@", credential.accessToken.copy] success:nil failure:nil];
                                                                             if (success) {
                                                                                 success(YES);
@@ -524,7 +493,7 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
             // Clean up
             self.username = nil;
             self.HATToken = nil;
-            [self passUserTokenToRegisteredServices];
+//            [self passUserTokenToRegisteredServices];
 
             success(response);
         }
@@ -662,29 +631,12 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
     return _userInfoService;
 }
 
-#pragma mark - MMService notifications
-
-- (void)notifyRegisteredServicesWithBlock:(void (^)(id<MMService>))block {
-    if (block) {
-        [self.services enumerateKeysAndObjectsUsingBlock:^(NSString __unused *serviceClass, NSArray *services, BOOL __unused *stop) {
-            [services enumerateObjectsUsingBlock:^(id<MMService> service, NSUInteger __unused idx, BOOL __unused *stop) {
-                block(service);
-            }];
-        }];
-    }
-}
-
 - (void)passAppTokenToRegisteredServices {
     
     NSString *deviceID = [MMServiceAdapter deviceUUID];
     
-    [self notifyRegisteredServicesWithBlock:^(id<MMService> service){
-        if (service.serviceAdapterDidSendAppToken) {
-            service.serviceAdapterDidSendAppToken(self.mmxAppId, deviceID, self.CATToken);
-        }
-    }];
     NSDictionary *userInfo = @{
-                               @"appID" : @"appID"/*self.mmxAppId*/,
+                               @"appID" : self.mmxAppId ?: @"unknownAppID",
                                @"deviceID" : deviceID,
                                @"token" : self.CATToken
                                };
@@ -695,15 +647,10 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
     
     NSString *deviceID = [MMServiceAdapter deviceUUID];
     
-    [self notifyRegisteredServicesWithBlock:^(id<MMService> service){
-        if (service.serviceAdapterDidSendUserToken) {
-            service.serviceAdapterDidSendUserToken(self.username, deviceID, self.HATToken);
-        }
-    }];
     NSDictionary *userInfo = @{
                                @"userID" : self.username,
                                @"deviceID" : deviceID,
-                               @"token" : self.CATToken
+                               @"token" : self.HATToken
                                };
     [[NSNotificationCenter defaultCenter] postNotificationName:MMServiceAdapterDidReceiveHATTokenNotification object:self userInfo:userInfo];
 }

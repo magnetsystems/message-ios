@@ -7,15 +7,17 @@
 @implementation MMUserRealmContainer
 
 + (NSDictionary *)mappings {
-  return @{ 
-      @"AD" : @(MMUserRealmAD),
-      @"DB" : @(MMUserRealmDB),
-      @"FACEBOOK" : @(MMUserRealmFACEBOOK),
-      @"GOOGLEPLUS" : @(MMUserRealmGOOGLEPLUS),
-      @"LDAP" : @(MMUserRealmLDAP),
-      @"OTHER" : @(MMUserRealmOTHER),
-      @"TWITTER" : @(MMUserRealmTWITTER)
-  };
+    return @{
+             @"AD" : @(MMUserRealmAD),
+             @"DB" : @(MMUserRealmDB),
+             @"FACEBOOK" : @(MMUserRealmFACEBOOK),
+             @"GOOGLEPLUS" : @(MMUserRealmGOOGLEPLUS),
+             @"LDAP" : @(MMUserRealmLDAP),
+             @"OTHER" : @(MMUserRealmOTHER),
+             @"TWITTER" : @(MMUserRealmTWITTER),
+             @"WORDPRESS" : @(MMUserRealmWORDPRESS)
+             };
 }
+
 
 @end

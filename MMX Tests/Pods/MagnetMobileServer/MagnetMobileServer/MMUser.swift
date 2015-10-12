@@ -8,7 +8,6 @@ public extension MMUser {
     
     static private var currentlyLoggedInUser: MMUser?
     
-    // TODO: Revisit!
     public func register(success: ((user: MMUser) -> Void)?, failure: ((error: NSError) -> Void)?) {
         MMCoreConfiguration.serviceAdapter.registerUser(self, success: { (user) -> Void in
             success?(user: user)
@@ -45,5 +44,15 @@ public extension MMUser {
     
     static public func currentUser() -> MMUser? {
         return currentlyLoggedInUser
+    }
+    
+    static public func searchUsers(query: String, take: Int, skip: Int, sort: String, success: (([MMUser]) -> Void)?, failure: ((error: NSError) -> Void)?) {
+        
+        let userService = MMUserService()
+        userService.searchUsers(query, take: Int32(take), skip: Int32(skip), sort: sort, success: { (users) -> Void in
+            success?(users)
+        }) { (error) -> Void in
+            failure?(error: error)
+        }.executeInBackground(nil)
     }
 }
