@@ -26,7 +26,7 @@
 
 @property(nonatomic, readwrite) NSDate *timestamp;
 
-@property(nonatomic, readwrite) MMXUser *sender;
+@property(nonatomic, readwrite) MMUser *sender;
 
 @property(nonatomic, copy) NSString *senderDeviceID;
 

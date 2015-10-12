@@ -6,6 +6,7 @@
 #import "MMX.h"
 #import "MMXDeviceManager.h"
 #import "MMXDeviceManager_Private.h"
+#import <MagnetMobileServer/MMUser.h>
 
 #define DEFAULT_TEST_TIMEOUT 10.0
 
@@ -187,8 +188,7 @@ SPEC_BEGIN(MMXMessageSpec)
                 [[expectFutureValue(receivedMessage.recipients) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] haveCountOf:1];
                 [[expectFutureValue(receivedMessage.messageContent) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:messageContent];
                 [[expectFutureValue(theValue(receivedMessage.messageType)) should] equal:theValue(MMXMessageTypeDefault)];
-                [[expectFutureValue(receivedMessage.sender.username) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
-                [[expectFutureValue(receivedMessage.sender.displayName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderName];
+                [[expectFutureValue(receivedMessage.sender.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
                 [[expectFutureValue(receivedMessage.channel) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNil];
 
             });

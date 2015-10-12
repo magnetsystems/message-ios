@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 #import "MMXMessageTypes.h"
 #import <Mantle/Mantle.h>
-@class MMXUser;
+@class MMUser;
 @class MMXChannel;
 
 @interface MMXMessage : MTLModel
@@ -40,9 +40,9 @@
 @property(nonatomic, readonly) NSDate *timestamp;
 
 /**
- *  The MMXUserID for the user that sent the message.
+ *  The MMUser for the user that sent the message.
  */
-@property(nonatomic, readonly) MMXUser *sender;
+@property(nonatomic, readonly) MMUser *sender;
 
 /**
  *  The channel the message was published to. See MMXChannel.h for more details.

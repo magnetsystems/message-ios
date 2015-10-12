@@ -28,6 +28,8 @@
 #import "MMXUserID_Private.h"
 #import "MMXMessageOptions.h"
 #import "MMXTopic_Private.h"
+#import "MMXInternalAddress.h"
+#import <MagnetMobileServer/MMUser.h>
 
 @implementation MMXMessage
 
@@ -213,7 +215,10 @@
 }
 
 - (void)sendDeliveryConfirmation {
-	[[MMXClient sharedClient] sendDeliveryConfirmationForAddress:self.sender.address messageID:self.messageID toDeviceID:self.senderDeviceID];
+	MMXInternalAddress *address = [MMXInternalAddress new];
+	address.username = self.sender.userName;
+	address.deviceID = self.senderDeviceID;
+	[[MMXClient sharedClient] sendDeliveryConfirmationForAddress:address messageID:self.messageID toDeviceID:self.senderDeviceID];
 }
 
 @end
