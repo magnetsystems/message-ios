@@ -6,7 +6,7 @@
 #import "MMX.h"
 #import "MMXDeviceManager.h"
 #import "MMXDeviceManager_Private.h"
-#import <MagnetMobileServer/MMUser.h>
+@import MagnetMobileServer;
 
 #define DEFAULT_TEST_TIMEOUT 10.0
 
@@ -16,25 +16,21 @@ SPEC_BEGIN(MMXMessageSpec)
 
         NSString *senderUsername = [NSString stringWithFormat:@"sender_%f", [[NSDate date] timeIntervalSince1970]];
         NSString *senderPassword = @"magnet";
-        NSString *senderName = senderUsername;
         NSURLCredential *senderCredential = [NSURLCredential credentialWithUser:senderUsername
                                                                        password:senderPassword
                                                                     persistence:NSURLCredentialPersistenceNone];
 
         NSString *receiverUsername = [NSString stringWithFormat:@"receiver_%f", [[NSDate date] timeIntervalSince1970]];
         NSString *receiverPassword = @"magnet";
-        NSString *receiverName = receiverUsername;
         NSURLCredential *receiverCredential = [NSURLCredential credentialWithUser:receiverUsername
                                                                          password:receiverPassword
                                                                       persistence:NSURLCredentialPersistenceNone];
 
-        MMXUser *sender = [[MMXUser alloc] init];
-        sender.username = senderUsername;
-        sender.displayName = senderName;
+        MMUser *sender = [[MMUser alloc] init];
+        sender.userName = senderUsername;
 
-        MMXUser *receiver = [[MMXUser alloc] init];
-        receiver.username = receiverUsername;
-        receiver.displayName = receiverName;
+        MMUser *receiver = [[MMUser alloc] init];
+        receiver.userName = receiverUsername;
 
         NSString *receiverDeviceID = [[NSUUID UUID] UUIDString];
 
@@ -53,7 +49,7 @@ SPEC_BEGIN(MMXMessageSpec)
 
             __block BOOL _isSuccess = NO;
 
-            [MMXUser logOutWithSuccess:^{
+			[MMUser logout:^{
                 _isSuccess = YES;
             } failure:^(NSError *error) {
                 _isSuccess = NO;
@@ -61,65 +57,8 @@ SPEC_BEGIN(MMXMessageSpec)
 
             [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
         });
-/*
-        context(@"when pre-registering the users", ^{
 
-            it(@"should return success for sender", ^{
-
-                // Create some users
-                __block BOOL _isSuccess = NO;
-
-                [sender registerWithCredential:senderCredential success:^{
-                    [MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-                        _isSuccess = YES;
-                    } failure:^(NSError *error) {
-                        _isSuccess = NO;
-                    }];
-                } failure:^(NSError *error) {
-                    _isSuccess = NO;
-                }];
-
-                [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-            });
-
-            it(@"should return success for receiver", ^{
-
-                // Create some users
-                __block BOOL _isSuccess = NO;
-
-                NSString *originalDeviceID = [MMXDeviceManager deviceUUID];
-
-                [MMXDeviceManager stub:@selector(deviceUUID) andReturn:receiverDeviceID];
-
-                [receiver registerWithCredential:receiverCredential success:^{
-                    [MMXUser logInWithCredential:receiverCredential success:^(MMXUser *user) {
-                        [MMXDeviceManager stub:@selector(deviceUUID) andReturn:originalDeviceID];
-                        _isSuccess = YES;
-                    } failure:^(NSError *error) {
-                        _isSuccess = NO;
-                    }];
-                } failure:^(NSError *error) {
-                    _isSuccess = NO;
-                }];
-
-                [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-            });
-
-            afterEach(^{
-
-                __block BOOL _isSuccess = NO;
-
-                [MMXUser logOutWithSuccess:^{
-                    _isSuccess = YES;
-                } failure:^(NSError *error) {
-                    _isSuccess = NO;
-                }];
-
-                [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-            });
-        });
-*/
-        context(@"when sending a message", ^{
+		context(@"when sending a message", ^{
 
             it(@"should return success if the user is valid", ^{
 
@@ -127,9 +66,8 @@ SPEC_BEGIN(MMXMessageSpec)
                                                        messageContent:messageContent];
 
                 __block BOOL _isSuccess = NO;
-
-                [MMXUser logInWithCredential:senderCredential success:^(MMXUser *user) {
-
+				
+				[MMUser login:senderCredential success:^{
                     _messageID = [message sendWithSuccess:^{
                         _isSuccess = YES;
                     }                             failure:^(NSError *error) {
@@ -146,11 +84,11 @@ SPEC_BEGIN(MMXMessageSpec)
 
                 __block BOOL _isSuccess = NO;
 
-                [MMXUser logOutWithSuccess:^{
-                    _isSuccess = YES;
-                } failure:^(NSError *error) {
-                    _isSuccess = NO;
-                }];
+				[MMUser logout:^{
+					_isSuccess = YES;
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
 
                 [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
             });
@@ -166,7 +104,7 @@ SPEC_BEGIN(MMXMessageSpec)
 
                 [MMXDeviceManager stub:@selector(deviceUUID) andReturn:receiverDeviceID];
 
-                [MMXUser logInWithCredential:receiverCredential success:^(MMXUser *user) {
+				[MMUser login:receiverCredential success:^{
                     [MMXDeviceManager stub:@selector(deviceUUID) andReturn:originalDeviceID];
                     _isSuccess = YES;
                 }                    failure:^(NSError *error) {
@@ -197,7 +135,7 @@ SPEC_BEGIN(MMXMessageSpec)
 
                 __block BOOL _isSuccess = NO;
 
-                [MMXUser logOutWithSuccess:^{
+				[MMUser logout:^{
                     _isSuccess = YES;
                 } failure:^(NSError *error) {
                     _isSuccess = NO;
