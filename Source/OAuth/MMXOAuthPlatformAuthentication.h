@@ -16,8 +16,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "XMPPSASLAuthentication.h"
-#import "XMPPStream.h"
+@import MMXXMPPFramework;
 
 @interface MMXOAuthPlatformAuthentication : NSObject <XMPPSASLAuthentication>
 
