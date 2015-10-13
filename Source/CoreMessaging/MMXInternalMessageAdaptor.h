@@ -17,7 +17,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MMXAddressable.h"
-#import <Mantle/Mantle.h>
+@import MagnetMobileServer;
 
 @class CLLocation;
 @class MMXUserID;
@@ -26,7 +26,7 @@
 @class MMXUser;
 @class MMXChannel;
 
-@interface MMXInternalMessageAdaptor : MTLModel
+@interface MMXInternalMessageAdaptor : MMModel
 
 //All Messages
 @property(nonatomic, strong, readonly) NSString *messageID;

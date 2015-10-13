@@ -18,11 +18,11 @@
 
 #import <Foundation/Foundation.h>
 #import "MMXMessageTypes.h"
-#import <Mantle/Mantle.h>
+@import MagnetMobileServer;
 @class MMUser;
 @class MMXChannel;
 
-@interface MMXMessage : MTLModel
+@interface MMXMessage : MMModel
 
 /**
  *  Type of message. See MMXMessageTypes

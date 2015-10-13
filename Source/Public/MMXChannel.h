@@ -17,12 +17,12 @@
 
 
 #import <Foundation/Foundation.h>
-#import <Mantle/Mantle.h>
+@import MagnetMobileServer;
 @class MMUser;
 @class MMXMessage;
 @class MMXInvite;
 
-@interface MMXChannel : MTLModel
+@interface MMXChannel : MMModel
 
 /**
  *  Is the topic public?

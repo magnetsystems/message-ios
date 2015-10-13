@@ -16,11 +16,11 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <Mantle/Mantle.h>
+@import MagnetMobileServer;
 
 @class MMXUserID;
 
-@interface MMXTopic : MTLModel
+@interface MMXTopic : MMModel
 
 typedef NS_ENUM(NSInteger, MMXPublishPermissionsLevel){
     MMXPublishPermissionsLevelOwner = 0,

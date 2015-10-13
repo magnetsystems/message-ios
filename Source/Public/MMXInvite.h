@@ -15,11 +15,11 @@
  * permissions and limitations under the License.
  */
 
-#import <Mantle/Mantle.h>
+@import MagnetMobileServer;
 @class MMUser;
 @class MMXChannel;
 
-@interface MMXInvite : MTLModel
+@interface MMXInvite : MMModel
 
 /**
  *  Time the invite was sent
