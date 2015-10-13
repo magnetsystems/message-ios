@@ -17,7 +17,6 @@
 
 #import "MagnetDelegate.h"
 #import "MMXNotificationConstants.h"
-#import "MMXUser.h"
 #import "MMXMessageTypes.h"
 #import "MMXChannel_Private.h"
 #import "MMXConfiguration.h"
@@ -36,6 +35,7 @@
 #import "MMXTopic_Private.h"
 #import "MMXOutboundMessage_Private.h"
 #import "MMXMessage_Private.h"
+@import MagnetMobileServer;
 
 typedef void(^MessageSuccessBlock)(void);
 typedef void(^MessageFailureBlock)(NSError *);
@@ -49,7 +49,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 
 @property (nonatomic, copy) void (^connectFailureBlock)(NSError *);
 
-@property (nonatomic, copy) void (^logInSuccessBlock)(MMXUser *);
+@property (nonatomic, copy) void (^logInSuccessBlock)(MMUser *);
 
 @property (nonatomic, copy) void (^logInFailureBlock)(NSError *);
 
@@ -135,7 +135,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 
 
 - (void)logInWithCredential:(NSURLCredential *)credential
-					success:(void (^)(MMXUser *))success
+					success:(void (^)(MMUser *))success
 					failure:(void (^)(NSError *error))failure {
 
 	MMXLogInOperation *op = [MMXLogInOperation new];
@@ -147,7 +147,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 }
 
 - (void)privateLogInWithCredential:(NSURLCredential *)credential
-						   success:(void (^)(MMXUser *))success
+						   success:(void (^)(MMUser *))success
 						   failure:(void (^)(NSError *error))failure {
 	
 	[MMXClient sharedClient].configuration.credential = credential;
@@ -214,9 +214,8 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 		case MMXConnectionStatusAuthenticated: {
 			[[MMXClient sharedClient].accountManager userProfileWithSuccess:^(MMXUserProfile *userProfile) {
 				[MMXClient sharedClient].currentProfile = userProfile;
-				MMXUser *user = [MMXUser new];
-				user.username = userProfile.userID.username;
-				user.displayName = userProfile.displayName;
+				MMUser *user = [MMUser new];
+				user.userName = userProfile.userID.username;
 				self.currentUser = user.copy;
 				if (self.logInSuccessBlock) {
 					self.logInSuccessBlock(user);
@@ -308,9 +307,8 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 									   messageContent:message.metaData];
 
 	msg.messageType = MMXMessageTypeDefault;
-	MMXUser *user = [MMXUser new];
-	user.username = message.senderUserID.username;
-	user.displayName = message.senderUserID.displayName;
+	MMUser *user = [MMUser new];
+	user.userName = message.senderUserID.username;
 	msg.sender = user;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
@@ -334,9 +332,8 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	msg.messageContent = message.metaData;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
-	MMXUser *user = [MMXUser new];
-	user.username = message.senderUserID.username;
-	user.displayName = message.senderUserID.displayName;
+	MMUser *user = [MMUser new];
+	user.userName = message.senderUserID.username;
 	msg.sender = user;
 	[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
 														object:nil
@@ -366,13 +363,12 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 }
 
 - (void)client:(MMXClient *)client didDeliverMessage:(NSString *)messageID recipient:(id<MMXAddressable>)recipient {
-	MMXUser *user = [MMXUser new];
+	MMUser *user = [MMUser new];
 	MMXInternalAddress *address = recipient.address;
 	if (address) {
 		//Converting to MMXUserID will handle any exscaping needed
 		MMXUserID *userID = [MMXUserID userIDFromAddress:address];
-		user.username = userID.username;
-		user.displayName = userID.displayName;
+		user.userName = userID.username;
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveDeliveryConfirmationNotification
 														object:nil
@@ -391,11 +387,10 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	NSMutableSet *set = [NSMutableSet setWithCapacity:recipients.count];
 	for (id<MMXAddressable> recipient in recipients) {
 		MMXInternalAddress *address = recipient.address;
-		MMXUser *user = [MMXUser new];
+		MMUser *user = [MMUser new];
 		//Converting to MMXUserID will handle any exscaping needed
 		MMXUserID *userID = [MMXUserID userIDFromAddress:address];
-		user.username = userID.username;
-		user.displayName = userID.displayName;
+		user.userName = userID.username;
 		[set addObject:user];
 	}
 	return set.copy;
