@@ -17,7 +17,6 @@
 
 #import "MMXMessage_Private.h"
 #import "MagnetDelegate.h"
-#import "MMXUser.h"
 #import "MMXInternal_Private.h"
 #import "MMXMessageUtils.h"
 #import "MMXClient_Private.h"
@@ -29,7 +28,7 @@
 #import "MMXMessageOptions.h"
 #import "MMXTopic_Private.h"
 #import "MMXInternalAddress.h"
-#import <MagnetMobileServer/MMUser.h>
+@import MagnetMobileServer;
 
 @implementation MMXMessage
 
@@ -59,11 +58,10 @@
 		msg.channel.isPublic = YES;
 	}
 	MMXInternalAddress *address = pubSubMessage.senderUserID.address;
-	MMXUser *sender = [MMXUser new];
+	MMUser *sender = [MMUser new];
 	//Converting to MMXUserID will handle any exscaping needed
 	MMXUserID *userID = [MMXUserID userIDFromAddress:address];
-	sender.username = userID.username;
-	sender.displayName = userID.displayName;
+	sender.userName = userID.username;
 	msg.sender = sender;
 	msg.messageID = pubSubMessage.messageID;
 	msg.messageContent = pubSubMessage.metaData;
@@ -81,7 +79,7 @@
 		}
 		return nil;
 	}
-	if ([MMXUser currentUser] == nil) {
+	if ([MMUser currentUser] == nil) {
 		NSError * error = [MMXClient errorWithTitle:@"Not Logged In" message:@"You must be logged in to send a message." code:401];
 		if (failure) {
 			failure(error);
@@ -94,7 +92,7 @@
 		msg.messageID = messageID;
 		self.messageID = messageID;
 		if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-			if ([MMXUser currentUser]) {
+			if ([MMUser currentUser]) {
 				[self saveForOfflineAsPubSub:msg];
 				return messageID;
 			} else {
@@ -105,7 +103,7 @@
 			}
 		}
 		[[MMXClient sharedClient].pubsubManager publishPubSubMessage:msg success:^(BOOL successful, NSString *messageID) {
-			self.sender = [MMXUser currentUser];
+			self.sender = [MMUser currentUser];
 			self.timestamp = [NSDate date];
 			if (success) {
 				success();
@@ -120,7 +118,7 @@
 		NSString *messageID = [[MMXClient sharedClient] generateMessageID];
 		self.messageID = messageID;
 		if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-			if ([MMXUser currentUser]) {
+			if ([MMUser currentUser]) {
 				[self saveForOfflineAsInAppMessage];
 				return messageID;
 			} else {
@@ -131,7 +129,7 @@
 			}
 		}
 		[[MagnetDelegate sharedDelegate] sendMessage:self.copy success:^(void) {
-			self.sender = [MMXUser currentUser];
+			self.sender = [MMUser currentUser];
 			self.timestamp = [NSDate date];
 			if (success) {
 				success();
@@ -166,7 +164,7 @@
 					failure:(void (^)(NSError *))failure {
 	NSMutableSet *newSet = [NSMutableSet setWithSet:self.recipients];
 	[newSet addObject:self.sender];
-	MMXUser *currentUser = [MMXUser currentUser];
+	MMUser *currentUser = [MMUser currentUser];
 	if (currentUser) {
 		[newSet removeObject:currentUser];
 	}
@@ -186,17 +184,17 @@
 #pragma mark - Offline
 
 - (void)saveForOfflineAsPubSub:(MMXPubSubMessage *)message {
-	[[MMXDataModel sharedDataModel] addOutboxEntryWithPubSubMessage:message username:[MMXUser currentUser].username];
+	[[MMXDataModel sharedDataModel] addOutboxEntryWithPubSubMessage:message username:[MMUser currentUser].userName];
 }
 
 - (void)saveForOfflineAsInAppMessage {
 	MMXInternalMessageAdaptor *message = [MMXInternalMessageAdaptor new];
-	message.senderUserID = [MMXUserID userIDFromMMXUser:self.sender];
+	message.senderUserID = [MMXUserID userIDFromMMUser:self.sender];
 	message.messageID = self.messageID;
 	message.metaData = self.messageContent;
 	message.recipients = [self.recipients allObjects];
 	
-	[[MMXDataModel sharedDataModel] addOutboxEntryWithMessage:message options:[MMXMessageOptions new] username:[MMXUser currentUser].username];
+	[[MMXDataModel sharedDataModel] addOutboxEntryWithMessage:message options:[MMXMessageOptions new] username:[MMUser currentUser].userName];
 }
 
 #pragma mark - Errors

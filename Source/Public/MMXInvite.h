@@ -16,7 +16,7 @@
  */
 
 #import <Mantle/Mantle.h>
-@class MMXUser;
+@class MMUser;
 @class MMXChannel;
 
 @interface MMXInvite : MTLModel
@@ -34,7 +34,7 @@
 /**
  *  The user that sent the invite
  */
-@property (nonatomic, readonly) MMXUser *sender;
+@property (nonatomic, readonly) MMUser *sender;
 
 /**
  *  The channel the invite is for.

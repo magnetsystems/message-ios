@@ -19,9 +19,9 @@
 #import "MMXInternalMessageAdaptor.h"
 #import "MMXChannel_Private.h"
 #import "MMXUserID_Private.h"
-#import "MMXUser.h"
 #import "MagnetDelegate.h"
 #import "MMXUtils.h"
+@import MagnetMobileServer;
 
 @implementation MMXInvite
 
@@ -63,11 +63,10 @@
 	MMXInvite *invite = [MMXInvite new];
 	invite.comments = message.metaData[@"text"];
 	MMXInternalAddress *address = message.senderUserID.address;
-	MMXUser *user = [MMXUser new];
+	MMUser *user = [MMUser new];
 	//Converting to MMXUserID will handle any exscaping needed
 	MMXUserID *userID = [MMXUserID userIDFromAddress:address];
-	user.username = userID.username;
-	user.displayName = userID.displayName;
+	user.userName = userID.username;
 	invite.sender = user;
 	invite.channel = [MMXInvite channelFromMessageMetaData:message.metaData];
 	invite.timestamp = message.timestamp;
