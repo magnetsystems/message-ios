@@ -29,7 +29,6 @@
 #import "MMXUtils.h"
 
 #import "MMXChannel.h"
-#import "MMXUser.h"
 
 #import "NSXMLElement+XMPP.h"
 #import "XMPPJID+MMX.h"

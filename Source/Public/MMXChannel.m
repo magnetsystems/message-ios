@@ -29,7 +29,7 @@
 #import "MMXInternalMessageAdaptor.h"
 #import "MMXDataModel.h"
 #import "MMXPubSubMessage_Private.h"
-#import <MagnetMobileServer/MagnetMobileServer-Swift.h>
+@import MagnetMobileServer;
 
 @implementation MMXChannel
 
@@ -534,7 +534,7 @@
 	MMXPubSubMessage *msg = [MMXPubSubMessage pubSubMessageToTopic:[self asTopic] content:nil metaData:messageContent];
 	msg.messageID = messageID;
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-		if ([MMXUser currentUser]) {
+		if ([MMUser currentUser]) {
 			[self saveForOfflineAsPubSub:msg];
 			return;
 		} else {
@@ -627,7 +627,7 @@
 
 }
 
-- (NSString *)inviteUser:(MMXUser *)user
+- (NSString *)inviteUser:(MMUser *)user
 				comments:(NSString *)comments
 				 success:(void (^)(MMXInvite *))success
 				 failure:(void (^)(NSError *))failure {
@@ -650,7 +650,7 @@
 			MMXInvite *invite = [MMXInvite new];
 			invite.comments = comments;
 			invite.channel = self.copy;
-			invite.sender = [MMXUser currentUser];
+			invite.sender = [MMUser currentUser];
 			invite.timestamp = [NSDate date];
 			success(invite);
 		}
@@ -665,7 +665,7 @@
 #pragma mark - Offline
 
 - (void)saveForOfflineAsPubSub:(MMXPubSubMessage *)message {
-	[[MMXDataModel sharedDataModel] addOutboxEntryWithPubSubMessage:message username:[MMXUser currentUser].username];
+	[[MMXDataModel sharedDataModel] addOutboxEntryWithPubSubMessage:message username:[MMUser currentUser].userName];
 }
 
 #pragma mark - Errors

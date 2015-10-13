@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Mantle/Mantle.h>
-@class MMXUser;
+@class MMUser;
 @class MMXMessage;
 @class MMXInvite;
 
@@ -251,7 +251,7 @@
  *
  *  @param limit	The max number of items you want returned.
  *  @param offset	The offset into the results list. Used for pagination.
- *  @param success	Block with the total count of subscribers and a NSSet of the subscribers(MMXUser objects)
+ *  @param success	Block with the total count of subscribers and a NSSet of the subscribers(MMUser objects)
  *  @param failure	Block with an NSError with details about the call failure.
  */
 - (void)subscribersWithLimit:(int)limit
@@ -303,14 +303,14 @@
 /**
  *  Invite a user to the channel
  *
- *  @param user			The MMXUser object for the user you want to invite
+ *  @param user			The MMUser object for the user you want to invite
  *  @param comments		An optional message telling the user why you want them to join the channel
  *  @param success		Block with the MMXInvite object that was sent.
  *  @param failure		Block with an NSError with details about the call failure.
  *
  *  @return The messageID for the invite sent
  */
-- (NSString *)inviteUser:(MMXUser *)user
+- (NSString *)inviteUser:(MMUser *)user
 				comments:(NSString *)comments
 				 success:(void (^)(MMXInvite *invite))success
 				 failure:(void (^)(NSError *error))failure;
