@@ -28,6 +28,8 @@ NSString * const MMXDidReceiveChannelInviteNotification = @"com.magnet.mmx.invit
 NSString * const MMXInviteKey = @"com.magnet.invite.key";
 NSString * const MMXDidReceiveChannelInviteResponseNotification = @"com.magnet.mmx.invite.response.receive";
 NSString * const MMXInviteResponseKey = @"com.magnet.invite.response.key";
+NSString * const MMXMessageSendErrorNotification = @"com.magnet.message.send.error.receive";
+NSString * const MMXMessageSendErrorKey = @"com.magnet.message.send.error.key";
 NSString * const MMXDidDisconnectNotification = @"com.magnet.disconnect.receive";
 NSString * const MMXDisconnectErrorKey = @"com.magnet.disconnect.error.key";
 

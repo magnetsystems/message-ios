@@ -332,8 +332,16 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 		MessageFailureBlock failure = messageBlockDict[MMXMessageFailureBlockKey];
 		if (failure) {
 			failure(error);
+		} else {
+			[[NSNotificationCenter defaultCenter] postNotificationName:MMXMessageSendErrorNotification
+																object:nil
+															  userInfo:@{MMXMessageSendErrorKey:error}];
 		}
 		[self.messageBlockQueue removeObjectForKey:messageID];
+	} else {
+		[[NSNotificationCenter defaultCenter] postNotificationName:MMXMessageSendErrorNotification
+															object:nil
+														  userInfo:@{MMXMessageSendErrorKey:error}];
 	}
 }
 
