@@ -234,9 +234,6 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 			}
 			break;
 		case MMXConnectionStatusDisconnected: {
-			if (error == nil) {
-				self.currentUser = nil;
-			}
 			if (self.logOutSuccessBlock) {
 				self.logOutSuccessBlock();
 			}
