@@ -24,7 +24,6 @@
 @class XMPPIQ;
 @class MMXConfiguration;
 @class MMXDeviceManager;
-@class MMXUser;
 
 @protocol MMXAccountManagerDelegate <NSObject>
 
@@ -64,8 +63,8 @@
 - (void)registerAnonymousWithSuccess:(void (^)(BOOL success))success
 							 failure:(void (^)(NSError * error))failure;
 
-- (void)userForUserName:(NSString *)username
-				success:(void (^)(MMXUser *))success
-				failure:(void (^)(NSError * error))failure;
-
+//- (void)userForUserName:(NSString *)username
+//				success:(void (^)(MMXUser *))success
+//				failure:(void (^)(NSError * error))failure;
+//
 @end

@@ -23,7 +23,6 @@
 @class MMXUserID;
 @class MMXEndpoint;
 @class MMXTopic;
-@class MMXUser;
 @class MMXChannel;
 
 @interface MMXInternalMessageAdaptor : MMModel
@@ -55,11 +54,11 @@
               messageType:(NSString *)messageType
                  metaData:(NSDictionary *)metaData;
 
-+ (instancetype)inviteMessageToUser:(MMXUser *)recipient
++ (instancetype)inviteMessageToUser:(MMUser *)recipient
 						 forChannel:(MMXChannel *)channel
 						   comments:(NSString *)comments;
 
-+ (instancetype)inviteResponseMessageToUser:(MMXUser *)recipient
++ (instancetype)inviteResponseMessageToUser:(MMUser *)recipient
 								 forChannel:(MMXChannel *)channel
 								   comments:(NSString *)comments
 								   response:(BOOL)response;
