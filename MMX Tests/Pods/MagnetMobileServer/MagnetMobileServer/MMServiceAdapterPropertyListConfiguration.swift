@@ -11,9 +11,9 @@ public class MMServiceAdapterPropertyListConfiguration: NSObject, MMServiceAdapt
     public var clientSecret: String = ""
     
     public init(dictionary: NSDictionary?) {
-        self.baseURL = NSURL(string: (dictionary?["baseURL"] as! String))!
-        self.clientID = dictionary?["clientID"] as! String
-        self.clientSecret = dictionary?["clientSecret"] as! String
+        self.baseURL = NSURL(string: (dictionary?["BaseURL"] as! String))!
+        self.clientID = dictionary?["ClientID"] as! String
+        self.clientSecret = dictionary?["ClientSecret"] as! String
     }
     
     // An URL that identifies a resource containing a string representation of a property list whose root object is a dictionary.

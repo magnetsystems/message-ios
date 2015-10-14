@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 
 #import "MagnetDelegate.h"
+#import "MMUser+Addressable.h"
 #import "MMXAsyncOperation.h"
 #import "MMXChannel_Private.h"
 #import "MMXConnectionOperation.h"

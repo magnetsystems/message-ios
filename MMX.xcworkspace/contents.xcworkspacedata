@@ -17,6 +17,12 @@
             location = "group:MagnetDelegate.m">
          </FileRef>
          <FileRef
+            location = "group:MMUser+Addressable.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMUser+Addressable.m">
+         </FileRef>
+         <FileRef
             location = "group:MMXAsyncOperation.h">
          </FileRef>
          <FileRef
