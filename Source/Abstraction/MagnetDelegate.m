@@ -387,9 +387,16 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 }
 
 - (void)shouldInitializeWithConfiguration:(NSDictionary * __nonnull)configuration success:(void (^ __nonnull)(void))success failure:(void (^ __nonnull)(NSError * __nonnull))failure {
-	self.maxInitSuccessBlock = success;
-	self.maxInitFailureBlock = failure;
-    [[MMXClient sharedClient] updateConfiguration:configuration];
+	if (nil == [MMUser currentUser]) {
+		if (failure) {
+			NSError * error = [MMXClient errorWithTitle:@"Not Authorized" message:@"You must be logged in to initialize MMX." code:401];
+			failure(error);
+		}
+	} else {
+		self.maxInitSuccessBlock = success;
+		self.maxInitFailureBlock = failure;
+		[[MMXClient sharedClient] updateConfiguration:configuration];
+	}
 }
 
 - (void)didReceiveAppToken:(NSString * __nonnull)appToken appID:(NSString * __nonnull)appID deviceID:(NSString * __nonnull)deviceID {
