@@ -44,6 +44,10 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 
 @interface MagnetDelegate () <MMXClientDelegate>
 
+@property (nonatomic, copy) void (^maxInitSuccessBlock)(void);
+
+@property (nonatomic, copy) void (^maxInitFailureBlock)(NSError *);
+
 @property (nonatomic, copy) void (^connectSuccessBlock)(void);
 
 @property (nonatomic, copy) void (^connectFailureBlock)(NSError *);
@@ -183,26 +187,26 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 				[MMXClient sharedClient].currentProfile = userProfile;
 				MMUser *user = [MMUser new];
 				user.userName = userProfile.userID.username;
-				if (self.logInSuccessBlock) {
-					self.logInSuccessBlock(user);
-					self.logInSuccessBlock = nil;
-					self.logInFailureBlock = nil;
+				if (self.maxInitSuccessBlock) {
+					self.maxInitSuccessBlock();
+					self.maxInitSuccessBlock = nil;
+					self.maxInitFailureBlock = nil;
 				}
 			} failure:^(NSError *error) {
-				if (self.logInSuccessBlock) {
-					self.logInSuccessBlock(nil);
-					self.logInSuccessBlock = nil;
-					self.logInFailureBlock = nil;
+				if (self.maxInitFailureBlock) {
+					self.maxInitFailureBlock(nil);
+					self.maxInitSuccessBlock = nil;
+					self.maxInitFailureBlock = nil;
 				}
 			}];
 			}
 			break;
 		case MMXConnectionStatusAuthenticationFailure: {
-			if (self.logInFailureBlock) {
-				self.logInFailureBlock(error);
+			if (self.maxInitFailureBlock) {
+				self.maxInitFailureBlock(error);
 			}
-			self.logInSuccessBlock = nil;
-			self.logInFailureBlock = nil;
+			self.maxInitSuccessBlock = nil;
+			self.maxInitFailureBlock = nil;
 			}
 			break;
 		case MMXConnectionStatusNotConnected: {
@@ -383,7 +387,8 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 }
 
 - (void)shouldInitializeWithConfiguration:(NSDictionary * __nonnull)configuration success:(void (^ __nonnull)(void))success failure:(void (^ __nonnull)(NSError * __nonnull))failure {
-    
+	self.maxInitSuccessBlock = success;
+	self.maxInitFailureBlock = failure;
     [[MMXClient sharedClient] updateConfiguration:configuration];
 }
 
@@ -395,7 +400,14 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 - (void)didReceiveUserToken:(NSString * __nonnull)userToken userID:(NSString * __nonnull)userID deviceID:(NSString * __nonnull)deviceID {
     
     [[MMXClient sharedClient] updateUsername:userID deviceID:deviceID userToken:userToken];
-    [[MMXClient sharedClient] connect];
+	if (![[MMXClient sharedClient] connect]) {
+		if (self.maxInitFailureBlock) {
+			NSError * error = [MMXClient errorWithTitle:@"Missing Information" message:@"MMX did not have enough information to connect to the server." code:500];
+			self.maxInitFailureBlock(error);
+		}
+		self.maxInitSuccessBlock = nil;
+		self.maxInitFailureBlock = nil;
+	}
 }
 
 @end

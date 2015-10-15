@@ -248,20 +248,31 @@ int const kReconnectionTimerInterval = 4;
 
 }
 
-#pragma mark - Connection Lifecycle - Public APIs
+#pragma mark - Connection Lifecycle
 
 
-- (void)connect {
-	if (self.username && self.appID && self.accessToken) {
-		[self openStream];
+- (BOOL)connect {
+	if (self.configuration == nil) {
+		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: Configuration ERROR (self.configuration == nil)"];
+		return NO;
+	} else if (self.configuration.baseURL == nil) {
+		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: Configuration ERROR (self.configuration.baseURL == nil)"];
+		return NO;
+	} else if (self.username == nil) {
+		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: username ERROR (username == nil)"];
+		return NO;
+	} else if (self.deviceID == nil) {
+		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: deviceID ERROR (deviceID == nil)"];
+		return NO;
+	} else if (self.accessToken == nil) {
+		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: userToken ERROR (userToken == nil)"];
+		return NO;
+	} else if (self.appID == nil) {
+		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: self.appID ERROR (self.appID == nil)"];
+		return NO;
 	} else {
-		if ([self.delegate respondsToSelector:@selector(client:didReceiveConnectionStatusChange:error:)]) {
-			dispatch_async(self.callbackQueue, ^{
-				//FIXME: This is a temporary error while building the new auth mechanism
-				NSError *error = [MMXClient errorWithTitle:@"Missing information" message:@"Missing accessToken, appID or username" code:500];
-				[self.delegate client:self didReceiveConnectionStatusChange:MMXConnectionStatusFailed error:error];
-			});
-		}
+		[self openStream];
+		return YES;
 	}
 }
 

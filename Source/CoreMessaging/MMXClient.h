@@ -242,7 +242,7 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
                    delegate:(id<MMXClientDelegate>)delegate;
 
 
-- (void)connect;
+- (BOOL)connect;
 
 /**
  *  Creates a session as an anonymous user.
