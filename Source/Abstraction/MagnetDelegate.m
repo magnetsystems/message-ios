@@ -315,7 +315,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 													  userInfo:@{MMXMessageKey:msg}];
 }
 
-- (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID recipient:(MMXUserID *)recipient {
+- (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID {
 	NSDictionary *messageBlockDict = [self.messageBlockQueue objectForKey:messageID];
 	if (messageBlockDict) {
 		MessageSuccessBlock success = messageBlockDict[MMXMessageSuccessBlockKey];
@@ -327,10 +327,6 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 }
 
 - (void)client:(MMXClient *)client didFailToSendMessage:(NSString *)messageID recipients:(NSArray *)recipients error:(NSError *)error {
-	NSDictionary *messageBlockDict = [self.messageBlockQueue objectForKey:messageID];
-	if (messageBlockDict) {
-		[self.messageBlockQueue removeObjectForKey:messageID];
-	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:MMXMessageSendErrorNotification
 														object:nil
 													  userInfo:@{MMXMessageSendErrorNSErrorKey:error,

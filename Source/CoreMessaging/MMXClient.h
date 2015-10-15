@@ -137,9 +137,8 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
  *
  *  @param client    - The client providing the message.
  *  @param messageID - The message ID of the message that was received by the server
- *  @param recipient - The MMXUserID of the user the message was addressed to.
  */
-- (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID recipient:(MMXUserID *)recipient;
+- (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID;
 
 // PubSub
 /**
