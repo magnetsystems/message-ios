@@ -18,8 +18,9 @@
 #import <Foundation/Foundation.h>
 @class MMXMessage;
 @class MMXInternalMessageAdaptor;
+@import MagnetMobileServer;
 
-@interface MagnetDelegate : NSObject
+@interface MagnetDelegate : NSObject<MMModule>
 
 + (instancetype)sharedDelegate;
 
@@ -44,9 +45,5 @@
 								failure:(void (^)(NSError *error))failure;
 
 + (NSError *)notNotLoggedInError;
-
-@property (nonatomic, readonly, copy) NSError * __nullable (^ __nullable configurationHandler)(NSDictionary * __nonnull);
-@property (nonatomic, readonly, copy) NSError * __nullable (^ __nullable appTokenHandler)(NSString * __nonnull, NSString * __nonnull, NSString * __nonnull);
-@property (nonatomic, readonly, copy) NSError * __nullable (^ __nullable userTokenHandler)(NSString * __nonnull, NSString * __nonnull, NSString * __nonnull);
 
 @end

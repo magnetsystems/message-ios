@@ -31,7 +31,7 @@
 	return _sharedInstance;
 }
 
-+ (void)setupWithConfiguration:(NSString *)name {
++ (void)setupWithConfiguration:(NSString *_Nonnull)name {
 	[[MagnetDelegate sharedDelegate] startMMXClientWithConfiguration:name];
 }
 
@@ -58,26 +58,29 @@
 	[MMXClient sharedClient].shouldSuspendIncomingMessages = YES;
 }
 
-+ (void)setRemoteNotificationDeviceToken:(NSData *)deviceToken {
++ (void)setRemoteNotificationDeviceToken:(NSData *_Nonnull)deviceToken {
 	[[MMXClient sharedClient] updateRemoteNotificationDeviceToken:deviceToken];
 }
 
 #pragma mark - MMModule Protocol methods
 
-- (NSError * _Nullable (^)(NSDictionary * _Nonnull))configurationHandler {
-	return [MagnetDelegate sharedDelegate].configurationHandler;
-}
-
-- (NSError * _Nullable (^)(NSString * _Nonnull, NSString * _Nonnull, NSString * _Nonnull))appTokenHandler {
-	return [MagnetDelegate sharedDelegate].appTokenHandler;
-}
-
-- (NSError * _Nullable (^)(NSString * _Nonnull, NSString * _Nonnull, NSString * _Nonnull))userTokenHandler {
-	return [MagnetDelegate sharedDelegate].userTokenHandler;
-}
-
 - (NSString *)name {
-	return @"MMX";
+    return @"MMX";
+}
+
+- (void)shouldInitializeWithConfiguration:(NSDictionary * __nonnull)configuration success:(void (^ __nonnull)(void))success failure:(void (^ __nonnull)(NSError * __nonnull))failure {
+    
+    return [[MagnetDelegate sharedDelegate] shouldInitializeWithConfiguration:configuration success:success failure:failure];
+}
+
+- (void)didReceiveAppToken:(NSString * __nonnull)appToken appID:(NSString * __nonnull)appID deviceID:(NSString * __nonnull)deviceID {
+    
+    return [[MagnetDelegate sharedDelegate] didReceiveAppToken:appToken appID:appID deviceID:deviceID];
+}
+
+- (void)didReceiveUserToken:(NSString * __nonnull)userToken userID:(NSString * __nonnull)userID deviceID:(NSString * __nonnull)deviceID {
+    
+    return [[MagnetDelegate sharedDelegate] didReceiveUserToken:userToken userID:userID deviceID:deviceID];
 }
 
 @end

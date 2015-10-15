@@ -36,7 +36,7 @@
  *
  *  @param name The name of the configuration in your Configurations.plist file that you want to connect to.
  */
-+ (void)setupWithConfiguration:(NSString *)name;
++ (void)setupWithConfiguration:(NSString *_Nonnull)name;
 
 /**
  *  Call when no longer need to use the MMX features or when the app goes to the background
@@ -70,6 +70,6 @@
  *
  *  @param deviceToken - Returned in AppDelegate application:didRegisterForRemoteNotificationsWithDeviceToken:
  */
-+ (void)setRemoteNotificationDeviceToken:(NSData *)deviceToken;
++ (void)setRemoteNotificationDeviceToken:(NSData *_Nonnull)deviceToken;
 
 @end

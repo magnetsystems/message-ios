@@ -8,7 +8,9 @@ import Foundation
     static var sharedInstance: MMModule { get }
     var name: String { get }
     
-    optional var configurationHandler : ((configuration: [NSObject: AnyObject]) -> NSError?)? { get }
-    optional var appTokenHandler : ((appID: String, deviceID: String, appToken: String) -> NSError?)? { get }
-    optional var userTokenHandler : ((userID: String, deviceID: String, userToken: String) -> NSError?)? { get }
+    func shouldInitializeWithConfiguration(configuration: [NSObject: AnyObject], success: (Void -> Void), failure: ((error: NSError) -> Void))
+    
+    optional func didReceiveAppToken(appToken: String, appID: String, deviceID: String)
+    
+    optional func didReceiveUserToken(userToken: String, userID: String, deviceID: String)
 }

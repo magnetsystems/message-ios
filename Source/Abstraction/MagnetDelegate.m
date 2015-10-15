@@ -60,10 +60,6 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 
 @property(nonatomic, strong) NSOperationQueue *internalQueue;
 
-@property (nonatomic, readwrite) NSError * __nullable (^ __nullable configurationHandler)(NSDictionary * __nonnull);
-@property (nonatomic, readwrite) NSError * __nullable (^ __nullable appTokenHandler)(NSString * __nonnull, NSString * __nonnull, NSString * __nonnull);
-@property (nonatomic, readwrite) NSError * __nullable (^ __nullable userTokenHandler)(NSString * __nonnull, NSString * __nonnull, NSString * __nonnull);
-
 @end
 
 @implementation MagnetDelegate
@@ -75,22 +71,25 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	dispatch_once(&onceToken, ^{
 		_sharedClient = [[MagnetDelegate alloc] init];
 		_sharedClient.messageBlockQueue = [NSMutableDictionary dictionary];
-		_sharedClient.configurationHandler = ^ NSError *(NSDictionary * config) {
-			[[MMXClient sharedClient] updateConfiguration:config];
-			return nil;
-		};
-		_sharedClient.appTokenHandler = ^ NSError *(NSString *appID, NSString *deviceID, NSString *appToken) {
-			[[MMXClient sharedClient] updateAppID:appID deviceID:deviceID appToken:appToken];
-			return nil;
-		};
-		_sharedClient.userTokenHandler = ^ NSError *(NSString *username, NSString *deviceID, NSString *userToken) {
-			[[MMXClient sharedClient] updateUsername:username deviceID:deviceID userToken:userToken];
-			[[MMXClient sharedClient] connect];
-			return nil;
-		};
 		[MMXClient sharedClient].delegate = _sharedClient;
 	});
 	return _sharedClient;
+}
+
+- (void)shouldInitializeWithConfiguration:(NSDictionary * __nonnull)configuration success:(void (^ __nonnull)(void))success failure:(void (^ __nonnull)(NSError * __nonnull))failure {
+
+    [[MMXClient sharedClient] updateConfiguration:configuration];
+}
+
+- (void)didReceiveAppToken:(NSString * __nonnull)appToken appID:(NSString * __nonnull)appID deviceID:(NSString * __nonnull)deviceID {
+    
+    [[MMXClient sharedClient] updateAppID:appID deviceID:deviceID appToken:appToken];
+}
+
+- (void)didReceiveUserToken:(NSString * __nonnull)userToken userID:(NSString * __nonnull)userID deviceID:(NSString * __nonnull)deviceID {
+    
+    [[MMXClient sharedClient] updateUsername:userID deviceID:deviceID userToken:userToken];
+    [[MMXClient sharedClient] connect];
 }
 
 - (void)startMMXClientWithConfiguration:(NSString *)name {

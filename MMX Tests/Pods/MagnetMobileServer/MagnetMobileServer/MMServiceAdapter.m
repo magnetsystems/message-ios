@@ -311,8 +311,8 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
 																					  success:^(NSURLResponse *response, id responseObject) {
 		AFOAuthCredential *credential;
 		if (responseObject) {
-			credential = [MMServiceAdapter credentialFromResponseObject:responseObject];
             [self setAppIdFromResponseObject:responseObject];
+			credential = [MMServiceAdapter credentialFromResponseObject:responseObject];
 		}
 		if (credential) {
 			self.CATToken = credential.accessToken;
@@ -382,8 +382,9 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
 //	if (!refreshToken || [refreshToken isEqual:[NSNull null]]) {
 //	 refreshToken = [parameters valueForKey:@"refresh_token"];
 //	}
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:MMServiceAdapterDidReceiveConfigurationNotification object:self userInfo:jsonDictionary[@"config"]];
+    NSMutableDictionary *configuration = [NSMutableDictionary dictionaryWithDictionary:jsonDictionary[@"config"]];
+    configuration[@"mmx-appId"] = jsonDictionary[@"mmx_app_id"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MMServiceAdapterDidReceiveConfigurationNotification object:self userInfo:configuration];
 
 	AFOAuthCredential *credential = [AFOAuthCredential credentialWithOAuthToken:[jsonDictionary valueForKey:@"access_token"] tokenType:[jsonDictionary valueForKey:@"token_type"]];
 
@@ -636,7 +637,7 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
     NSString *deviceID = [MMServiceAdapter deviceUUID];
     
     NSDictionary *userInfo = @{
-                               @"appID" : self.mmxAppId ?: @"unknownAppID",
+                               @"appID" : self.clientID,
                                @"deviceID" : deviceID,
                                @"token" : self.CATToken
                                };

@@ -319,6 +319,14 @@ static NSString *const kHTTPContentType = @"Content-Type";
                                          parameters:(bodyParameters.count ? bodyParameters : nil)
                                               error:&serializationError];
     }
+    
+    // If this a GET request with an array parameter, delete []
+    // https://github.com/AFNetworking/AFNetworking/issues/437
+    if (method.requestMethod == MMRequestMethodGET && [[method.parameters filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"type = %@", @(MMServiceIOTypeArray)]] count] > 0) {
+        NSString *absoluteString = request.URL.absoluteString;
+        absoluteString = [absoluteString stringByReplacingOccurrencesOfString:@"%5B%5D" withString:@""];
+        request.URL = [NSURL URLWithString:absoluteString];
+    }
 
     if (shouldRequestHaveNonJSONBody) {
         NSArray *values = [bodyParameters allValues];
