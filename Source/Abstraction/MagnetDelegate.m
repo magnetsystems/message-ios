@@ -34,6 +34,7 @@
 #import "MMXTopic_Private.h"
 #import "MMXOutboundMessage_Private.h"
 #import "MMXMessage_Private.h"
+#import "MMXConstants.h"
 @import MagnetMobileServer;
 
 typedef void(^MessageSuccessBlock)(void);
@@ -308,7 +309,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 													  userInfo:@{MMXMessageKey:msg}];
 }
 
-- (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID recipient:(MMXUserID *)recipient {
+- (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID {
 	NSDictionary *messageBlockDict = [self.messageBlockQueue objectForKey:messageID];
 	if (messageBlockDict) {
 		MessageSuccessBlock success = messageBlockDict[MMXMessageSuccessBlockKey];
@@ -320,14 +321,11 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 }
 
 - (void)client:(MMXClient *)client didFailToSendMessage:(NSString *)messageID recipients:(NSArray *)recipients error:(NSError *)error {
-	NSDictionary *messageBlockDict = [self.messageBlockQueue objectForKey:messageID];
-	if (messageBlockDict) {
-		MessageFailureBlock failure = messageBlockDict[MMXMessageFailureBlockKey];
-		if (failure) {
-			failure(error);
-		}
-		[self.messageBlockQueue removeObjectForKey:messageID];
-	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:MMXMessageSendErrorNotification
+														object:nil
+													  userInfo:@{MMXMessageSendErrorNSErrorKey:error,
+																 MMXMessageSendErrorMessageIDKey:messageID,
+																 MMXMessageSendErrorRecipientsKey:recipients}];
 }
 
 - (void)client:(MMXClient *)client didDeliverMessage:(NSString *)messageID recipient:(id<MMXAddressable>)recipient {

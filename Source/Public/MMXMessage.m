@@ -28,6 +28,7 @@
 #import "MMXMessageOptions.h"
 #import "MMXTopic_Private.h"
 #import "MMXInternalAddress.h"
+#import "MMXConstants.h"
 @import MagnetMobileServer;
 
 @implementation MMXMessage
@@ -128,25 +129,43 @@
 				return nil;
 			}
 		}
-		[[MagnetDelegate sharedDelegate] sendMessage:self.copy success:^(void) {
-			self.sender = [MMUser currentUser];
-			self.timestamp = [NSDate date];
-			if (success) {
-				success();
-			}
-		} failure:^(NSError *error) {
+		NSError *error;
+		[MMXMessage validateMessageRecipients:self.recipients content:self.messageContent error:&error];
+		if (error) {
 			if (failure) {
 				failure(error);
 			}
-		}];
+		} else {
+			[[MagnetDelegate sharedDelegate] sendMessage:self.copy success:^(void) {
+				self.sender = [MMUser currentUser];
+				self.timestamp = [NSDate date];
+				if (success) {
+					success();
+				}
+			} failure:^(NSError *error) {
+				if (failure) {
+					failure(error);
+				}
+			}];
+		}
 		return messageID;
 	}
 }
 
 - (NSString *)replyWithContent:(NSDictionary *)content
-				 success:(void (^)(void))success
-				 failure:(void (^)(NSError *))failure {
-	MMXMessage *msg = [MMXMessage messageToRecipients:[NSSet setWithObjects:self.sender, nil] messageContent:content];
+					   success:(void (^)(void))success
+					   failure:(void (^)(NSError *))failure {
+	NSSet *recipients = [NSSet setWithObject:self.sender];
+	NSError *error;
+	[MMXMessage validateMessageRecipients:recipients content:self.messageContent error:&error];
+	if (error) {
+		if (failure) {
+			failure(error);
+		}
+		return nil;
+	}
+	
+	MMXMessage *msg = [MMXMessage messageToRecipients:recipients messageContent:content];
 	NSString * messageID = [msg sendWithSuccess:^{
 		if (success) {
 			success();
@@ -160,13 +179,21 @@
 }
 
 - (NSString *)replyAllWithContent:(NSDictionary *)content
-					success:(void (^)(void))success
-					failure:(void (^)(NSError *))failure {
+						  success:(void (^)(void))success
+						  failure:(void (^)(NSError *))failure {
 	NSMutableSet *newSet = [NSMutableSet setWithSet:self.recipients];
 	[newSet addObject:self.sender];
 	MMUser *currentUser = [MMUser currentUser];
 	if (currentUser) {
 		[newSet removeObject:currentUser];
+	}
+	NSError *error;
+	[MMXMessage validateMessageRecipients:newSet content:self.messageContent error:&error];
+	if (error) {
+		if (failure) {
+			failure(error);
+		}
+		return nil;
 	}
 	MMXMessage *msg = [MMXMessage messageToRecipients:newSet messageContent:content];
 	NSString * messageID = [msg sendWithSuccess:^{
@@ -217,6 +244,23 @@
 	address.username = self.sender.userName;
 	address.deviceID = self.senderDeviceID;
 	[[MMXClient sharedClient] sendDeliveryConfirmationForAddress:address messageID:self.messageID toDeviceID:self.senderDeviceID];
+}
+
++ (BOOL)validateMessageRecipients:(NSSet *)recipients content:(NSDictionary *)content error:(NSError **)error {
+	if (recipients == nil || recipients.count < 1) {
+		*error = [MMXClient errorWithTitle:@"Recipients not set" message:@"Recipients cannot be nil" code:401];
+		return NO;
+	}
+	
+	if (![MMXMessageUtils isValidMetaData:content]) {
+		*error = [MMXClient errorWithTitle:@"Not Valid" message:@"All values must be strings." code:401];
+		return NO;
+	}
+	if ([MMXMessageUtils sizeOfMessageContent:nil metaData:content] > kMaxMessageSize) {
+		*error = [MMXClient errorWithTitle:@"Message too large" message:@"Message content exceeds the max size of 200KB" code:401];
+		return NO;
+	}
+	return YES;
 }
 
 @end

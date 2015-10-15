@@ -937,13 +937,19 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)xmppMessage {
-    if ([xmppMessage isErrorMessage]) {
+	if ([xmppMessage isErrorMessage]) {
 		MMXInternalMessageAdaptor * message = [MMXInternalMessageAdaptor initWithXMPPMessage:xmppMessage];
 		if ([message.messageContent containsString:@"recipient_unavailable"]) {
+			NSData *jsonData = [message.messageContent dataUsingEncoding:NSUTF8StringEncoding];
+			NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil] ?: @{};
 			if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipients:error:)]) {
 				dispatch_async(self.callbackQueue, ^{
 					NSError *error = [MMXClient errorWithTitle:@"Invalid User" message:@"The user you are trying to send a message to does not exist or does not have a valid device associated with them." code:500];
-					[self.delegate client:self didFailToSendMessage:message.messageID recipients:message.recipients error:error];
+					NSArray *paramsArray = jsonDictionary[@"params"] ?: @[];
+					NSString *username = paramsArray.firstObject;
+					MMUser *user = [MMUser new];
+					user.userName = username ?: @"Unknown";
+					[self.delegate client:self didFailToSendMessage:jsonDictionary[@"msgId"] ?: @"Unknown" recipients:@[user] error:error];
 				});
 			}
 		} else if ([self.delegate respondsToSelector:@selector(client:didReceiveError:severity:messageID:)]) {
@@ -954,20 +960,9 @@ int const kReconnectionTimerInterval = 4;
 					[self.delegate client:self didReceiveError:[xmppMessage errorMessage] severity:MMXErrorSeverityUnknown messageID:@""];
 				});
 			}
-        }
-        return;
-    }
-    if ([MMXClient isPubSubMessage:xmppMessage]) {
-		if ([self.delegate respondsToSelector:@selector(client:didReceivePubSubMessage:)]) {
-			NSArray * messageArray = [MMXPubSubMessage pubSubMessagesFromXMPPMessage:xmppMessage];
-			for (MMXPubSubMessage * pubMsg in messageArray) {
-				dispatch_async(self.callbackQueue, ^{
-					[self.delegate client:self didReceivePubSubMessage:pubMsg];
-				});
-			}
 		}
-        return;
-    }
+		return;
+	}
     if ([xmppMessage elementsForXmlns:MXnsDataPayload].count) {
 		XMPPJID* to = [xmppMessage to] ;
 		XMPPJID* from =[xmppMessage from];
@@ -1031,10 +1026,10 @@ int const kReconnectionTimerInterval = 4;
 					NSString *ackForMsgId = serverackDict[@"ackForMsgId"];
 					NSDictionary *receiverDict = serverackDict[@"receiver"];
 					NSString *receiver = receiverDict[@"userId"];
-					if (ackForMsgId && [self.delegate respondsToSelector:@selector(client:didReceiveServerAckForMessageID:recipient:)]) {
+					if (ackForMsgId && [self.delegate respondsToSelector:@selector(client:didReceiveServerAckForMessageID:)]) {
 						dispatch_async(self.callbackQueue, ^{
 							MMXUserID *userID = [MMXUserID userIDWithUsername:receiver];
-							[self.delegate client:self didReceiveServerAckForMessageID:ackForMsgId recipient:userID.username ? userID : nil];
+							[self.delegate client:self didReceiveServerAckForMessageID:ackForMsgId];
 						});
 					}
 				}
