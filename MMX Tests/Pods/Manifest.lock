@@ -64,9 +64,9 @@ PODS:
     - CocoaLumberjack (~> 2.0.2)
     - libextobjc (~> 0.4)
     - Mantle (~> 1.5)
-  - Mantle (1.5.5):
-    - Mantle/extobjc (= 1.5.5)
-  - Mantle/extobjc (1.5.5)
+  - Mantle (1.5.6):
+    - Mantle/extobjc (= 1.5.6)
+  - Mantle/extobjc (1.5.6)
   - MDMCoreData (1.5.0):
     - MDMCoreData/MDMCoreDataCore (= 1.5.0)
     - MDMCoreData/MDMFetchedResultsCollectionDataSource (= 1.5.0)
@@ -135,7 +135,7 @@ SPEC CHECKSUMS:
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MagnetMobileServer: ca1770abf99ca5156942af93cacd68514cdefcca
-  Mantle: 1b29072a707453975b200a173cf77ec1e2810b75
+  Mantle: a197db93e0f1e36194b1fdbc078219a8492eaef2
   MDMCoreData: 402f754cda90865026a209243f1667824e775649
   MMX: dacad08a53d5e19dc5776f2777a8e9e633d4acc7
   MMXXMPPFramework: af652c05a32674c3d0d8631f52f8a3171f42e859

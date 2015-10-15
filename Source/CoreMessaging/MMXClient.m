@@ -57,7 +57,7 @@
 #import <AssertMacros.h>
 
 @import CoreLocation;
-
+@import MagnetMobileServer;
 // Taken from https://github.com/AFNetworking/AFNetworking/blob/master/AFNetworking/AFSecurityPolicy.m
 static BOOL MMXServerTrustIsValid(SecTrustRef serverTrust) {
     BOOL isValid = NO;
@@ -213,7 +213,6 @@ int const kReconnectionTimerInterval = 4;
     [userWithAppId appendString:@"%"];
     [userWithAppId appendString:self.appID];
 	
-	//FIXME: Configure the host
     NSString *host = self.configuration.baseURL.host;
 
     [self.xmppStream setMyJID:[XMPPJID jidWithUser:userWithAppId
@@ -221,8 +220,6 @@ int const kReconnectionTimerInterval = 4;
 										  resource:[MMXDeviceManager deviceUUID]]];
 
     [self.xmppStream setHostName:host];
-	//FIXME: Blowfish
-	//[self.xmppStream setHostPort:kPort];
 
 	[self.xmppStream setHostPort:[self.configuration.baseURL.port integerValue]];
 	
@@ -981,18 +978,38 @@ int const kReconnectionTimerInterval = 4;
 		}
 		if ([inMessage.mType isEqualToString:@"invitation"]) {
 			MMXInvite *invite = [MMXInvite inviteFromMMXInternalMessage:inMessage];
-			[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteNotification
-																object:nil
-															  userInfo:@{MMXInviteKey:invite}];
+			[MMUser usersWithUserNames:@[invite.sender.userName] success:^(NSArray *users) {
+				if (users.count) {
+					invite.sender = users.firstObject;
+				}
+				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteNotification
+																	object:nil
+																  userInfo:@{MMXInviteKey:invite}];
+			} failure:^(NSError * error) {
+				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteNotification
+																	object:nil
+																  userInfo:@{MMXInviteKey:invite}];
+			}];
 		} else if ([inMessage.mType isEqualToString:@"invitationResponse"]) {
 			MMXInviteResponse *inviteResponse = [MMXInviteResponse inviteResponseFromMMXInternalMessage:inMessage];
+			[MMUser usersWithUserNames:@[inviteResponse.sender.userName] success:^(NSArray *users) {
+				if (users.count) {
+					inviteResponse.sender = users.firstObject;
+				}
 				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteResponseNotification
 																	object:nil
 																  userInfo:@{MMXInviteResponseKey:inviteResponse}];
 
+			} failure:^(NSError * error) {
+				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteResponseNotification
+																	object:nil
+																  userInfo:@{MMXInviteResponseKey:inviteResponse}];
+
+			}];
 		} else {
 			if ([self.delegate respondsToSelector:@selector(client:didReceiveMessage:deliveryReceiptRequested:)]) {
 				MMXInboundMessage * inboundMessage = [MMXInboundMessage initWithMessage:inMessage];
+//				NSArray *usernameArray = [inboundMessage.otherRecipients valueForKey:@"username"];
 				dispatch_async(self.callbackQueue, ^{
 					[self.delegate client:self didReceiveMessage:inboundMessage deliveryReceiptRequested:inMessage.deliveryReceiptRequested];
 				});

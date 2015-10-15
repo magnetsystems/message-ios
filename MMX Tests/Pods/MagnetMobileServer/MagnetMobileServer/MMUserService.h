@@ -80,6 +80,17 @@
                    sort:(NSString *)sort
                 success:(void (^)(NSArray <MMUser *>*response))success
                 failure:(void (^)(NSError *error))failure;
+
+/**
+ 
+ GET /com.magnet.server/user/users
+ @param userNames style:QUERY
+ @return A 'MMCall' object.
+ */
+- (MMCall *)getUsersByUserNames:(NSArray <NSString *>*)userNames
+                        success:(void (^)(NSArray <MMUser *>*response))success
+                        failure:(void (^)(NSError *error))failure;
+
 @end
 
 @interface MMUserService : MMService<MMUserServiceProtocol>

@@ -183,6 +183,29 @@
         searchUsersTakeSkipSortSuccessFailure.returnTypeClass = MMUser.class;
         serviceMetaData[NSStringFromSelector(searchUsersTakeSkipSortSuccessFailure.selector)] = searchUsersTakeSkipSortSuccessFailure;
         
+        // schema for service method getUsersByUserNames:success:failure:
+        MMServiceMethod *getUsersByUserNamesSuccessFailure = [[MMServiceMethod alloc] init];
+        getUsersByUserNamesSuccessFailure.clazz = [self class];
+        getUsersByUserNamesSuccessFailure.selector = @selector(getUsersByUserNames:success:failure:);
+        getUsersByUserNamesSuccessFailure.path = @"com.magnet.server/user/users";
+        getUsersByUserNamesSuccessFailure.requestMethod = MMRequestMethodGET;
+        getUsersByUserNamesSuccessFailure.produces = [NSSet setWithObjects:@"application/json", nil];
+        
+        NSMutableArray *getUsersByUserNamesSuccessFailureParams = [NSMutableArray array];
+        MMServiceMethodParameter *getUsersByUserNamesSuccessFailureParam0 = [[MMServiceMethodParameter alloc] init];
+        getUsersByUserNamesSuccessFailureParam0.name = @"userNames";
+        getUsersByUserNamesSuccessFailureParam0.requestParameterType = MMServiceMethodParameterTypeQuery;
+        getUsersByUserNamesSuccessFailureParam0.type = MMServiceIOTypeArray;
+        getUsersByUserNamesSuccessFailureParam0.componentType = MMServiceIOTypeString;
+        getUsersByUserNamesSuccessFailureParam0.isOptional = NO;
+        [getUsersByUserNamesSuccessFailureParams addObject:getUsersByUserNamesSuccessFailureParam0];
+        
+        getUsersByUserNamesSuccessFailure.parameters = getUsersByUserNamesSuccessFailureParams;
+        getUsersByUserNamesSuccessFailure.returnType = MMServiceIOTypeArray;
+        getUsersByUserNamesSuccessFailure.returnComponentType = MMServiceIOTypeMagnetNode;
+        getUsersByUserNamesSuccessFailure.returnTypeClass = MMUser.class;
+        serviceMetaData[NSStringFromSelector(getUsersByUserNamesSuccessFailure.selector)] = getUsersByUserNamesSuccessFailure;
+        
         __metaData = serviceMetaData;
     });
 

@@ -270,6 +270,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	if (message.targetUserID) {
 		[recipients addObject:message.targetUserID];
 	}
+	
 	MMXMessage *msg = [MMXMessage messageToRecipients:[self usersFromInboundRecipients:recipients.copy]
 									   messageContent:message.metaData];
 
