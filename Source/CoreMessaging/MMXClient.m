@@ -141,16 +141,15 @@ int const kReconnectionTimerInterval = 4;
 		config.baseURL = [NSURL URLWithString:urlString];
 		config.shouldForceTLS = [configurationDict[@"tls-enabled"] boolValue];
 		config.allowInvalidCertificates = [configurationDict[@"security-policy"] isEqualToString:@"NONE"];
+		self.appID = configurationDict[@"mmx-appId"];
 		self.configuration = config;
 	} else {
 		[[MMXLogger sharedLogger] error:@"Configuration ERROR (mmx-host == nil)"];
 	}
 }
 
-- (void)updateAppID:(NSString *)appID
-		   deviceID:(NSString *)deviceID
-		   appToken:(NSString *)appToken {
-	self.appID = appID;
+- (void)updateDeviceID:(NSString *)deviceID
+			  appToken:(NSString *)appToken {
 	self.deviceID = deviceID;
 	self.accessToken = appToken;
 	[self updateConnectionStatus:MMXConnectionStatusAnonReady error:nil];

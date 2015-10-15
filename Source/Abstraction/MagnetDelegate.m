@@ -389,7 +389,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 
 - (void)didReceiveAppToken:(NSString * __nonnull)appToken appID:(NSString * __nonnull)appID deviceID:(NSString * __nonnull)deviceID {
     
-    [[MMXClient sharedClient] updateAppID:appID deviceID:deviceID appToken:appToken];
+    [[MMXClient sharedClient] updateDeviceID:deviceID appToken:appToken];
 }
 
 - (void)didReceiveUserToken:(NSString * __nonnull)userToken userID:(NSString * __nonnull)userID deviceID:(NSString * __nonnull)deviceID {

@@ -382,7 +382,7 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 
 - (void)updateConfiguration:(NSDictionary *)configurationDict;
 
-- (void)updateAppID:(NSString *)appID deviceID:(NSString *)deviceID appToken:(NSString *)appToken;
+- (void)updateDeviceID:(NSString *)deviceID appToken:(NSString *)appToken;
 
 - (void)updateUsername:(NSString *)username deviceID:(NSString *)deviceID userToken:(NSString *)userToken;
 
