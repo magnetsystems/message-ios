@@ -19,8 +19,6 @@
 	#define MMXINTERNAL_Private_h
 
 	#import "MMXClient.h"
-	#import "MMXDeviceManager.h"
-	#import "MMXDeviceProfile.h"
 	#import "MMXEndpoint.h"
 	#import "MMXUserID.h"
 	#import "MMXUserProfile.h"

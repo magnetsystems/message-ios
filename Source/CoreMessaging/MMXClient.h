@@ -317,13 +317,6 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 - (NSArray *)deleteQueuedPubSubMessages:(NSArray *)messages;
 
 /**
- *  Updates the device token.
- *
- *  @param deviceToken - The device token.
- */
-- (void)updateRemoteNotificationDeviceToken:(NSData *)deviceToken;
-
-/**
  *  Method to publish the current GeoLocation of the user.
  *
  *  @param location - CLLocation object for the current location.

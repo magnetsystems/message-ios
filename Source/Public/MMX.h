@@ -65,11 +65,4 @@
  */
 + (void)stop;
 
-/**
- *  Updates the device token.
- *
- *  @param deviceToken - Returned in AppDelegate application:didRegisterForRemoteNotificationsWithDeviceToken:
- */
-+ (void)setRemoteNotificationDeviceToken:(NSData *_Nonnull)deviceToken;
-
 @end

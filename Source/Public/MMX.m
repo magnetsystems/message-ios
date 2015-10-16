@@ -58,10 +58,6 @@
 	[MMXClient sharedClient].shouldSuspendIncomingMessages = YES;
 }
 
-+ (void)setRemoteNotificationDeviceToken:(NSData *_Nonnull)deviceToken {
-	[[MMXClient sharedClient] updateRemoteNotificationDeviceToken:deviceToken];
-}
-
 #pragma mark - MMModule Protocol methods
 
 - (NSString *)name {

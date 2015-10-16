@@ -8,15 +8,13 @@
 
 #import <Kiwi/Kiwi.h>
 #import "MMX.h"
-#import "MMXDeviceManager.h"
-#import "MMXDeviceManager_Private.h"
 #import "MMXUtils.h"
 @import MagnetMobileServer;
 
 #define DEFAULT_TEST_TIMEOUT 10.0
 
 SPEC_BEGIN(MMXChannelSpec)
-
+/*
 describe(@"MMXMessage", ^{
 	
 	NSString *senderUsername = [NSString stringWithFormat:@"sender_%f", [[NSDate date] timeIntervalSince1970]];
@@ -399,5 +397,5 @@ describe(@"MMXMessage", ^{
 	});
 	
 });
-
+*/
 SPEC_END
