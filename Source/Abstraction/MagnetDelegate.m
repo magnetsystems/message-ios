@@ -20,8 +20,6 @@
 #import "MMXMessageTypes.h"
 #import "MMXChannel_Private.h"
 #import "MMXConfiguration.h"
-#import "MMXAccountManager_Private.h"
-#import "MMXConnectionOperation.h"
 #import "MMXClient_Private.h"
 #import "MMXAddressable.h"
 #import "MMXInternalMessageAdaptor.h"
@@ -91,20 +89,10 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	}
 }
 
-- (void)connect {
-	MMXConnectionOperation *op = [MMXConnectionOperation new];
-	[self.internalQueue addOperation:op];
-}
-
-- (void)connectWithSuccess:(void (^)(void))success
-				   failure:(void (^)(NSError *error))failure {
-	
-	self.connectSuccessBlock = success;
-	self.connectFailureBlock = failure;
-	[[MMXClient sharedClient] connectAnonymous];
-	
-}
-
+//- (void)connect {
+//	MMXConnectionOperation *op = [MMXConnectionOperation new];
+//	[self.internalQueue addOperation:op];
+//}
 
 //- (void)logInWithCredential:(NSURLCredential *)credential
 //					success:(void (^)(MMUser *))success
@@ -184,22 +172,11 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 - (void)client:(MMXClient *)client didReceiveConnectionStatusChange:(MMXConnectionStatus)connectionStatus error:(NSError *)error {
 	switch (connectionStatus) {
 		case MMXConnectionStatusAuthenticated: {
-			[[MMXClient sharedClient].accountManager userProfileWithSuccess:^(MMXUserProfile *userProfile) {
-				[MMXClient sharedClient].currentProfile = userProfile;
-				MMUser *user = [MMUser new];
-				user.userName = userProfile.userID.username;
 				if (self.maxInitSuccessBlock) {
 					self.maxInitSuccessBlock();
 					self.maxInitSuccessBlock = nil;
 					self.maxInitFailureBlock = nil;
 				}
-			} failure:^(NSError *error) {
-				if (self.maxInitFailureBlock) {
-					self.maxInitFailureBlock(nil);
-					self.maxInitSuccessBlock = nil;
-					self.maxInitFailureBlock = nil;
-				}
-			}];
 			}
 			break;
 		case MMXConnectionStatusAuthenticationFailure: {

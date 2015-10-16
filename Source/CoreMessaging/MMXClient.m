@@ -17,11 +17,8 @@
 
 #import "MMXClient_Private.h"
 
-#import "MMXAccountManager_Private.h"
 #import "MMXAssert.h"
 #import "MMXConstants.h"
-#import "MMXDeviceManager.h"
-#import "MMXDeviceManager_Private.h"
 #import "MMXInternalAck.h"
 #import "MMXInternalMessageAdaptor.h"
 //DDXML.h needs to be imported before MMXMessage_Private.h
@@ -77,10 +74,8 @@ int const kPort = 5222;
 int const kMaxReconnectionTries = 4;
 int const kReconnectionTimerInterval = 4;
 
-@interface MMXClient () <XMPPStreamDelegate, XMPPReconnectDelegate, MMXDeviceManagerDelegate, MMXAccountManagerDelegate, MMXPubSubManagerDelegate>
+@interface MMXClient () <XMPPStreamDelegate, XMPPReconnectDelegate, MMXPubSubManagerDelegate>
 
-@property (nonatomic, readwrite) MMXDeviceManager * deviceManager;
-@property (nonatomic, readwrite) MMXAccountManager * accountManager;
 @property (nonatomic, readwrite) MMXPubSubManager * pubsubManager;
 @property (nonatomic, strong) XMPPReconnect * xmppReconnect;
 @property (nonatomic, assign) BOOL switchingUser;
@@ -217,7 +212,7 @@ int const kReconnectionTimerInterval = 4;
 
     [self.xmppStream setMyJID:[XMPPJID jidWithUser:userWithAppId
 											domain:@"mmx"
-										  resource:[MMXDeviceManager deviceUUID]]];
+										  resource:self.deviceID]];
 
     [self.xmppStream setHostName:host];
 
@@ -273,12 +268,6 @@ int const kReconnectionTimerInterval = 4;
 	}
 }
 
-- (void)connectAnonymous {
-    self.anonymousConnection = YES;
-	self.configuration.credential = [self anonymousCredentials];
-	[self openStream];
-}
-
 - (void)connectWithCredentials {
 	if (self.configuration.credential && [self.configuration.credential.user hasPrefix:@"_anon-"]) {
 		self.configuration.credential = nil;
@@ -310,51 +299,13 @@ int const kReconnectionTimerInterval = 4;
     }
 }
 
-- (void)goAnonymous {
-    if (self.anonymousConnection && self.xmppStream && [self.xmppStream isConnected]) {
-        return;
-    }
-    [self clearCredentialsForProtectionSpace];
-    if (self.xmppStream && [self.xmppStream isConnected]) {
-        self.switchingUser = YES;
-    }
-    [self connectAnonymous];
-}
-
 - (void)disconnect {
     if (self.xmppStream && [self.xmppStream isConnected]) {
         [self.xmppStream disconnect];
     }
 }
 
-- (void)disconnectAndDeactivateWithSuccess:(void (^)(BOOL ))success
-								   failure:(void (^)(NSError * error))failure {
-	[self.deviceManager deactivateCurrentDeviceSuccess:^(BOOL successful) {
-		[self disconnect];
-		if (success) {
-			dispatch_async(dispatch_get_main_queue(), ^{
-				success(YES);
-			});
-		}
-	} failure:failure];
-}
-
-- (void)updateRemoteNotificationDeviceToken:(NSData *)deviceToken {
-
-    NSString *deviceTokenString = [self sanitizeDeviceToken:deviceToken];
-
-    self.deviceToken = deviceTokenString;
-
-    if (self.connectionStatus == MMXConnectionStatusAuthenticated || self.connectionStatus == MMXConnectionStatusConnected) {
-        [self.deviceManager registerCurrentDeviceWithSuccess:nil failure:nil];
-    }
-}
-
 #pragma mark - Credentials
-
-- (NSURLCredential *)anonymousCredentials {
-    return [MMXDeviceManager anonymousCredentials];
-}
 
 - (XMPPJID *)currentJID {
     return self.xmppStream.myJID;
@@ -375,25 +326,6 @@ int const kReconnectionTimerInterval = 4;
 - (NSString *)generateMessageID {
 	self.messageNumber = self.messageNumber + 1;
 	return [NSString stringWithFormat:@"%@-%ld",[MMXClient sessionIdentifier],(unsigned long)self.messageNumber];
-}
-
-#pragma mark - Device Manager
-
-- (MMXDeviceManager *)deviceManager {
-    if (!_deviceManager) {
-        MMXAssert((self.xmppStream && [self.xmppStream isConnected] && self.iqTracker && self.mmxQueue), @"You must be connected or logged in to use the MMXDeviceManager");
-        _deviceManager = [[MMXDeviceManager alloc] initWithDelegate:self];
-    }
-    return _deviceManager;
-}
-
-#pragma mark - Account Manager
-
-- (MMXAccountManager *)accountManager {
-    if (!_accountManager) {
-        _accountManager = [[MMXAccountManager alloc] initWithDelegate:self];
-    }
-    return _accountManager;
 }
 
 #pragma mark - PubSub Manager
@@ -856,40 +788,8 @@ int const kReconnectionTimerInterval = 4;
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error {
 // 	[self updateConnectionStatus:MMXConnectionStatusAuthenticationFailure error:nil];
-        if (self.anonymousConnection) {
-            __weak __typeof__(self) weakSelf = self;
-            [self.accountManager registerAnonymousWithSuccess:^(BOOL success){
-                __typeof__(self) strongSelf = weakSelf;
-                [strongSelf authenticate];
-            } failure:^ (NSError * error) {
-				__typeof__(self) strongSelf = weakSelf;
-                [strongSelf updateConnectionStatus:MMXConnectionStatusFailed error:error];
-            }];
-        } else if (self.shouldAutoCreateUser) {
-            if ([self hasValidCredentials]) {
-                __weak __typeof__(self) weakSelf = self;
-                MMXUserProfile * user = [MMXUserProfile initWithUsername:self.configuration.credential.user displayName:[MMXUtils deviceName] email:@"" tags:nil];
-				[self.accountManager registerUser:user password:self.configuration.credential.password success:^(BOOL success){
-                    __typeof__(self) strongSelf = weakSelf;
-                    [strongSelf authenticate];
-                    if (!self.anonymousConnection && [self.delegate respondsToSelector:@selector(client:didReceiveUserAutoRegistrationResult:error:)]) {
-						dispatch_async(self.callbackQueue, ^{
-							[self.delegate client:self didReceiveUserAutoRegistrationResult:YES error:nil];
-						});
-                    }
-                } failure:^ (NSError * error) {
-					__typeof__(self) strongSelf = weakSelf;
-                    if (!strongSelf.anonymousConnection && [strongSelf.delegate respondsToSelector:@selector(client:didReceiveUserAutoRegistrationResult:error:)]) {
-						dispatch_async(self.callbackQueue, ^{
-							[strongSelf.delegate client:strongSelf didReceiveUserAutoRegistrationResult:NO error:error];
-						});
-                    }
-                }];
-            }
-        } else {
-			NSError *authError = [MMXClient errorWithTitle:@"Authentication Failure" message:@"Not Authorized. Please check your credentials and try again." code:401];
-            [self updateConnectionStatus:MMXConnectionStatusAuthenticationFailure error:authError];
-        }
+	NSError *authError = [MMXClient errorWithTitle:@"Authentication Failure" message:@"Not Authorized. Please check your credentials and try again." code:401];
+	[self updateConnectionStatus:MMXConnectionStatusAuthenticationFailure error:authError];
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender {
@@ -1070,6 +970,23 @@ int const kReconnectionTimerInterval = 4;
     }
 }
 
+#pragma mark Message Handling
+
+//FIXME: Move all logic for inbound messages to be delivered to the developer here
+//Send server ack after successfully parsed message and notification to dev sent
+- (void)handleInboundMessageFromInternalMessageAdaptor:(MMXInternalMessageAdaptor *)message {
+	
+}
+
+- (void)handleInviteMessageFromInternalMessageAdaptor:(MMXInternalMessageAdaptor *)message {
+	
+}
+
+- (void)handleInviteResponseMessageFromInternalMessageAdaptor:(MMXInternalMessageAdaptor *)message {
+	
+}
+
+
 #pragma mark Error Message Handling
 
 - (void)handleErrorMessage:(MMXInternalMessageAdaptor *)message {
@@ -1117,14 +1034,6 @@ int const kReconnectionTimerInterval = 4;
 		return NO;
 	}
 	return YES;
-}
-
-- (BOOL)areCurrentCredentialsAnonymous {
-	NSString *anonymousUsername = [NSString stringWithFormat:@"_anon-%@",[MMXDeviceManager deviceUUID]];
-	if ([self.username isEqualToString:anonymousUsername]) {
-		return YES;
-	}
-	return NO;
 }
 
 - (BOOL)hasValidCredentials {

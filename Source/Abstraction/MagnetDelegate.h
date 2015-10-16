@@ -26,9 +26,6 @@
 
 - (void)startMMXClientWithConfiguration:(NSString *)name;
 
-- (void)connectWithSuccess:(void (^)(void))success
-				   failure:(void (^)(NSError *error))failure;
-
 /**
  *  Method to send the message
  *

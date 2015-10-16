@@ -28,7 +28,7 @@
 SPEC_BEGIN(MMXClientSpec)
 
 describe(@"MMXClient", ^{
-
+/*
     __block id clientDelegateMock;
     __block MMXClient *mmxClient;
     __block MMXConfiguration *mmxConfiguration;
@@ -60,7 +60,7 @@ describe(@"MMXClient", ^{
             [[client should] beIdenticalTo:anotherClient];
         });
     });
-    
+	
     context(@"when connecting anonymously for the first time", ^{
         it(@"should receive the delegate callback", ^{
             
@@ -299,6 +299,7 @@ describe(@"MMXClient", ^{
             [[expectFutureValue(theValue(_testFinished)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
         });
     });
+ */
 });
 
 SPEC_END

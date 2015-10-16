@@ -22,7 +22,6 @@
 	#import "MMXDeviceManager.h"
 	#import "MMXDeviceProfile.h"
 	#import "MMXEndpoint.h"
-	#import "MMXAccountManager.h"
 	#import "MMXUserID.h"
 	#import "MMXUserProfile.h"
 	#import "MMXMessageOptions.h"

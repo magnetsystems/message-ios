@@ -21,8 +21,6 @@
 
 @class MMXClient;
 @class MMXUserID;
-@class MMXAccountManager;
-@class MMXDeviceManager;
 @class MMXPubSubManager;
 @class MMXInboundMessage;
 @class MMXOutboundMessage;
@@ -31,7 +29,6 @@
 @class MMXMessageOptions;
 @class MMXConfiguration;
 @class CLLocation;
-@class MMXUserID;
 
 /**
  *  Values representing the connection status of the MMXClient.
@@ -176,18 +173,6 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 @property (nonatomic, weak)     id<MMXClientDelegate> delegate;
 
 /**
- *  Current instance of the MMXDeviceManager. See MMXDeviceManager.h for usage.
- *	Must have an active connection to be able to use the MMXDeviceManager.
- */
-@property (nonatomic, readonly) MMXDeviceManager * deviceManager;
-
-/**
- *  Current instance of the MMXAccountManager. See MMXAccountManager.h for usage.
- *	Must have an active connection to be able to use the MMXAccountManager.
- */
-@property (nonatomic, readonly) MMXAccountManager * accountManager;
-
-/**
  *  Current instance of the MMXPubSubManager. See MMXPubSubManager.h for usage.
  */
 @property (nonatomic, readonly) MMXPubSubManager * pubsubManager;
@@ -244,43 +229,15 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 - (BOOL)connect;
 
 /**
- *  Creates a session as an anonymous user.
- */
-- (void)connectAnonymous;
-
-/**
  *  Creates a session as a named user using the NSURLCredential set as the credentials property of the configuration property.
  */
 - (void)connectWithCredentials;
-
-/**
- *  This method degrades a session using a named account to an anonymous session.
- */
-- (void)goAnonymous;
 
 /**
  *  This closes the connection to the server. The device will still receive push notifications to be alerted to
  *  new messages/content.
  */
 - (void)disconnect;
-
-/**
- *  This method deregisters the current device so it will no longer be a valid endpoint for receiving messages and
- *  push notifications and closes the connection to the server. You must be currently connected to the server to
- *  use this API.
- *
- *  @param success - Block with BOOL. Value should be YES.
- *  @param failure - Block with an NSError with details about the call failure.
- */
-- (void)disconnectAndDeactivateWithSuccess:(void (^)(BOOL success))success
-								   failure:(void (^)(NSError * error))failure;
-
-/**
- *  Get the MMXUserID for the current user.
- *
- *  @return The MMXUserID for the current user
- */
-- (MMXUserID *)currentUser;
 
 /**
  *  Sends a message to a desired user. MMXMessageOptions are set to default values.
