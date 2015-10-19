@@ -31,23 +31,11 @@
 	return _sharedInstance;
 }
 
-+ (void)setupWithConfiguration:(NSString *_Nonnull)name {
-	[[MagnetDelegate sharedDelegate] startMMXClientWithConfiguration:name];
-}
-
 + (void)teardown {
 	if ([MMXClient sharedClient].connectionStatus == MMXConnectionStatusAuthenticated ||
 		[MMXClient sharedClient].connectionStatus == MMXConnectionStatusConnected) {
 		[[MMXClient sharedClient] disconnect];
 	}
-}
-
-+ (void)enableIncomingMessages {
-	[MMXClient sharedClient].shouldSuspendIncomingMessages = NO;
-}
-
-+ (void)disableIncomingMessages {
-	[MMXClient sharedClient].shouldSuspendIncomingMessages = YES;
 }
 
 + (void)start {
@@ -77,6 +65,10 @@
 - (void)didReceiveUserToken:(NSString * __nonnull)userToken userID:(NSString * __nonnull)userID deviceID:(NSString * __nonnull)deviceID {
     
     return [[MagnetDelegate sharedDelegate] didReceiveUserToken:userToken userID:userID deviceID:deviceID];
+}
+
+- (void)didInvalidateUserToken {
+	[[MagnetDelegate sharedDelegate] didInvalidateUserToken];
 }
 
 @end

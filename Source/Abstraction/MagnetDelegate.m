@@ -319,7 +319,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 																 MMXMessageIDKey:messageID}];
 }
 
-+ (NSError *)notNotLoggedInError {
++ (NSError *)notLoggedInError {
 	NSError * error = [MMXClient errorWithTitle:@"Forbidden" message:@"You must log in to use this API." code:403];
 	return error;
 }
@@ -391,6 +391,10 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 		self.maxInitSuccessBlock = nil;
 		self.maxInitFailureBlock = nil;
 	}
+}
+
+- (void)didInvalidateUserToken {
+	[[MMXClient sharedClient] closeConnectionAndInvalidateUserData];
 }
 
 @end

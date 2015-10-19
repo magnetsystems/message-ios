@@ -32,30 +32,6 @@
 + (id <MMModule> __nonnull)sharedInstance;
 
 /**
- *  Initialize MMX with a configuration
- *
- *  @param name The name of the configuration in your Configurations.plist file that you want to connect to.
- */
-+ (void)setupWithConfiguration:(NSString *_Nonnull)name;
-
-/**
- *  Call when no longer need to use the MMX features or when the app goes to the background
- */
-+ (void)teardown;
-
-/**
- * @deprecated This method is deprecated starting in version 1.9
- * @note Please use @code start @code instead.
- */
-+ (void)enableIncomingMessages  __attribute__((deprecated));
-
-/**
- * @deprecated This method is deprecated starting in version 1.9
- * @note Please use @code stop @code instead.
- */
-+ (void)disableIncomingMessages  __attribute__((deprecated));
-
-/**
  *  You must enable incoming messages. It is disabled by default.
  */
 + (void)start;

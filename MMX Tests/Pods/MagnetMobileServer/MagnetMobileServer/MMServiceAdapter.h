@@ -8,6 +8,7 @@
 @class AFSecurityPolicy;
 @class MMUser;
 @class MMCall;
+@class MMDevice;
 @protocol MMServiceAdapterConfiguration;
 
 @protocol MMClientFacade <NSObject>
@@ -81,6 +82,8 @@ The timeout interval, in seconds, for created requests. The default timeout inte
 
 @property(nonatomic, strong) id<MMClientFacade> client;
 
+@property(nonatomic, readonly) MMDevice *currentDevice;
+
 - (id)createService:(Class)serviceClass;
 
 + (NSString *)deviceUUID;
@@ -116,6 +119,9 @@ The timeout interval, in seconds, for created requests. The default timeout inte
 - (MMCall *)getCurrentUserWithSuccess:(void (^)(MMUser *response))success
                            failure:(void (^)(NSError *error))failure;
 
+- (void)registerCurrentDeviceWithSuccess:(void (^)(MMDevice *response))success
+                                 failure:(void (^)(NSError *error))failure;
+
 - (void)resendReliableCalls;
 
 - (void)cancelAllOperations;
@@ -134,6 +140,11 @@ extern NSString *const MMServiceAdapterDidReceiveCATTokenNotification;
  * Posted when an user (HAT) token is received.
  */
 extern NSString *const MMServiceAdapterDidReceiveHATTokenNotification;
+
+/**
+ * Posted when an user (HAT) token is invalidated.
+ */
+extern NSString *const MMServiceAdapterDidInvalidateHATTokenNotification;
 
 /**
  * Posted when an OAuth Login Exception is received.

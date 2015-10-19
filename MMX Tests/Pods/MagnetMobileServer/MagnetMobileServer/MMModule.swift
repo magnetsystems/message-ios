@@ -13,4 +13,6 @@ import Foundation
     optional func didReceiveAppToken(appToken: String, appID: String, deviceID: String)
     
     optional func didReceiveUserToken(userToken: String, userID: String, deviceID: String)
+    
+    optional func didInvalidateUserToken()
 }

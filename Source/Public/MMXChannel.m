@@ -57,7 +57,7 @@
 						   failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		return;
 	}
@@ -79,7 +79,7 @@
 							failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		return;
 	}
@@ -102,7 +102,7 @@
 			   failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		return;
 	}
@@ -144,7 +144,7 @@
 					 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		return;
 	}
@@ -173,7 +173,7 @@
 					 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		return;
 	}
@@ -203,7 +203,7 @@
 	
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		return;
 	}
@@ -242,7 +242,7 @@
 	
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		return;
 	}
@@ -306,7 +306,7 @@
 				failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		return;
 	}
@@ -327,7 +327,7 @@
 
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		
 		return;
@@ -350,7 +350,7 @@
 	
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		
 		return;
@@ -378,7 +378,7 @@
 	
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		
 		return;
@@ -407,7 +407,7 @@
 
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		
 		return;
@@ -428,7 +428,7 @@
 
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		
 		return;
@@ -450,7 +450,7 @@
 
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		
 		return;
@@ -471,7 +471,7 @@
 							  failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		return;
 	}
@@ -511,7 +511,7 @@
 					 failure:(void (^)(NSError *error))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		return;
 	}
@@ -583,7 +583,7 @@
 						 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		
 		return;
@@ -633,7 +633,7 @@
 				 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
-			failure([MagnetDelegate notNotLoggedInError]);
+			failure([MagnetDelegate notLoggedInError]);
 		}
 		return nil;
 	}

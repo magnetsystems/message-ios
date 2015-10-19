@@ -34,6 +34,7 @@
 NSString * const MMServiceAdapterDidReceiveConfigurationNotification = @"com.magnet.networking.configuration.receive";
 NSString * const MMServiceAdapterDidReceiveCATTokenNotification = @"com.magnet.networking.cattoken.receive";
 NSString * const MMServiceAdapterDidReceiveHATTokenNotification = @"com.magnet.networking.hattoken.receive";
+NSString * const MMServiceAdapterDidInvalidateHATTokenNotification = @"com.magnet.networking.hattoken.invalidate";
 NSString * const MMServiceAdapterDidReceiveAuthenticationChallengeNotification = @"com.magnet.networking.challenge.receive";
 NSString * const MMServiceAdapterDidReceiveAuthenticationChallengeURLKey = @"com.magnet.networking.challenge.receive.url";
 
@@ -267,18 +268,10 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
     return serviceAdapter;
 }
 
-- (void)registerDeviceAuthString:(NSString *)authString
-						 success:(void (^)(MMDevice *response))success
-						 failure:(void (^)(NSError *error))failure {
-	MMDevice *myDevice = [MMDevice new];
-	myDevice.os = MMOsTypeIOS;
-	myDevice.osVersion = [[UIDevice currentDevice] systemVersion];
-	myDevice.pushAuthority = MMPushAuthorityTypeAPNS;
-	myDevice.deviceId = [MMServiceAdapter deviceUUID];
-	myDevice.label = [[UIDevice currentDevice] name];
-	//FIXME: Fix auth header
-	//NSLog(@"register device authString = %@",authString);
-    MMCall *call = [self.deviceService registerDevice:myDevice authorization:nil success:^(MMDevice *response) {
+- (void)registerCurrentDeviceWithSuccess:(void (^)(MMDevice *response))success
+                                 failure:(void (^)(NSError *error))failure {
+	
+    MMCall *call = [self.deviceService registerDevice:self.currentDevice authorization:nil success:^(MMDevice *response) {
         if (success) {
             success(response);
         }
@@ -330,9 +323,7 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
             }
 			self.currentCATTokenRequestStatus = MMCATTokenRequestStatusFailed;
 		}
-																						  
-        //	NSString *authString = [self basicAuthorization];//[NSString stringWithFormat:@"Bearer %@",self.CATToken];
-        [self registerDeviceAuthString:[self basicAuthorization] success:nil failure:nil];
+                                                                                          [self registerCurrentDeviceWithSuccess:nil failure:nil];
 
 	} failure:^(NSError *error) {
 		self.currentCATTokenRequestStatus = MMCATTokenRequestStatusFailed;
@@ -458,10 +449,10 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
                                                                         success:^(AFOAuthCredential *credential) {
                                                                             self.username = username;
                                                                             self.HATToken = credential.accessToken;
+                                                                            [self registerCurrentDeviceWithSuccess:nil failure:nil];
                                                                             if (self.HATToken) {
                                                                                 [self passUserTokenToRegisteredServices];
                                                                             }
-                                                                            [self registerDeviceAuthString:[NSString stringWithFormat:@"Bearer %@", credential.accessToken.copy] success:nil failure:nil];
                                                                             if (success) {
                                                                                 success(YES);
                                                                             }
@@ -485,7 +476,7 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
     MMCall *call = [self.deviceService unRegisterDevice:[MMServiceAdapter deviceUUID] authorization:self.HATToken success:^(BOOL response) {
 
     } failure:^(NSError *error) {
-        NSLog(@"Failed to unregister device when logout");
+//        NSLog(@"Failed to unregister device when logout");
     }];
     [call executeInBackground:nil];
 
@@ -494,9 +485,10 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
             // Clean up
             self.username = nil;
             self.HATToken = nil;
-//            [self passUserTokenToRegisteredServices];
-
-            success(response);
+            [self invalidateUserTokenInRegisteredServices];
+            if (success) {
+                success(response);
+            }
         }
     } failure:^(NSError *error) {
         if(failure) {
@@ -525,8 +517,6 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:[MMReliableCall entityName]];
     NSError *error;
     NSArray<MMReliableCall *> *pendingReliableCalls = [[MMCoreDataStack sharedContext] executeFetchRequest:fetchRequest error:&error];
-    
-    
 }
 
 - (void)cancelAllOperations {
@@ -632,6 +622,21 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
     return _userInfoService;
 }
 
+- (MMDevice *)currentDevice {
+    if (!_currentDevice) {
+        MMDevice *myDevice = [[MMDevice alloc] init];
+        myDevice.os = MMOsTypeIOS;
+        myDevice.osVersion = [[UIDevice currentDevice] systemVersion];
+        myDevice.pushAuthority = MMPushAuthorityTypeAPNS;
+        myDevice.deviceId = [MMServiceAdapter deviceUUID];
+        myDevice.label = [[UIDevice currentDevice] name];
+        
+        _currentDevice = myDevice;
+    }
+    
+    return _currentDevice;
+}
+
 - (void)passAppTokenToRegisteredServices {
     
     NSString *deviceID = [MMServiceAdapter deviceUUID];
@@ -654,6 +659,17 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
                                @"token" : self.HATToken
                                };
     [[NSNotificationCenter defaultCenter] postNotificationName:MMServiceAdapterDidReceiveHATTokenNotification object:self userInfo:userInfo];
+}
+
+- (void)invalidateUserTokenInRegisteredServices {
+    
+    NSString *deviceID = [MMServiceAdapter deviceUUID];
+    
+    NSDictionary *userInfo = @{
+                               @"userID" : self.username,
+                               @"deviceID" : deviceID,
+                               };
+    [[NSNotificationCenter defaultCenter] postNotificationName:MMServiceAdapterDidInvalidateHATTokenNotification object:self userInfo:userInfo];
 }
 
 @end

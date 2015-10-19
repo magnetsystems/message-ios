@@ -41,6 +41,6 @@
 								success:(void (^)(void))success
 								failure:(void (^)(NSError *error))failure;
 
-+ (NSError *)notNotLoggedInError;
++ (NSError *)notLoggedInError;
 
 @end

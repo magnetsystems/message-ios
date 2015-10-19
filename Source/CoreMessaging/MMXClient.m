@@ -305,6 +305,16 @@ int const kReconnectionTimerInterval = 4;
     }
 }
 
+- (void)closeConnectionAndInvalidateUserData {
+	[self disconnect];
+	self.configuration = nil;
+	self.username = nil;
+	self.appID = nil;
+	self.deviceID = nil;
+	self.accessToken = nil;
+	
+}
+
 #pragma mark - Credentials
 
 - (XMPPJID *)currentJID {

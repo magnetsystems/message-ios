@@ -41,6 +41,8 @@ typedef NS_ENUM(NSUInteger, MMCATTokenRequestStatus){
 @property(nonatomic, copy) NSMutableDictionary *services;
 @property(nonatomic, strong) NSOperation *CATTokenOperation;
 
+@property(nonatomic, readwrite) MMDevice *currentDevice;
+
 @property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
 
 @property (readwrite, nonatomic, copy) AFNetworkReachabilityStatusBlock networkReachabilityStatusBlock;
