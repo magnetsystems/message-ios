@@ -240,30 +240,6 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	}
 }
 
-
-
-- (void)client:(MMXClient *)client didReceiveMessage:(MMXInboundMessage *)message deliveryReceiptRequested:(BOOL)receiptRequested {
-
-	NSMutableArray *recipients = [NSMutableArray arrayWithArray:message.otherRecipients ?: @[]];
-	if (message.targetUserID) {
-		[recipients addObject:message.targetUserID];
-	}
-	
-	MMXMessage *msg = [MMXMessage messageToRecipients:[self usersFromInboundRecipients:recipients.copy]
-									   messageContent:message.metaData];
-
-	msg.messageType = MMXMessageTypeDefault;
-	MMUser *user = [MMUser new];
-	user.userName = message.senderUserID.username;
-	msg.sender = user;
-	msg.timestamp = message.timestamp;
-	msg.messageID = message.messageID;
-	msg.senderDeviceID = message.senderEndpoint.deviceID;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
-														object:nil
-													  userInfo:@{MMXMessageKey:msg}];
-}
-
 - (void)client:(MMXClient *)client didReceivePubSubMessage:(MMXPubSubMessage *)message {
 	MMXMessage *msg = [MMXMessage new];
 	msg.messageType = MMXMessageTypeChannel;
@@ -322,21 +298,6 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 + (NSError *)notLoggedInError {
 	NSError * error = [MMXClient errorWithTitle:@"Forbidden" message:@"You must log in to use this API." code:403];
 	return error;
-}
-
-#pragma mark - Recipient conversion
-
-- (NSSet *)usersFromInboundRecipients:(NSArray *)recipients {
-	NSMutableSet *set = [NSMutableSet setWithCapacity:recipients.count];
-	for (id<MMXAddressable> recipient in recipients) {
-		MMXInternalAddress *address = recipient.address;
-		MMUser *user = [MMUser new];
-		//Converting to MMXUserID will handle any exscaping needed
-		MMXUserID *userID = [MMXUserID userIDFromAddress:address];
-		user.userName = userID.username;
-		[set addObject:user];
-	}
-	return set.copy;
 }
 
 #pragma mark - Overriden getters

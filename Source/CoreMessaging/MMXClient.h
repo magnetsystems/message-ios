@@ -28,6 +28,7 @@
 @class MMXTopic;
 @class MMXMessageOptions;
 @class MMXConfiguration;
+@class MMXInternalMessageAdaptor;
 @class CLLocation;
 
 /**
@@ -126,7 +127,7 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
  *  @param message          - The MMXInboundMessage object that was received.
  *  @param receiptRequested - BOOL will be YES if the sender requested a delivery confirmation message.
  */
-- (void)client:(MMXClient *)client didReceiveMessage:(MMXInboundMessage *)message deliveryReceiptRequested:(BOOL)receiptRequested;
+- (void)client:(MMXClient *)client didReceiveMessage:(MMXInternalMessageAdaptor *)message deliveryReceiptRequested:(BOOL)receiptRequested;
 
 /**
  *  This method is called when an error message is received.

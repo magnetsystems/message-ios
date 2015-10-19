@@ -43,6 +43,7 @@
 
 #import "MMXUtils.h"
 #import "MMXMessageUtils.h"
+#import "MMXMessage_Private.h"
 
 #import "XMPP.h"
 #import "XMPPJID+MMX.h"
@@ -455,17 +456,6 @@ int const kReconnectionTimerInterval = 4;
 
 - (BOOL)validateAndRespondToErrorsForOutboundMessage:(MMXInternalMessageAdaptor *)outboundMessage {
 	MMXAssert(!(outboundMessage.messageContent == nil && outboundMessage.metaData == nil),@"MMXClient sendMessage: messageContent && metaData cannot both be nil");
-	
-	//FIXME: Blowfish
-// 	for (id<MMXAddressable> addressable in recipients) {
-// 		NSXMLElement *address = [[NSXMLElement alloc] initWithName:@"address"];
-// 		[address addAttributeWithName:@"type" stringValue:@"to"];
-// 
-// 		if ([addressable respondsToSelector:@selector(address)]) {
-// 			NSString *fullUsername = [NSString stringWithFormat:@"%@%%%@",[addressable address],self.appID];
-// 			XMPPJID *toAddress = [XMPPJID jidWithUser:fullUsername domain:[[self currentJID] domain] resource:[addressable subAddress]];
-// 			[address addAttributeWithName:@"jid" stringValue:[toAddress full]];
-// 			[addressesElement addChild:address];
 	if (outboundMessage == nil) {
 		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipients:error:)]) {
 			NSError * error = [MMXClient errorWithTitle:@"Message cannot be nil" message:@"Message cannot be nil" code:401];
@@ -499,10 +489,6 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (NSString *)sendDeliveryConfirmationForMessage:(MMXInboundMessage *)message {
-	//FIXME: Blowfish
-// 	NSString *sender = [NSString stringWithFormat:@"%@%%%@@%@", message.senderUserID.username, self.appID, self.configuration.domain];
-// 	if (message.senderEndpoint.deviceID != nil && ![message.senderEndpoint.deviceID isEqualToString:@""]) {
-// 		sender = [NSString stringWithFormat:@"%@/%@", sender, message.senderEndpoint.deviceID];
 	return [self sendDeliveryConfirmationForAddress:message.senderUserID.address messageID:message.messageID toDeviceID:message.senderEndpoint.deviceID];
 }
 
@@ -874,51 +860,16 @@ int const kReconnectionTimerInterval = 4;
 		return;
 	}
     if ([xmppMessage elementsForXmlns:MXnsDataPayload].count) {
-		XMPPJID* to = [xmppMessage to] ;
-		XMPPJID* from =[xmppMessage from];
-		NSString* msgId = [xmppMessage elementID];
+		XMPPJID *to = [xmppMessage to] ;
+		XMPPJID *from =[xmppMessage from];
+		NSString *msgId = [xmppMessage elementID];
 		MMXInternalMessageAdaptor* inMessage = [MMXInternalMessageAdaptor initWithXMPPMessage:xmppMessage];
-		if (![inMessage.mType isEqualToString:@"normal"]) {
-			[self sendSDKAckMessageId:msgId sourceFrom:from sourceTo:to];
-		}
 		if ([inMessage.mType isEqualToString:@"invitation"]) {
-			MMXInvite *invite = [MMXInvite inviteFromMMXInternalMessage:inMessage];
-			[MMUser usersWithUserNames:@[invite.sender.userName] success:^(NSArray *users) {
-				if (users.count) {
-					invite.sender = users.firstObject;
-				}
-				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteNotification
-																	object:nil
-																  userInfo:@{MMXInviteKey:invite}];
-			} failure:^(NSError * error) {
-				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteNotification
-																	object:nil
-																  userInfo:@{MMXInviteKey:invite}];
-			}];
+			[self handleInviteMessageFromInternalMessageAdaptor:inMessage from:from to:to messageID:msgId];
 		} else if ([inMessage.mType isEqualToString:@"invitationResponse"]) {
-			MMXInviteResponse *inviteResponse = [MMXInviteResponse inviteResponseFromMMXInternalMessage:inMessage];
-			[MMUser usersWithUserNames:@[inviteResponse.sender.userName] success:^(NSArray *users) {
-				if (users.count) {
-					inviteResponse.sender = users.firstObject;
-				}
-				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteResponseNotification
-																	object:nil
-																  userInfo:@{MMXInviteResponseKey:inviteResponse}];
-
-			} failure:^(NSError * error) {
-				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteResponseNotification
-																	object:nil
-																  userInfo:@{MMXInviteResponseKey:inviteResponse}];
-
-			}];
+			[self handleInviteResponseMessageFromInternalMessageAdaptor:inMessage from:from to:to messageID:msgId];
 		} else {
-			if ([self.delegate respondsToSelector:@selector(client:didReceiveMessage:deliveryReceiptRequested:)]) {
-				MMXInboundMessage * inboundMessage = [MMXInboundMessage initWithMessage:inMessage];
-//				NSArray *usernameArray = [inboundMessage.otherRecipients valueForKey:@"username"];
-				dispatch_async(self.callbackQueue, ^{
-					[self.delegate client:self didReceiveMessage:inboundMessage deliveryReceiptRequested:inMessage.deliveryReceiptRequested];
-				});
-			}
+			[self handleInboundMessageFromInternalMessageAdaptor:inMessage from:from to:to messageID:msgId];
 		}
 	} else if ([xmppMessage elementsForXmlns:MXnsServerSignal].count) {
 		NSArray* mmxElements = [xmppMessage elementsForName:MXmmxElement];
@@ -984,16 +935,76 @@ int const kReconnectionTimerInterval = 4;
 
 //FIXME: Move all logic for inbound messages to be delivered to the developer here
 //Send server ack after successfully parsed message and notification to dev sent
-- (void)handleInboundMessageFromInternalMessageAdaptor:(MMXInternalMessageAdaptor *)message {
-	
+- (void)handleInboundMessageFromInternalMessageAdaptor:(MMXInternalMessageAdaptor *)message
+												  from:(XMPPJID *)from
+													to:(XMPPJID *)to
+											 messageID:(NSString *)messageID {
+
+	NSArray *usernamesArray = [message.recipients valueForKey:@"username"];
+	[MMUser usersWithUserNames:usernamesArray success:^(NSArray *users) {
+		MMXMessage *msg = [MMXMessage messageToRecipients:users
+										   messageContent:message.metaData];
+		
+		msg.messageType = MMXMessageTypeDefault;
+		
+		MMUser *sender;
+		for (MMUser *user in users) {
+			if ([user.userName.lowercaseString isEqualToString:message.senderUserID.username.lowercaseString]) {
+				sender = user.copy;
+			}
+		}
+		msg.sender = sender;
+		msg.timestamp = message.timestamp;
+		msg.messageID = message.messageID;
+		msg.senderDeviceID = message.senderEndpoint.deviceID;
+		[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
+															object:nil
+														  userInfo:@{MMXMessageKey:msg}];
+		if (![message.mType isEqualToString:@"normal"]) {
+			[self sendSDKAckMessageId:messageID sourceFrom:from sourceTo:to];
+		}
+	} failure:^(NSError * error) {
+		[[MMLogger sharedLogger] error:@"Failed to get users for Inbound Message\n%@",error];
+	}];
+
 }
 
-- (void)handleInviteMessageFromInternalMessageAdaptor:(MMXInternalMessageAdaptor *)message {
-	
+- (void)handleInviteMessageFromInternalMessageAdaptor:(MMXInternalMessageAdaptor *)message
+												 from:(XMPPJID *)from
+												   to:(XMPPJID *)to
+											messageID:(NSString *)messageID {
+	MMXInvite *invite = [MMXInvite inviteFromMMXInternalMessage:message];
+	[MMUser usersWithUserNames:@[invite.sender.userName] success:^(NSArray *users) {
+		if (users.count) {
+			invite.sender = users.firstObject;
+		}
+		[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteNotification
+															object:nil
+														  userInfo:@{MMXInviteKey:invite}];
+		[self sendSDKAckMessageId:messageID sourceFrom:from sourceTo:to];
+	} failure:^(NSError * error) {
+		[[MMLogger sharedLogger] error:@"Failed to get users for Invite\n%@",error];
+	}];
 }
 
-- (void)handleInviteResponseMessageFromInternalMessageAdaptor:(MMXInternalMessageAdaptor *)message {
-	
+- (void)handleInviteResponseMessageFromInternalMessageAdaptor:(MMXInternalMessageAdaptor *)message
+														 from:(XMPPJID *)from
+														   to:(XMPPJID *)to
+													messageID:(NSString *)messageID {
+
+	MMXInviteResponse *inviteResponse = [MMXInviteResponse inviteResponseFromMMXInternalMessage:message];
+	[MMUser usersWithUserNames:@[inviteResponse.sender.userName] success:^(NSArray *users) {
+		if (users.count) {
+			inviteResponse.sender = users.firstObject;
+		}
+		[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteResponseNotification
+															object:nil
+														  userInfo:@{MMXInviteResponseKey:inviteResponse}];
+		[self sendSDKAckMessageId:messageID sourceFrom:from sourceTo:to];
+	} failure:^(NSError * error) {
+		[[MMLogger sharedLogger] error:@"Failed to get users for Invite Response\n%@",error];
+	}];
+
 }
 
 
