@@ -720,7 +720,7 @@ int const kReconnectionTimerInterval = 4;
 }
 
 #pragma mark - XMPPReconnect
-#pragma mark - XMPPReconnectDelegate Callbacks
+#pragma mark XMPPReconnectDelegate Callbacks
 
 - (void)xmppReconnect:(XMPPReconnect *)sender didDetectAccidentalDisconnect:(SCNetworkConnectionFlags)connectionFlags {
 	[[MMXLogger sharedLogger] error:@"Received didDetectAccidentalDisconnect callback."];
@@ -859,16 +859,23 @@ int const kReconnectionTimerInterval = 4;
 		}
 		return;
 	}
-    if ([xmppMessage elementsForXmlns:MXnsDataPayload].count) {
+	if ([MMXClient isPubSubMessage:xmppMessage]) {
+		NSArray * messageArray = [MMXPubSubMessage pubSubMessagesFromXMPPMessage:xmppMessage];
+		[self handlePubSubMessages:messageArray];
+		return;
+	} else if ([xmppMessage elementsForXmlns:MXnsDataPayload].count) {
 		XMPPJID *to = [xmppMessage to] ;
 		XMPPJID *from =[xmppMessage from];
 		NSString *msgId = [xmppMessage elementID];
 		MMXInternalMessageAdaptor* inMessage = [MMXInternalMessageAdaptor initWithXMPPMessage:xmppMessage];
 		if ([inMessage.mType isEqualToString:@"invitation"]) {
+			//Channel Invitation Message
 			[self handleInviteMessageFromInternalMessageAdaptor:inMessage from:from to:to messageID:msgId];
 		} else if ([inMessage.mType isEqualToString:@"invitationResponse"]) {
+			//Channel Invitation Response Message
 			[self handleInviteResponseMessageFromInternalMessageAdaptor:inMessage from:from to:to messageID:msgId];
 		} else {
+			//User to User Message
 			[self handleInboundMessageFromInternalMessageAdaptor:inMessage from:from to:to messageID:msgId];
 		}
 	} else if ([xmppMessage elementsForXmlns:MXnsServerSignal].count) {
@@ -913,6 +920,7 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (void)xmppStream:(XMPPStream *)sender didSendMessage:(XMPPMessage *)message {
+	
 }
 
 - (void)xmppStream:(XMPPStream *)sender didFailToSendMessage:(XMPPMessage *)message error:(NSError *)error {
@@ -928,7 +936,7 @@ int const kReconnectionTimerInterval = 4;
     }
 }
 
-#pragma mark Message Handling
+#pragma mark - Message Handling
 
 //FIXME: Move all logic for inbound messages to be delivered to the developer here
 //Send server ack after successfully parsed message and notification to dev sent
@@ -1004,6 +1012,26 @@ int const kReconnectionTimerInterval = 4;
 
 }
 
+- (void)handlePubSubMessages:(NSArray *)messageArray {
+	NSArray *usernames = [[messageArray valueForKey:@"senderUserID"] valueForKey:@"username"];
+	if (usernames && usernames.count) {
+		[MMUser usersWithUserNames:usernames success:^(NSArray *users) {
+			for (MMXPubSubMessage *pubMsg in messageArray) {
+				NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userName = %@",pubMsg.senderUserID.username];
+				MMUser *sender = [users filteredArrayUsingPredicate:usernamePredicate].firstObject;
+				MMXMessage *channelMessage = [MMXMessage messageFromPubSubMessage:pubMsg sender:sender];
+				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
+																	object:nil
+																  userInfo:@{MMXMessageKey:channelMessage}];
+	
+			}
+		} failure:^(NSError * error) {
+			[[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n%@",error];
+		}];
+		return;
+	}
+	[[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n"];
+}
 
 #pragma mark Error Message Handling
 
@@ -1044,7 +1072,7 @@ int const kReconnectionTimerInterval = 4;
     return MMXErrorSeverityUnknown;
 }
 
-#pragma mark Helper Methods
+#pragma mark - Helper Methods
 
 - (BOOL)hasActiveConnection {
 	if (self.connectionStatus != MMXConnectionStatusAuthenticated &&

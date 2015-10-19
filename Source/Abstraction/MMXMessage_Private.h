@@ -37,5 +37,7 @@
 @property(nonatomic, readwrite) NSDictionary *messageContent;
 
 + (instancetype)messageFromPubSubMessage:(MMXPubSubMessage *)pubSubMessage;
++ (instancetype)messageFromPubSubMessage:(MMXPubSubMessage *)pubSubMessage
+								  sender:(MMUser *)sender;
 
 @end
