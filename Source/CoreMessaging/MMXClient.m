@@ -889,7 +889,6 @@ int const kReconnectionTimerInterval = 4;
 					NSString *receiver = receiverDict[@"userId"];
 					if (ackForMsgId && [self.delegate respondsToSelector:@selector(client:didReceiveServerAckForMessageID:)]) {
 						dispatch_async(self.callbackQueue, ^{
-							MMXUserID *userID = [MMXUserID userIDWithUsername:receiver];
 							[self.delegate client:self didReceiveServerAckForMessageID:ackForMsgId];
 						});
 					}
@@ -942,7 +941,7 @@ int const kReconnectionTimerInterval = 4;
 
 	NSArray *usernamesArray = [message.recipients valueForKey:@"username"];
 	[MMUser usersWithUserNames:usernamesArray success:^(NSArray *users) {
-		MMXMessage *msg = [MMXMessage messageToRecipients:users
+		MMXMessage *msg = [MMXMessage messageToRecipients:[NSSet setWithArray:users]
 										   messageContent:message.metaData];
 		
 		msg.messageType = MMXMessageTypeDefault;

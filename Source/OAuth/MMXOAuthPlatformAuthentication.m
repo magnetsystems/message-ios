@@ -133,13 +133,9 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
 
 - (NSString *)basicAuthorization {
 	NSString * authString = [NSString stringWithFormat:@"\0%@\0%@",xmppStream.myJID.user,accessToken];
-	NSLog(@"\n\n############\n\nAuth string = %@\n\n\n",authString);
 	NSData *nsdata = [authString dataUsingEncoding:NSUTF8StringEncoding];
  
 	return [NSString stringWithFormat:@"%@",[nsdata base64EncodedStringWithOptions:0]];
-	//@"AHN1cGVyJTFlNGk4aHpoa2RlADc4NjQ3b1V0eXJl";
-	//@"AHN1cGVyADc4NjQ3b1V0eXJl" \x00super\x00%@"
-	//@"AHN1cGVyADc4NjQ3b1V0eXJl"
 }
 
 
