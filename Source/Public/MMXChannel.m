@@ -34,14 +34,6 @@
 @implementation MMXChannel
 
 + (instancetype)channelWithName:(NSString *)name
-						summary:(NSString *)summary {
-	MMXChannel *channel = [MMXChannel new];
-	channel.name = name;
-	channel.summary = summary;
-	return channel;
-}
-
-+ (instancetype)channelWithName:(NSString *)name
 						summary:(NSString *)summary
 					   isPublic:(BOOL)isPublic {
 	MMXChannel *channel = [MMXChannel new];
@@ -140,34 +132,6 @@
 
 + (void)channelsStartingWith:(NSString *)name
 					   limit:(int)limit
-					 success:(void (^)(int, NSArray *))success
-					 failure:(void (^)(NSError *))failure {
-	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-		if (failure) {
-			failure([MagnetDelegate notLoggedInError]);
-		}
-		return;
-	}
-	if (name == nil || [name isEqualToString:@""]) {
-		if (failure) {
-			failure([MMXClient errorWithTitle:@"Invalid Search Parameter"
-									  message:@"You must pass at least one valid character to this method."
-										 code:500]);
-		}
-		return;
-	}
-	
-	NSDictionary *queryDict = @{@"operator" : @"AND",
-								@"limit" : @(limit),
-								@"tags" : [NSNull null],
-								@"topicName": @{
-									@"match": @"PREFIX",
-									@"value": name}};
-	[MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
-}
-
-+ (void)channelsStartingWith:(NSString *)name
-					   limit:(int)limit
 					  offset:(int)offset
 					 success:(void (^)(int, NSArray *))success
 					 failure:(void (^)(NSError *))failure {
@@ -195,43 +159,6 @@
 										@"value": name}};
 	[MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
 	
-}
-
-+ (void)findByTags:(NSSet *)tags
-		   success:(void (^)(int, NSArray *))success
-		   failure:(void (^)(NSError *))failure {
-	
-	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-		if (failure) {
-			failure([MagnetDelegate notLoggedInError]);
-		}
-		return;
-	}
-	
-	if (tags.count < 1) {
-		if (failure) {
-			NSError * error = [MMXClient errorWithTitle:@"Tags Empty" message:@"You must specify at least one tag." code:400];
-			failure(error);
-		}
-		return;
-	}
-	
-	for (id tag in tags) {
-		if (![tag isKindOfClass:[NSString class]]) {
-			if (failure) {
-				NSError * error = [MMXClient errorWithTitle:@"Invalid Tags" message:@"Tags can only be strings." code:400];
-				failure(error);
-			}
-			return;
-		}
-	}
-	
-	NSDictionary *queryDict = @{@"operator" : @"AND",
-								@"limit" : @(-1),
-								@"tags": @{@"match": @"EXACT",
-										   @"values": [tags allObjects]}};
-	
-	[MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
 }
 
 + (void)findByTags:(NSSet *)tags
@@ -338,31 +265,6 @@
 												if (success) {
 													success();
 												}
-	} failure:^(NSError *error) {
-		if (failure) {
-			failure(error);
-		}
-	}];
-}
-
-- (void)createWithSuccess:(void (^)(void))success
-				  failure:(void (^)(NSError *))failure {
-	
-	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-		if (failure) {
-			failure([MagnetDelegate notLoggedInError]);
-		}
-		
-		return;
-	}
-	[[MMXClient sharedClient].pubsubManager createTopic:[self asTopic] success:^(BOOL successful) {
-		MMUser *creator = [MMUser currentUser];
-		if (creator) {
-			self.ownerUsername = creator.userName;
-		}
-		if (success) {
-			success();
-		}
 	} failure:^(NSError *error) {
 		if (failure) {
 			failure(error);
@@ -499,12 +401,6 @@
 	}];
 }
 
-- (void)subscribersWithSuccess:(void (^)(int totalCount, NSArray *subscribers))success
-					   failure:(void (^)(NSError *error))failure {
-
-	[self subscribersWithLimit:-1 offset:0 success:success failure:failure];
-}
-
 - (void)subscribersWithLimit:(int)limit
 					  offset:(int)offset
 					 success:(void (^)(int totalCount, NSArray *subscribers))success
@@ -558,22 +454,6 @@
 	}];
 }
 
-- (void)fetchMessagesBetweenStartDate:(NSDate *)startDate
-							  endDate:(NSDate *)endDate
-								limit:(int)limit
-							ascending:(BOOL)ascending
-							  success:(void (^)(int totalCount, NSArray *messages))success
-							  failure:(void (^)(NSError *))failure {
-	
-	[self messagesBetweenStartDate:startDate
-						   endDate:endDate
-							 limit:limit
-							offset:0
-						 ascending:ascending
-						   success:success
-						   failure:failure];
-}
-
 - (void)messagesBetweenStartDate:(NSDate *)startDate
 						 endDate:(NSDate *)endDate
 						   limit:(int)limit
@@ -600,31 +480,40 @@
 	fetch.offset = offset;
 	fetch.ascending = ascending;
 	[[MMXClient sharedClient].pubsubManager fetchItems:fetch success:^(NSArray *messages) {
-		NSMutableArray *msgArray = [[NSMutableArray alloc] initWithCapacity:messages.count];
-		for (MMXPubSubMessage *message in messages) {
-			MMXMessage *msg = [MMXMessage messageFromPubSubMessage:message];
-			[msgArray addObject:msg];
+		NSMutableArray *channelMessageArray = [[NSMutableArray alloc] initWithCapacity:messages.count];
+		NSArray *usernames = [[messages valueForKey:@"senderUserID"] valueForKey:@"username"];
+		if (usernames && usernames.count) {
+			[MMUser usersWithUserNames:usernames success:^(NSArray *users) {
+				for (MMXPubSubMessage *pubMsg in messages) {
+					NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userName = %@",pubMsg.senderUserID.username];
+					MMUser *sender = [users filteredArrayUsingPredicate:usernamePredicate].firstObject;
+					MMXMessage *channelMessage = [MMXMessage messageFromPubSubMessage:pubMsg sender:sender];
+					[channelMessageArray addObject:channelMessage];
+				}
+				[[MMXClient sharedClient].pubsubManager summaryOfTopics:@[topic] since:startDate until:endDate success:^(NSArray *summaries) {
+					int count = 0;
+					if (summaries.count) {
+						MMXTopicSummary *sum = summaries[0];
+						count =  sum.numItemsPublished;
+					}
+					if (success) {
+						success(count, channelMessageArray);
+					}
+				} failure:^(NSError *error) {
+					if (failure) {
+						failure(error);
+					}
+				}];
+			} failure:^(NSError * error) {
+				[[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n%@",error];
+			}];
+			return;
 		}
-		[[MMXClient sharedClient].pubsubManager summaryOfTopics:@[topic] since:startDate until:endDate success:^(NSArray *summaries) {
-			int count = 0;
-			if (summaries.count) {
-				MMXTopicSummary *sum = summaries[0];
-				count =  sum.numItemsPublished;
-			}
-			if (success) {
-				success(count, msgArray);
-			}
-		} failure:^(NSError *error) {
-			if (failure) {
-				failure(error);
-			}
-		}];
 	} failure:^(NSError *error) {
 		if (failure) {
 			failure(error);
 		}
 	}];
-
 }
 
 - (NSString *)inviteUser:(MMUser *)user

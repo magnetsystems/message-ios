@@ -105,15 +105,6 @@
 			   failure:(void (^)(NSError *error))failure;
 
 /**
- * @deprecated This method is deprecated starting in version 1.9
- * @note Please use @code channelsStartingWith:limit:offset:success:failure: @code instead.
- */
-+ (void)channelsStartingWith:(NSString *)name
-					   limit:(int)limit
-					 success:(void (^)(int totalCount, NSArray *channels))success
-					 failure:(void (^)(NSError *error))failure __attribute__((deprecated));
-
-/**
  *  Method used to discover existing channels by name
  *
  *  @param name     The begining of the channel name you are searching for.
@@ -127,14 +118,6 @@
 					  offset:(int)offset
 					 success:(void (^)(int totalCount, NSArray *channels))success
 					 failure:(void (^)(NSError *error))failure;
-
-/**
- * @deprecated This method is deprecated starting in version 1.9
- * @note Please use @code findByTags:success:failure: @code instead.
- */
-+ (void)findByTags:(NSSet *)tags
-		   success:(void (^)(int totalCount, NSArray *channels))success
-		   failure:(void (^)(NSError *error))failure __attribute__((deprecated));
 
 /**
  *  Method used to discover existing channels that have any of the tags provided
@@ -171,20 +154,6 @@
 - (void)setTags:(NSSet *)tags
 		success:(void (^)(void))success
 		failure:(void (^)(NSError *error))failure;
-
-/**
- * @deprecated This method is deprecated starting in version 1.9
- * @note Please use @code findByDisplayName:limit:offset:success:failure: @code instead.
- */
-+ (instancetype)channelWithName:(NSString *)name
-						summary:(NSString *)summary  __attribute__((deprecated));
-
-/**
- * @deprecated This method is deprecated starting in version 1.9
- * @note Please use @code findByDisplayName:limit:offset:success:failure: @code instead.
- */
-- (void)createWithSuccess:(void (^)(void))success
-				  failure:(void (^)(NSError * error))failure  __attribute__((deprecated));
 
 /**
  *  Method to create a new channel.
@@ -239,13 +208,6 @@
 							  failure:(void (^)(NSError *error))failure;
 
 /**
- * @deprecated This method is deprecated starting in version 1.9
- * @note Please use @code subscribersWithSuccess:failure: @code instead.
- */
-- (void)subscribersWithSuccess:(void (^)(int totalCount, NSArray *subscribers))success
-					   failure:(void (^)(NSError *error))failure __attribute__((deprecated));
-
-/**
  *  Get the subscribers for a channel
  *	Must be subscribed to the channel to use this API
  *
@@ -269,17 +231,6 @@
 - (void)publish:(NSDictionary *)messageContent
 		success:(void (^)(MMXMessage *message))success
 		failure:(void (^)(NSError *error))failure;
-
-/**
- * @deprecated This method is deprecated starting in version 1.9
- * @note Please use @code messagesBetweenStartDate:endDate:limit:offset:ascending:success:failure: @code instead.
- */
-- (void)fetchMessagesBetweenStartDate:(NSDate *)startDate
-							  endDate:(NSDate *)endDate
-								limit:(int)limit
-							ascending:(BOOL)ascending
-							  success:(void (^)(int totalCount, NSArray *messages))success
-							  failure:(void (^)(NSError *error))failure __attribute__((deprecated));
 
 /**
  *  Get messages previous posted to this channel.
