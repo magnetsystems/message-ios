@@ -640,7 +640,7 @@ int const kReconnectionTimerInterval = 4;
 #pragma mark - Queued Messages
 
 - (NSArray *)queuedMessagesForType:(MMXOutboxEntryMessageType)type {
-    NSString * username  = self.xmppStream.myJID.user;
+    NSString * username  = self.xmppStream.myJID.user ?: self.username;
     NSMutableArray * messageArray = @[].mutableCopy;
     NSArray * archivedMessages = [[MMXDataModel sharedDataModel] outboxEntriesForUser:username outboxEntryMessageType:type];
     for (MMXOutboxEntry * entry in archivedMessages) {
@@ -697,7 +697,7 @@ int const kReconnectionTimerInterval = 4;
 #pragma mark - Archived Messages
 
 - (void)sendArchivedMessages {
-    NSString * username  = self.xmppStream.myJID.user;
+	NSString * username  = self.xmppStream.myJID.user ?: self.username;
     NSArray * archivedMessages = [[MMXDataModel sharedDataModel] outboxEntriesForUser:username outboxEntryMessageType:MMXOutboxEntryMessageTypeDefault];
     for (MMXOutboxEntry * entry in archivedMessages) {
         [[MMXLogger sharedLogger] verbose:@"MMXOutboxEntry = %@",entry];

@@ -10,7 +10,7 @@
 @import MagnetMax;
 @import MMX;
 
-#define DEFAULT_TEST_TIMEOUT 20.0
+#define DEFAULT_TEST_TIMEOUT 10.0
 
 SPEC_BEGIN(MMXChannelSpec)
 
@@ -22,22 +22,10 @@ describe(@"MMXMessage", ^{
 																   password:senderPassword
 																persistence:NSURLCredentialPersistenceNone];
 	
-	NSString *receiverUsername = [NSString stringWithFormat:@"receiver_%f", [[NSDate date] timeIntervalSince1970]];
-	NSString *receiverPassword = @"magnet";
-	NSURLCredential *receiverCredential = [NSURLCredential credentialWithUser:receiverUsername
-																	 password:receiverPassword
-																  persistence:NSURLCredentialPersistenceNone];
-	
 	MMUser *sender = [[MMUser alloc] init];
 	sender.userName = senderUsername;
 	sender.password = senderPassword;
 	
-	MMUser *receiver = [[MMUser alloc] init];
-	receiver.userName = receiverUsername;
-	receiver.password = senderPassword;
-
-	NSString *receiverDeviceID = [[NSUUID UUID] UUIDString];
-		
 	beforeAll(^{
 		
 		NSString *filename = @"MagnetMax";
@@ -302,7 +290,7 @@ describe(@"MMXMessage", ^{
 			
 			// Assert
 			[[expectFutureValue(_fetchedChannels) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] haveCountOfAtLeast:1];
-			[[expectFutureValue(theValue(_totalCount)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beBetween:theValue(1) and:theValue(15)];
+			[[expectFutureValue(theValue(_totalCount)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beBetween:theValue(1) and:theValue(100)];
 		});
 		
 		it(@"should have the same channel for offset 0 channel 1 as offset 1 channel 0", ^{
@@ -333,10 +321,23 @@ describe(@"MMXMessage", ^{
 			// Assert
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
+		afterEach(^{
+			
+			__block BOOL _isSuccess = NO;
+			
+			[MMUser logout:^{
+				_isSuccess = YES;
+			} failure:^(NSError * _Nonnull error) {
+				_isSuccess = NO;
+			}];
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+
 	});
 
 	context(@"when fetching all private channels", ^{
-		xit(@"should return more than one channel", ^{
+		it(@"should return more than one channel", ^{
 			__block NSArray *_fetchedChannels = @[]; // Set should start empty
 			__block int _totalCount = 0; // Start value at zero
 			
@@ -346,24 +347,28 @@ describe(@"MMXMessage", ^{
 			NSString *channelName2 = [NSString stringWithFormat:@"privateChannelName_%f", [[NSDate date] timeIntervalSince1970]];
 			NSString *channelSummary2 = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 
-			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
-				[MMXChannel createWithName:channelName2 summary:channelSummary2 isPublic:NO success:^(MMXChannel *channel) {
-					[MMUser login:senderCredential success:^{
-						[MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
-							_fetchedChannels = channels;
-							_totalCount = totalCount;
+			[MMUser login:senderCredential success:^{
+				[MagnetMax initModule:[MMX sharedInstance] success:^{
+					[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+						[MMXChannel createWithName:channelName2 summary:channelSummary2 isPublic:NO success:^(MMXChannel *channel) {
+							[MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
+								_fetchedChannels = channels;
+								_totalCount = totalCount;
+							} failure:^(NSError * error) {
+							}];
 						} failure:^(NSError * error) {
 						}];
 					} failure:^(NSError * error) {
 					}];
 				} failure:^(NSError * error) {
 				}];
-			} failure:^(NSError * error) {
+				
+			} failure:^(NSError *error) {
 			}];
-			
+
 			// Assert
 			[[expectFutureValue(_fetchedChannels) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] haveCountOfAtLeast:1];
-			[[expectFutureValue(theValue(_totalCount)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beBetween:theValue(1) and:theValue(15)];
+			[[expectFutureValue(theValue(_totalCount)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beBetween:theValue(1) and:theValue(100)];
 		});
 		
 		it(@"should have the same channel for offset 0 channel 1 as offset 1 channel 0", ^{
