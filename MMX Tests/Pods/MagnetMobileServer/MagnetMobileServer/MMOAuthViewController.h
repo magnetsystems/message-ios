@@ -38,7 +38,7 @@
 
  @return The newly-initialized view controller.
 */
-- (instancetype)initWithURL:(NSURL *)url NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithURL:(NSURL *)url;
 
 /**
  Sets a callback to be executed when OAuth flow is cancelled.

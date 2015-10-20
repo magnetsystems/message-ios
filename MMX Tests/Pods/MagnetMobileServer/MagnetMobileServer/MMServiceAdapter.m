@@ -288,14 +288,17 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
 - (void)authorizeApplicationWithSuccess:(void (^)(AFOAuthCredential *credential))success
 								failure:(void (^)(NSError *error))failure {
 	
-	self.authManager = [[AFOAuth2Manager alloc] initWithBaseURL:self.endPoint.URL
-													   clientID:self.clientID/*kClientID*/
-														 secret:self.clientSecret/*kClientSecret*/];
-	
-	[self.authManager.requestSerializer setValue:[MMServiceAdapter deviceUUID] forHTTPHeaderField:@"MMS-DEVICE-ID"];
-	[self.authManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"ACCEPT"];
-
-	self.authManager.operationQueue = nil;
+    self.authManager = [[AFOAuth2Manager alloc] initWithBaseURL:self.endPoint.URL
+                                                       clientID:self.clientID/*kClientID*/
+                                                         secret:self.clientSecret/*kClientSecret*/];
+    
+    [self.authManager.requestSerializer setValue:[MMServiceAdapter deviceUUID] forHTTPHeaderField:@"MMS-DEVICE-ID"];
+    [self.authManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
+    self.authManager.operationQueue = nil;
+#pragma clang diagnostic pop
 	
 	AFHTTPRequestOperation *afOperation = [self.authManager authenticateUsingOAuthWithURLString:@"com.magnet.server/applications/session" scope:@"APPLICATION" success:nil failure:nil];
 	
@@ -431,21 +434,13 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
                      password:(NSString *)password
                       success:(void (^)(BOOL successful))success
                       failure:(void (^)(NSError *error))failure {
-	AFOAuth2Manager *OAuth2Manager = [[AFOAuth2Manager alloc] initWithBaseURL:self.endPoint.URL
-																	 clientID:self.clientID
-																	   secret:self.clientSecret];
 	
-	[OAuth2Manager.requestSerializer setValue:[MMServiceAdapter deviceUUID] forHTTPHeaderField:@"MMS-DEVICE-ID"];
-	[OAuth2Manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"ACCEPT"];
-
-    OAuth2Manager.operationQueue = nil;
-	
-	NSDictionary * params = @{@"grant_type":@"password",
+    NSDictionary * params = @{@"grant_type":@"password",
 							  @"username":username,
 							  @"password":password,
 							  @"client_id":self.clientID,
 							  @"scope":@"anonymous"};
-    NSOperation *operation = [OAuth2Manager authenticateUsingOAuthWithURLString:@"com.magnet.server/user/session" parameters:params
+    NSOperation *operation = [self.authManager authenticateUsingOAuthWithURLString:@"com.magnet.server/user/session" parameters:params
                                                                         success:^(AFOAuthCredential *credential) {
                                                                             self.username = username;
                                                                             self.HATToken = credential.accessToken;
@@ -483,9 +478,9 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
     return [self.userService logoutWithSuccess:^(BOOL response) {
         if(success) {
             // Clean up
-            self.username = nil;
             self.HATToken = nil;
             [self invalidateUserTokenInRegisteredServices];
+            self.username = nil;
             if (success) {
                 success(response);
             }
@@ -516,7 +511,7 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
     // Use [MMReliableCall sortedFetchRequest]
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:[MMReliableCall entityName]];
     NSError *error;
-    NSArray<MMReliableCall *> *pendingReliableCalls = [[MMCoreDataStack sharedContext] executeFetchRequest:fetchRequest error:&error];
+    NSArray<MMReliableCall *> __unused *pendingReliableCalls = [[MMCoreDataStack sharedContext] executeFetchRequest:fetchRequest error:&error];
 }
 
 - (void)cancelAllOperations {

@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6AF98C233A062E7E2AFADDFE"
+               BlueprintIdentifier = "7788D4269A5399B944D5D132"
                BuildableName = "MMX.framework"
                BlueprintName = "MMX"
                ReferencedContainer = "container:Pods.xcodeproj">

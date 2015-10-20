@@ -10,6 +10,8 @@ import Foundation
     
     func shouldInitializeWithConfiguration(configuration: [NSObject: AnyObject], success: (Void -> Void), failure: ((error: NSError) -> Void))
     
+    optional func shouldDeInitialize()
+    
     optional func didReceiveAppToken(appToken: String, appID: String, deviceID: String)
     
     optional func didReceiveUserToken(userToken: String, userID: String, deviceID: String)

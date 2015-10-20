@@ -441,6 +441,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 			<key>FooterText</key>
 			<string>See http://www.magnet.com/resources/tos.html</string>
 			<key>Title</key>
+			<string>MagnetMax</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
+			<string>See http://www.magnet.com/resources/tos.html</string>
+			<key>Title</key>
 			<string>MagnetMobileServer</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>

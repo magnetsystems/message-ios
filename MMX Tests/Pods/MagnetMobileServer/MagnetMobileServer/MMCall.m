@@ -28,7 +28,16 @@
     BOOL isReachable = self.serviceAdapter.sessionManager.reachabilityManager.isReachable;
     BOOL useCache = (self.cacheOptions != nil);
     
+    if (useCache) {
+        BOOL doesMethodSupportCaching = (self.serviceMethod.requestMethod & (MMRequestMethodGET | MMRequestMethodHEAD | MMRequestMethodOPTIONS)) != 0;
+        NSAssert(doesMethodSupportCaching, @"Caching is only supported for calls with the following HTTP methods: HEAD, GET and OPTIONS.");
+    }
+    
     BOOL isReliable = (self.reliableCallOptions != nil);
+    if (isReliable) {
+        BOOL doesMethodSupportReliability = (self.serviceMethod.requestMethod & (MMRequestMethodPOST | MMRequestMethodPUT | MMRequestMethodDELETE | MMRequestMethodPATCH)) != 0;
+        NSAssert(doesMethodSupportReliability, @"Only calls with the HTTP methods: POST, PUT, DELETE and PATCH can be made reliable.");
+    }
     
     if (!self.underlyingOperation) {
         

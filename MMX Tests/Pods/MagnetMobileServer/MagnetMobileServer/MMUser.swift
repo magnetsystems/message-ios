@@ -34,6 +34,10 @@ public extension MMUser {
     }
     
     static public func logout(success: (() -> Void)?, failure: ((error: NSError) -> Void)?) {
+        if currentUser() == nil {
+            success?()
+            return
+        }
         MMCoreConfiguration.serviceAdapter.logoutWithSuccess({ _ in
             currentlyLoggedInUser = nil
             success?()

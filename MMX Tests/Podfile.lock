@@ -1,15 +1,15 @@
 PODS:
-  - AFNetworking/NSURLConnection (2.5.4):
+  - AFNetworking/NSURLConnection (2.6.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.4):
+  - AFNetworking/NSURLSession (2.6.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.4)
-  - AFNetworking/Security (2.5.4)
-  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/Reachability (2.6.1)
+  - AFNetworking/Security (2.6.1)
+  - AFNetworking/Serialization (2.6.1)
   - AFOAuth2Manager (2.2.1):
     - AFNetworking/NSURLConnection (~> 2.2)
   - CocoaAsyncSocket (7.4.1)
@@ -57,11 +57,14 @@ PODS:
     - libextobjc/RuntimeExtensions
   - libextobjc/RuntimeExtensions (0.4.1)
   - libextobjc/UmbrellaHeader (0.4.1)
+  - MagnetMax (3.0):
+    - MagnetMobileServer (~> 3.0)
+    - MMX (~> 2.0)
   - MagnetMobileServer (3.0.9):
-    - AFNetworking/NSURLConnection (= 2.5.4)
-    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/NSURLConnection (= 2.6.1)
+    - AFNetworking/NSURLSession (= 2.6.1)
     - AFOAuth2Manager (~> 2.2.1)
-    - CocoaLumberjack (~> 2.0.2)
+    - CocoaLumberjack (~> 2.0.3)
     - libextobjc (~> 0.4)
     - Mantle (~> 1.5)
   - Mantle (1.5.6):
@@ -121,6 +124,7 @@ PODS:
 
 DEPENDENCIES:
   - Kiwi (~> 2.3)
+  - MagnetMax (~> 3.0)
   - MMX (from `../`)
 
 EXTERNAL SOURCES:
@@ -128,13 +132,14 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  AFNetworking: 8e4e60500beb8bec644cf575beee72990a76d399
   AFOAuth2Manager: 9efc94eb158fbfca13e685c22d91721c7a64fc8c
   CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
   CocoaLumberjack: f58d8a19629f4d8379ae14bb3534def24161430e
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
-  MagnetMobileServer: ca1770abf99ca5156942af93cacd68514cdefcca
+  MagnetMax: 26604f57907dbb344e3fec7da47572bbecba0538
+  MagnetMobileServer: 2d2f029761dec60a7af4158c225c9f0f8926109c
   Mantle: a197db93e0f1e36194b1fdbc078219a8492eaef2
   MDMCoreData: 402f754cda90865026a209243f1667824e775649
   MMX: dacad08a53d5e19dc5776f2777a8e9e633d4acc7

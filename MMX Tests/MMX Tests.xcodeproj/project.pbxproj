@@ -20,6 +20,7 @@
 		0E333FC91BC44060006B56BF /* MMXPubSubManagerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FBA1BC44060006B56BF /* MMXPubSubManagerSpec.m */; settings = {ASSET_TAGS = (); }; };
 		0E333FCA1BC44060006B56BF /* MMXRemoteNotificationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FBB1BC44060006B56BF /* MMXRemoteNotificationSpec.m */; settings = {ASSET_TAGS = (); }; };
 		0E333FCB1BC44060006B56BF /* MMXUserSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FBD1BC44060006B56BF /* MMXUserSpec.m */; settings = {ASSET_TAGS = (); }; };
+		0E933B8E1BD5B74F008EE43A /* MagnetMax.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E933B8D1BD5B74F008EE43A /* MagnetMax.plist */; settings = {ASSET_TAGS = (); }; };
 		632B889AE4EED44692438F12 /* Pods_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E7C3DC8A699C0F7010B4FF7 /* Pods_ios.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,7 @@
 		0E333FBB1BC44060006B56BF /* MMXRemoteNotificationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXRemoteNotificationSpec.m; sourceTree = "<group>"; };
 		0E333FBC1BC44060006B56BF /* MMXTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMXTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		0E333FBD1BC44060006B56BF /* MMXUserSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXUserSpec.m; sourceTree = "<group>"; };
+		0E933B8D1BD5B74F008EE43A /* MagnetMax.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MagnetMax.plist; sourceTree = "<group>"; };
 		4881B281C03C15213696FADC /* Pods-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-ios/Pods-ios.release.xcconfig"; sourceTree = "<group>"; };
 		8E7C3DC8A699C0F7010B4FF7 /* Pods_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA99B94B29C5C8136FB6C739 /* Pods-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ios/Pods-ios.debug.xcconfig"; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 		0E333FAC1BC44060006B56BF /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				0E933B8D1BD5B74F008EE43A /* MagnetMax.plist */,
 				0E333FAD1BC44060006B56BF /* CoreData */,
 				0E333FB11BC44060006B56BF /* Info.plist */,
 				0E333FB21BC44060006B56BF /* MathSpec.m */,
@@ -211,6 +214,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0E333FC11BC44060006B56BF /* Info.plist in Resources */,
+				0E933B8E1BD5B74F008EE43A /* MagnetMax.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
