@@ -15,11 +15,8 @@
 		0E333FC21BC44060006B56BF /* MathSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FB21BC44060006B56BF /* MathSpec.m */; settings = {ASSET_TAGS = (); }; };
 		0E333FC41BC44060006B56BF /* MMXChannelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FB41BC44060006B56BF /* MMXChannelSpec.m */; settings = {ASSET_TAGS = (); }; };
 		0E333FC51BC44060006B56BF /* MMXClientDelegateSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FB61BC44060006B56BF /* MMXClientDelegateSpy.m */; settings = {ASSET_TAGS = (); }; };
-		0E333FC61BC44060006B56BF /* MMXClientSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FB71BC44060006B56BF /* MMXClientSpec.m */; settings = {ASSET_TAGS = (); }; };
 		0E333FC81BC44060006B56BF /* MMXMessageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FB91BC44060006B56BF /* MMXMessageSpec.m */; settings = {ASSET_TAGS = (); }; };
-		0E333FC91BC44060006B56BF /* MMXPubSubManagerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FBA1BC44060006B56BF /* MMXPubSubManagerSpec.m */; settings = {ASSET_TAGS = (); }; };
 		0E333FCA1BC44060006B56BF /* MMXRemoteNotificationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FBB1BC44060006B56BF /* MMXRemoteNotificationSpec.m */; settings = {ASSET_TAGS = (); }; };
-		0E333FCB1BC44060006B56BF /* MMXUserSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FBD1BC44060006B56BF /* MMXUserSpec.m */; settings = {ASSET_TAGS = (); }; };
 		0E933B8E1BD5B74F008EE43A /* MagnetMax.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E933B8D1BD5B74F008EE43A /* MagnetMax.plist */; settings = {ASSET_TAGS = (); }; };
 		632B889AE4EED44692438F12 /* Pods_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E7C3DC8A699C0F7010B4FF7 /* Pods_ios.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -37,12 +34,9 @@
 		0E333FB41BC44060006B56BF /* MMXChannelSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXChannelSpec.m; sourceTree = "<group>"; };
 		0E333FB51BC44060006B56BF /* MMXClientDelegateSpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMXClientDelegateSpy.h; sourceTree = "<group>"; };
 		0E333FB61BC44060006B56BF /* MMXClientDelegateSpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXClientDelegateSpy.m; sourceTree = "<group>"; };
-		0E333FB71BC44060006B56BF /* MMXClientSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXClientSpec.m; sourceTree = "<group>"; };
 		0E333FB91BC44060006B56BF /* MMXMessageSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXMessageSpec.m; sourceTree = "<group>"; };
-		0E333FBA1BC44060006B56BF /* MMXPubSubManagerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXPubSubManagerSpec.m; sourceTree = "<group>"; };
 		0E333FBB1BC44060006B56BF /* MMXRemoteNotificationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXRemoteNotificationSpec.m; sourceTree = "<group>"; };
 		0E333FBC1BC44060006B56BF /* MMXTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMXTests-Bridging-Header.h"; sourceTree = "<group>"; };
-		0E333FBD1BC44060006B56BF /* MMXUserSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXUserSpec.m; sourceTree = "<group>"; };
 		0E933B8D1BD5B74F008EE43A /* MagnetMax.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MagnetMax.plist; sourceTree = "<group>"; };
 		4881B281C03C15213696FADC /* Pods-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-ios/Pods-ios.release.xcconfig"; sourceTree = "<group>"; };
 		8E7C3DC8A699C0F7010B4FF7 /* Pods_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,19 +103,15 @@
 		0E333FAC1BC44060006B56BF /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				0E980A741BD6D88000708FB0 /* Helpers */,
 				0E933B8D1BD5B74F008EE43A /* MagnetMax.plist */,
 				0E333FAD1BC44060006B56BF /* CoreData */,
 				0E333FB11BC44060006B56BF /* Info.plist */,
 				0E333FB21BC44060006B56BF /* MathSpec.m */,
 				0E333FB41BC44060006B56BF /* MMXChannelSpec.m */,
-				0E333FB51BC44060006B56BF /* MMXClientDelegateSpy.h */,
-				0E333FB61BC44060006B56BF /* MMXClientDelegateSpy.m */,
-				0E333FB71BC44060006B56BF /* MMXClientSpec.m */,
 				0E333FB91BC44060006B56BF /* MMXMessageSpec.m */,
-				0E333FBA1BC44060006B56BF /* MMXPubSubManagerSpec.m */,
 				0E333FBB1BC44060006B56BF /* MMXRemoteNotificationSpec.m */,
 				0E333FBC1BC44060006B56BF /* MMXTests-Bridging-Header.h */,
-				0E333FBD1BC44060006B56BF /* MMXUserSpec.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -134,6 +124,15 @@
 				0E333FB01BC44060006B56BF /* MMXKeyedUnarchiverSpec.m */,
 			);
 			path = CoreData;
+			sourceTree = "<group>";
+		};
+		0E980A741BD6D88000708FB0 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				0E333FB51BC44060006B56BF /* MMXClientDelegateSpy.h */,
+				0E333FB61BC44060006B56BF /* MMXClientDelegateSpy.m */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 		28D152D2E666AFD759570949 /* Pods */ = {
@@ -278,13 +277,10 @@
 				0E333FC01BC44060006B56BF /* MMXKeyedUnarchiverSpec.m in Sources */,
 				0E333FCA1BC44060006B56BF /* MMXRemoteNotificationSpec.m in Sources */,
 				0E333FBF1BC44060006B56BF /* MMXKeyedArchiverSpec.m in Sources */,
-				0E333FC91BC44060006B56BF /* MMXPubSubManagerSpec.m in Sources */,
 				0E333FBE1BC44060006B56BF /* MMXDataModelSpec.m in Sources */,
 				0E333FC81BC44060006B56BF /* MMXMessageSpec.m in Sources */,
 				0E333FC41BC44060006B56BF /* MMXChannelSpec.m in Sources */,
 				0E333FC21BC44060006B56BF /* MathSpec.m in Sources */,
-				0E333FCB1BC44060006B56BF /* MMXUserSpec.m in Sources */,
-				0E333FC61BC44060006B56BF /* MMXClientSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
