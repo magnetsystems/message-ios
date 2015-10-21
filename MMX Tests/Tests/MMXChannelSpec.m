@@ -108,6 +108,26 @@ describe(@"MMXChannel", ^{
 			
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
+
+		it(@"should not have any tags set on it", ^{
+			
+			NSString *channelName = [NSString stringWithFormat:@"channelName_%f", [[NSDate date] timeIntervalSince1970]];
+			NSString *channelSummary = [NSString stringWithFormat:@"channelSummary_%f", [[NSDate date] timeIntervalSince1970]];
+			__block BOOL _isSuccess = NO;
+			
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
+				[channel tagsWithSuccess:^(NSSet *tags) {
+					_isSuccess = YES;
+					[[expectFutureValue(theValue(tags.count)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beZero];
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
 	});
 
 	context(@"when finding a channel by name", ^{
@@ -128,10 +148,37 @@ describe(@"MMXChannel", ^{
 		});
 	});
 
-	context(@"when finding a channel by tag", ^{
-		[[MMXLogger sharedLogger] setLevel:MMXLoggerLevelVerbose];
-		[[MMXLogger sharedLogger] startLogging];
+	context(@"when setting tags on a channel", ^{
+		
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-retain-cycles"
+		it(@"retain only those tags", ^{
+			NSString *channelName = [NSString stringWithFormat:@"channelName_%f", [[NSDate date] timeIntervalSince1970]];
+			NSString *channelSummary = [NSString stringWithFormat:@"channelSummary_%f", [[NSDate date] timeIntervalSince1970]];
+			__block BOOL _isSuccess = NO;
+			NSSet *tagSet = [NSSet setWithObjects:@"tag1",@"tag2", nil];
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
+				[channel setTags:tagSet success:^{
+					[channel tagsWithSuccess:^(NSSet *tags2) {
+						[[expectFutureValue(theValue(tags2.count)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:theValue(tagSet.count)];
+						_isSuccess = YES;
+					} failure:^(NSError *error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+#pragma clang diagnostic pop
+	});
 
+	context(@"when searching by tags", ^{
+		
 		it(@"should only return one valid channel for the test tag", ^{
 			__block BOOL _isSuccess = NO;
 			[MMXChannel findByTags:[NSSet setWithObject:@"test_topic_tag"] limit:100 offset:0 success:^(int totalCount, NSArray *channels) {
@@ -148,7 +195,7 @@ describe(@"MMXChannel", ^{
 			} failure:^(NSError *error) {
 				_isSuccess = NO;
 			}];
-
+			
 			//This test requires prepopulated data(a channel tagged with "test_topic_tag") to be on the server when the test is run
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
