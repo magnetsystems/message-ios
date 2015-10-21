@@ -174,10 +174,93 @@ describe(@"MMXChannel", ^{
 			//This test requires prepopulated data(a channel named "test_topic") to be on the server when the test is run
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
-		
 	});
 	
-	context(@"when fetching all public channels", ^{
+	context(@"when publishing to a channel", ^{
+		
+		it(@"should deliver a valid MMXMessage if the user is subscribed", ^{
+			
+			NSString *channelName = [NSString stringWithFormat:@"publicChannelName_%f", [[NSDate date] timeIntervalSince1970]];
+			NSString *channelSummary = [NSString stringWithFormat:@"publicChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
+			__block MMXMessage *receivedMessage;
+			__block BOOL _isSuccess = NO;
+			
+			NSDictionary *messageContent = @{@"Something1":@"Content1"};
+
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
+				[[expectFutureValue(theValue(channel.isSubscribed)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+				[channel publish:messageContent success:^(MMXMessage *message) {
+					_isSuccess = YES;
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			
+			[[MMXDidReceiveMessageNotification shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] bePostedEvaluatingBlock:^(NSNotification *notification){
+				receivedMessage = notification.userInfo[MMXMessageKey];
+				NSLog(@"received message with messageID: %@", receivedMessage.messageID);
+			}];
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+			[[expectFutureValue(receivedMessage.messageID) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNonNil];
+			[[expectFutureValue(receivedMessage.recipients) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNil];
+			[[expectFutureValue(receivedMessage.messageContent) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:messageContent];
+			[[expectFutureValue(theValue(receivedMessage.messageType)) should] equal:theValue(MMXMessageTypeChannel)];
+			[[expectFutureValue(receivedMessage.sender.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
+			[[expectFutureValue(receivedMessage.channel) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNonNil];
+			[[expectFutureValue(receivedMessage.channel.name) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:channelName.lowercaseString];
+
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+		
+		it(@"should NOT deliver a MMXMessage if the user is not subscribed", ^{
+			
+			NSString *channelName = [NSString stringWithFormat:@"publicChannelName_%f", [[NSDate date] timeIntervalSince1970]];
+			NSString *channelSummary = [NSString stringWithFormat:@"publicChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
+			__block MMXMessage *receivedMessage;
+			__block BOOL _isSuccess = NO;
+			
+			NSDictionary *messageContent = @{@"Something2":@"Content2"};
+			
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
+				[channel unSubscribeWithSuccess:^{
+					[[expectFutureValue(theValue(channel.isSubscribed)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNo];
+					[channel publish:messageContent success:^(MMXMessage *message) {
+						_isSuccess = YES;
+					} failure:^(NSError *error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			
+			[[MMXDidReceiveMessageNotification shouldNotEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT/2.0)] bePostedEvaluatingBlock:^(NSNotification *notification){
+				receivedMessage = notification.userInfo[MMXMessageKey];
+				NSLog(@"received message with messageID: %@", receivedMessage.messageID);
+			}];
+			
+//			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+//			[[expectFutureValue(receivedMessage.messageID) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNonNil];
+//			[[expectFutureValue(receivedMessage.recipients) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNil];
+//			[[expectFutureValue(receivedMessage.messageContent) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:messageContent];
+//			[[expectFutureValue(theValue(receivedMessage.messageType)) should] equal:theValue(MMXMessageTypeChannel)];
+//			[[expectFutureValue(receivedMessage.sender.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
+//			[[expectFutureValue(receivedMessage.channel) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNonNil];
+//			[[expectFutureValue(receivedMessage.channel.name) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:channelName];
+			
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+	});
+
+	
+	context(@"when getting all public channels", ^{
 		it(@"should return more than one channel", ^{
 			__block NSArray *_fetchedChannels = @[]; // Set should start empty
 			__block int _totalCount = 0; // Start value at zero
@@ -214,7 +297,7 @@ describe(@"MMXChannel", ^{
 		});
 	});
 
-	context(@"when fetching all private channels", ^{
+	context(@"when getting all private channels", ^{
 		it(@"should return more than one channel", ^{
 			__block NSArray *_fetchedChannels = @[]; // Set should start empty
 			__block int _totalCount = 0; // Start value at zero
@@ -317,6 +400,8 @@ describe(@"MMXChannel", ^{
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
 	});
+	
+	
 	
 	context(@"when getting subscribers to a channel", ^{
 		it(@"should return at least one user", ^{
