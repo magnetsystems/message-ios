@@ -171,6 +171,20 @@ describe(@"MMXChannel", ^{
 			} failure:^(NSError *error) {
 				_isSuccess = NO;
 			}];
+			
+			__block MMXInvite *receivedInvite;
+
+			[[MMXDidReceiveChannelInviteNotification shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] bePostedEvaluatingBlock:^(NSNotification *notification){
+				receivedInvite = notification.userInfo[MMXInviteKey];
+			}];
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+			[[expectFutureValue(receivedInvite.timestamp) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNonNil];
+			[[expectFutureValue(receivedInvite.comments) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:@"No commment"];
+			[[expectFutureValue(receivedInvite.sender.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
+			[[expectFutureValue(receivedInvite.channel) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNonNil];
+			[[expectFutureValue(receivedInvite.channel.name) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:@"test_topic"];
+
 			//This test requires prepopulated data(a channel named "test_topic") to be on the server when the test is run
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
