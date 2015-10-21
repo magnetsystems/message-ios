@@ -246,22 +246,22 @@ int const kReconnectionTimerInterval = 4;
 
 - (BOOL)connect {
 	if (self.configuration == nil) {
-		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: Configuration ERROR (self.configuration == nil)"];
+		[[MMXLogger sharedLogger] error:@"MMXClient -connect: Configuration ERROR (self.configuration == nil)"];
 		return NO;
 	} else if (self.configuration.baseURL == nil) {
-		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: Configuration ERROR (self.configuration.baseURL == nil)"];
+		[[MMXLogger sharedLogger] error:@"MMXClient -connect: Configuration ERROR (self.configuration.baseURL == nil)"];
 		return NO;
 	} else if (self.username == nil) {
-		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: username ERROR (username == nil)"];
+		[[MMXLogger sharedLogger] error:@"MMXClient -connect: username ERROR (username == nil)"];
 		return NO;
 	} else if (self.deviceID == nil) {
-		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: deviceID ERROR (deviceID == nil)"];
+		[[MMXLogger sharedLogger] error:@"MMXClient -connect: deviceID ERROR (deviceID == nil)"];
 		return NO;
 	} else if (self.accessToken == nil) {
-		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: userToken ERROR (userToken == nil)"];
+		[[MMXLogger sharedLogger] error:@"MMXClient -connect: userToken ERROR (userToken == nil)"];
 		return NO;
 	} else if (self.appID == nil) {
-		[[MMXLogger sharedLogger] error:@"MMXClient -updateUsername: self.appID ERROR (self.appID == nil)"];
+		[[MMXLogger sharedLogger] error:@"MMXClient -connect: self.appID ERROR (self.appID == nil)"];
 		return NO;
 	} else {
 		[self openStream];
@@ -492,7 +492,7 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (NSString *)sendDeliveryConfirmationForAddress:(MMXInternalAddress *)address messageID:(NSString *)messageID toDeviceID:(NSString *)deviceID {
-	NSString *sender = [NSString stringWithFormat:@"%@%%%@@%@", address.username, self.configuration.appID, self.configuration.domain];
+	NSString *sender = [NSString stringWithFormat:@"%@%%%@@%@", address.username, self.appID, self.configuration.domain];
 	if (deviceID) {
 		sender = [NSString stringWithFormat:@"%@/%@", sender, deviceID];
 	}
