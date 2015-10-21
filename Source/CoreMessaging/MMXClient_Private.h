@@ -36,7 +36,6 @@ extern int const kTempVersionMinor;
 @property (nonatomic, strong) XMPPStream *xmppStream;
 @property (nonatomic, strong) XMPPIDTracker *iqTracker;
 @property (nonatomic, strong) dispatch_queue_t mmxQueue;
-@property (nonatomic, readwrite) BOOL anonymousConnection;
 @property (nonatomic, readwrite) NSString *deviceToken;
 @property (nonatomic, copy) NSString *accessToken;
 @property (nonatomic, copy) NSString *username;

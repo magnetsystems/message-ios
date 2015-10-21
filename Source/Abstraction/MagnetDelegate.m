@@ -172,15 +172,11 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 - (void)client:(MMXClient *)client didReceiveConnectionStatusChange:(MMXConnectionStatus)connectionStatus error:(NSError *)error {
 	switch (connectionStatus) {
 		case MMXConnectionStatusAuthenticated: {
-			    double delayInSeconds = 0.2;
-				dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-				dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-					if (self.maxInitSuccessBlock) {
-						self.maxInitSuccessBlock();
-						self.maxInitSuccessBlock = nil;
-						self.maxInitFailureBlock = nil;
-					}
-				});
+				if (self.maxInitSuccessBlock) {
+					self.maxInitSuccessBlock();
+					self.maxInitSuccessBlock = nil;
+					self.maxInitFailureBlock = nil;
+				}
 			}
 			break;
 		case MMXConnectionStatusAuthenticationFailure: {

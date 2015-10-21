@@ -276,7 +276,6 @@ int const kReconnectionTimerInterval = 4;
     if (![self hasValidCredentials]) {
         return;
     }
-    self.anonymousConnection = NO;
     // If credential was not set, look for saved credential
     if (!self.configuration.credential && self.configuration.shouldUseCredentialStorage) {
         self.configuration.credential = [self savedCredential];
@@ -783,14 +782,13 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error {
-// 	[self updateConnectionStatus:MMXConnectionStatusAuthenticationFailure error:nil];
 	NSError *authError = [MMXClient errorWithTitle:@"Authentication Failure" message:@"Not Authorized. Please check your credentials and try again." code:401];
 	[self updateConnectionStatus:MMXConnectionStatusAuthenticationFailure error:authError];
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender {
-	[self updateConnectionStatus:MMXConnectionStatusAuthenticated error:nil];
 	[self postAuthenticationTasks];
+	[self updateConnectionStatus:MMXConnectionStatusAuthenticated error:nil];
 }
 
 - (void)postAuthenticationTasks {
@@ -799,9 +797,7 @@ int const kReconnectionTimerInterval = 4;
 	} else {
 		[self updatePresenceWithPriority:24];
 	}
-	if (!self.anonymousConnection) {
-		[self sendArchivedMessages];
-	}
+	[self sendArchivedMessages];
 }
 
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error {
