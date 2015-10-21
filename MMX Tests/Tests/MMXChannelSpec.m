@@ -14,7 +14,7 @@
 
 SPEC_BEGIN(MMXChannelSpec)
 
-describe(@"MMXMessage", ^{
+describe(@"MMXChannel", ^{
 	
 	NSString *senderUsername = [NSString stringWithFormat:@"sender_%f", [[NSDate date] timeIntervalSince1970]];
 	NSString *senderPassword = @"magnet";
@@ -45,50 +45,22 @@ describe(@"MMXMessage", ^{
 
 		__block BOOL _isSuccess = NO;
 		
-		[MMUser logout:^{
-			_isSuccess = YES;
-		} failure:^(NSError * _Nonnull error) {
-			_isSuccess = NO;
-		}];
-		
-		[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-	});
-
-	context(@"when pre-registering the users", ^{
-		
-		it(@"should return success for sender", ^{
-			
-			// Create some users
-			__block BOOL _isSuccess = NO;
-			
-			[sender register:^(MMUser * _Nonnull user) {
-				[MMUser login:senderCredential success:^{
-					[MagnetMax initModule:[MMX sharedInstance] success:^{
-						_isSuccess = YES;
-					} failure:^(NSError * error) {
-						_isSuccess = NO;
-					}];
-				} failure:^(NSError * _Nonnull error) {
+		[sender register:^(MMUser * _Nonnull user) {
+			[MMUser login:senderCredential success:^{
+				[MagnetMax initModule:[MMX sharedInstance] success:^{
+					[MMX start];
+					_isSuccess = YES;
+				} failure:^(NSError * error) {
 					_isSuccess = NO;
 				}];
 			} failure:^(NSError * _Nonnull error) {
 				_isSuccess = NO;
 			}];
-			
-			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-		});
+		} failure:^(NSError * _Nonnull error) {
+			_isSuccess = NO;
+		}];
 		
-		afterEach(^{
-			
-			__block BOOL _isSuccess = NO;
-			[MMUser logout:^{
-				_isSuccess = YES;
-			} failure:^(NSError * error) {
-				_isSuccess = NO;
-			}];
-			
-			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-		});
+		[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 	});
 
 	context(@"when creating a channel", ^{
@@ -99,23 +71,13 @@ describe(@"MMXMessage", ^{
 			NSString *channelSummary = [NSString stringWithFormat:@"channelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 			__block BOOL _isSuccess = NO;
 			
-			[MMUser login:senderCredential success:^{
-				[MagnetMax initModule:[MMX sharedInstance] success:^{
-					[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
-						[[channel.name shouldNot] beNil];
-						[[channel.summary shouldNot] beNil];
-						[[channel.creationDate shouldNot] beNil];
-						[[channel.ownerUsername shouldNot] beNil];
-						_isSuccess = YES;
-					} failure:^(NSError *error) {
-						_isSuccess = NO;
-					}];
-
-				} failure:^(NSError * error) {
-					_isSuccess = NO;
-				}];
-
-			} failure:^(NSError * _Nonnull error) {
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+				[[channel.name shouldNot] beNil];
+				[[channel.summary shouldNot] beNil];
+				[[channel.creationDate shouldNot] beNil];
+				[[channel.ownerUsername shouldNot] beNil];
+				_isSuccess = YES;
+			} failure:^(NSError *error) {
 				_isSuccess = NO;
 			}];
 			
@@ -128,41 +90,19 @@ describe(@"MMXMessage", ^{
 			NSString *channelSummary = [NSString stringWithFormat:@"channelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 			__block BOOL _isSuccess = NO;
 			
-			[MMUser login:senderCredential success:^{
-				[MagnetMax initModule:[MMX sharedInstance] success:^{
-					[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
-						[MMXChannel channelsStartingWith:channelName limit:10 offset:0 success:^(int totalCount, NSArray *channels) {
-							MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
-							[[returnedChannel.creationDate shouldNot] beNil];
-							[[theValue(totalCount) should] equal:theValue(1)];
-							[[returnedChannel shouldNot] beNil];
-							[[theValue([channelSummary isEqualToString:returnedChannel.summary]) should] beYes];
-							[[theValue([returnedChannel.ownerUsername isEqualToString:[MMUser currentUser].userName]) should] beYes];
-							_isSuccess = YES;
-						} failure:^(NSError *error) {
-							_isSuccess = NO;
-						}];
-					} failure:^(NSError *error) {
-						_isSuccess = NO;
-					}];
-				} failure:^(NSError * error) {
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
+				[MMXChannel channelsStartingWith:channelName limit:10 offset:0 success:^(int totalCount, NSArray *channels) {
+					MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
+					[[returnedChannel.creationDate shouldNot] beNil];
+					[[theValue(totalCount) should] equal:theValue(1)];
+					[[returnedChannel shouldNot] beNil];
+					[[theValue([channelSummary isEqualToString:returnedChannel.summary]) should] beYes];
+					[[theValue([returnedChannel.ownerUsername isEqualToString:[MMUser currentUser].userName]) should] beYes];
+					_isSuccess = YES;
+				} failure:^(NSError *error) {
 					_isSuccess = NO;
 				}];
-
 			} failure:^(NSError *error) {
-				_isSuccess = NO;
-			}];
-			
-			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-		});
-		
-		afterEach(^{
-			
-			__block BOOL _isSuccess = NO;
-			
-			[MMUser logout:^{
-				_isSuccess = YES;
-			} failure:^(NSError * _Nonnull error) {
 				_isSuccess = NO;
 			}];
 			
@@ -173,101 +113,68 @@ describe(@"MMXMessage", ^{
 	context(@"when finding a channel by name", ^{
 		it(@"should only return one valid channel", ^{
 			__block BOOL _isSuccess = NO;
-			[MMUser login:senderCredential success:^{
-				[MagnetMax initModule:[MMX sharedInstance] success:^{
-					[MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
-						[[theValue([MMXUtils objectIsValidString:channel.name]) should] beYes];
-						[[theValue([MMXUtils objectIsValidString:channel.summary]) should] beYes];
-						[[theValue([MMXUtils objectIsValidString:channel.ownerUsername]) should] beYes];
-						[[theValue(channel.isPublic) should] beYes];
-						[[channel.creationDate shouldNot] beNil];
-						_isSuccess = YES;
-					} failure:^(NSError *error) {
-						_isSuccess = NO;
-					}];
-				} failure:^(NSError * error) {
-					_isSuccess = NO;
-				}];
-
+			[MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
+				[[theValue([MMXUtils objectIsValidString:channel.name]) should] beYes];
+				[[theValue([MMXUtils objectIsValidString:channel.summary]) should] beYes];
+				[[theValue([MMXUtils objectIsValidString:channel.ownerUsername]) should] beYes];
+				[[theValue(channel.isPublic) should] beYes];
+				[[channel.creationDate shouldNot] beNil];
+				_isSuccess = YES;
 			} failure:^(NSError *error) {
 				_isSuccess = NO;
 			}];
+
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
 	});
-	
+
 	context(@"when finding a channel by tag", ^{
+		[[MMXLogger sharedLogger] setLevel:MMXLoggerLevelVerbose];
+		[[MMXLogger sharedLogger] startLogging];
+
 		it(@"should only return one valid channel for the test tag", ^{
 			__block BOOL _isSuccess = NO;
-			[MMUser login:senderCredential success:^{
-				[MagnetMax initModule:[MMX sharedInstance] success:^{
-					[MMXChannel findByTags:[NSSet setWithObject:@"test_topic_tag"] limit:100 offset:0 success:^(int totalCount, NSArray *channels) {
-						MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
-						[[returnedChannel.creationDate shouldNot] beNil];
-						[[theValue(totalCount) should] equal:theValue(1)];
-						[[returnedChannel shouldNot] beNil];
-						[[theValue([MMXUtils objectIsValidString:returnedChannel.name]) should] beYes];
-						[[theValue([MMXUtils objectIsValidString:returnedChannel.summary]) should] beYes];
-						[[theValue([MMXUtils objectIsValidString:returnedChannel.ownerUsername]) should] beYes];
-						[[theValue(returnedChannel.isPublic) should] beYes];
-						[[returnedChannel.creationDate shouldNot] beNil];
-						_isSuccess = YES;
-					} failure:^(NSError *error) {
-						_isSuccess = NO;
-					}];
-				} failure:^(NSError * error) {
-					_isSuccess = NO;
-				}];
-
+			[MMXChannel findByTags:[NSSet setWithObject:@"test_topic_tag"] limit:100 offset:0 success:^(int totalCount, NSArray *channels) {
+				MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
+				[[returnedChannel.creationDate shouldNot] beNil];
+				[[theValue(totalCount) should] equal:theValue(1)];
+				[[returnedChannel shouldNot] beNil];
+				[[theValue([MMXUtils objectIsValidString:returnedChannel.name]) should] beYes];
+				[[theValue([MMXUtils objectIsValidString:returnedChannel.summary]) should] beYes];
+				[[theValue([MMXUtils objectIsValidString:returnedChannel.ownerUsername]) should] beYes];
+				[[theValue(returnedChannel.isPublic) should] beYes];
+				[[returnedChannel.creationDate shouldNot] beNil];
+				_isSuccess = YES;
 			} failure:^(NSError *error) {
 				_isSuccess = NO;
 			}];
+
+			//This test requires prepopulated data(a channel tagged with "test_topic_tag") to be on the server when the test is run
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
 	});
-	
+
 	context(@"when sending an invite", ^{
 
 		it(@"should succeed if trying to send from a channel object that is fully hydrated", ^{
 			__block BOOL _isSuccess = NO;
-			[MMUser login:senderCredential success:^{
-				[MagnetMax initModule:[MMX sharedInstance] success:^{
-					[MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
-						[channel inviteUser:[MMUser currentUser] comments:@"No commment" success:^(MMXInvite *invite) {
-							[[invite shouldNot] beNil];
-							[[theValue([channel isEqual:invite.channel]) should] beYes];
-							[[theValue([[MMUser currentUser] isEqual:invite.sender]) should] beYes];
-							[[theValue([invite.comments isEqualToString:@""]) should] beNo];
-							_isSuccess = YES;
-						} failure:^(NSError *error) {
-							_isSuccess = NO;
-						}];
-					} failure:^(NSError *error) {
-						_isSuccess = NO;
-					}];
-				} failure:^(NSError * error) {
+			[MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
+				[channel inviteUser:[MMUser currentUser] comments:@"No commment" success:^(MMXInvite *invite) {
+					[[invite shouldNot] beNil];
+					[[theValue([channel isEqual:invite.channel]) should] beYes];
+					[[theValue([[MMUser currentUser] isEqual:invite.sender]) should] beYes];
+					[[theValue([invite.comments isEqualToString:@""]) should] beNo];
+					_isSuccess = YES;
+				} failure:^(NSError *error) {
 					_isSuccess = NO;
 				}];
-
 			} failure:^(NSError *error) {
 				_isSuccess = NO;
 			}];
+			//This test requires prepopulated data(a channel named "test_topic") to be on the server when the test is run
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
 		
-		afterEach(^{
-			
-			__block BOOL _isSuccess = NO;
-			
-			[MMUser logout:^{
-				_isSuccess = YES;
-			} failure:^(NSError * _Nonnull error) {
-				_isSuccess = NO;
-			}];
-			
-			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-		});
-
 	});
 	
 	context(@"when fetching all public channels", ^{
@@ -275,16 +182,9 @@ describe(@"MMXMessage", ^{
 			__block NSArray *_fetchedChannels = @[]; // Set should start empty
 			__block int _totalCount = 0; // Start value at zero
 			
-			[MMUser login:senderCredential success:^{
-				[MagnetMax initModule:[MMX sharedInstance] success:^{
-					[MMXChannel allPublicChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
-						_fetchedChannels = channels;
-						_totalCount = totalCount;
-					} failure:^(NSError * error) {
-					}];
-				} failure:^(NSError * error) {
-				}];
-
+			[MMXChannel allPublicChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
+				_fetchedChannels = channels;
+				_totalCount = totalCount;
 			} failure:^(NSError * error) {
 			}];
 			
@@ -296,44 +196,22 @@ describe(@"MMXMessage", ^{
 		it(@"should have the same channel for offset 0 channel 1 as offset 1 channel 0", ^{
 			__block BOOL _isSuccess = NO;
 			
-			[MMUser login:senderCredential success:^{
-				[MagnetMax initModule:[MMX sharedInstance] success:^{
-					[MMXChannel allPublicChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels1) {
-						MMXChannel *channelAtOffset0Position1 = channels1[1];
-						[MMXChannel allPublicChannelsWithLimit:100 offset:1 success:^(int totalCount, NSArray *channels2) {
-							MMXChannel *channelAtOffset1Position0 = channels2[0];
-							[[theValue([channelAtOffset0Position1 isEqual:channelAtOffset1Position0]) should] beYes];
-							_isSuccess = YES;
-						} failure:^(NSError * error) {
-							_isSuccess = NO;
-						}];
-					} failure:^(NSError * error) {
-						_isSuccess = NO;
-					}];
+			[MMXChannel allPublicChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels1) {
+				MMXChannel *channelAtOffset0Position1 = channels1[1];
+				[MMXChannel allPublicChannelsWithLimit:100 offset:1 success:^(int totalCount, NSArray *channels2) {
+					MMXChannel *channelAtOffset1Position0 = channels2[0];
+					[[theValue([channelAtOffset0Position1 isEqual:channelAtOffset1Position0]) should] beYes];
+					_isSuccess = YES;
 				} failure:^(NSError * error) {
 					_isSuccess = NO;
 				}];
-
-			} failure:^(NSError *error) {
+			} failure:^(NSError * error) {
 				_isSuccess = NO;
 			}];
 			
 			// Assert
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
-		afterEach(^{
-			
-			__block BOOL _isSuccess = NO;
-			
-			[MMUser logout:^{
-				_isSuccess = YES;
-			} failure:^(NSError * _Nonnull error) {
-				_isSuccess = NO;
-			}];
-			
-			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-		});
-
 	});
 
 	context(@"when fetching all private channels", ^{
@@ -347,23 +225,16 @@ describe(@"MMXMessage", ^{
 			NSString *channelName2 = [NSString stringWithFormat:@"privateChannelName_%f", [[NSDate date] timeIntervalSince1970]];
 			NSString *channelSummary2 = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 
-			[MMUser login:senderCredential success:^{
-				[MagnetMax initModule:[MMX sharedInstance] success:^{
-					[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
-						[MMXChannel createWithName:channelName2 summary:channelSummary2 isPublic:NO success:^(MMXChannel *channel) {
-							[MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
-								_fetchedChannels = channels;
-								_totalCount = totalCount;
-							} failure:^(NSError * error) {
-							}];
-						} failure:^(NSError * error) {
-						}];
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+				[MMXChannel createWithName:channelName2 summary:channelSummary2 isPublic:NO success:^(MMXChannel *channel) {
+					[MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
+						_fetchedChannels = channels;
+						_totalCount = totalCount;
 					} failure:^(NSError * error) {
 					}];
 				} failure:^(NSError * error) {
 				}];
-				
-			} failure:^(NSError *error) {
+			} failure:^(NSError * error) {
 			}];
 
 			// Assert
@@ -374,25 +245,16 @@ describe(@"MMXMessage", ^{
 		it(@"should have the same channel for offset 0 channel 1 as offset 1 channel 0", ^{
 			__block BOOL _isSuccess = NO;
 			
-			[MMUser login:senderCredential success:^{
-				[MagnetMax initModule:[MMX sharedInstance] success:^{
-					[MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels1) {
-						MMXChannel *channelAtOffset0Position1 = channels1[1];
-						[MMXChannel allPrivateChannelsWithLimit:100 offset:1 success:^(int totalCount, NSArray *channels2) {
-							MMXChannel *channelAtOffset1Position0 = channels2[0];
-							[[theValue([channelAtOffset0Position1 isEqual:channelAtOffset1Position0]) should] beYes];
-							_isSuccess = YES;
-						} failure:^(NSError * error) {
-							_isSuccess = NO;
-						}];
-					} failure:^(NSError * error) {
-						_isSuccess = NO;
-					}];
+			[MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels1) {
+				MMXChannel *channelAtOffset0Position1 = channels1[1];
+				[MMXChannel allPrivateChannelsWithLimit:100 offset:1 success:^(int totalCount, NSArray *channels2) {
+					MMXChannel *channelAtOffset1Position0 = channels2[0];
+					[[theValue([channelAtOffset0Position1 isEqual:channelAtOffset1Position0]) should] beYes];
+					_isSuccess = YES;
 				} failure:^(NSError * error) {
 					_isSuccess = NO;
 				}];
-
-			} failure:^(NSError *error) {
+			} failure:^(NSError * error) {
 				_isSuccess = NO;
 			}];
 			
@@ -409,28 +271,19 @@ describe(@"MMXMessage", ^{
 			NSString *channelSummary = [NSString stringWithFormat:@"publicChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 			__block BOOL _isSuccess = NO;
 			
-			[MMUser login:senderCredential success:^{
-				[MagnetMax initModule:[MMX sharedInstance] success:^{
-					[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
-						[channel publish:@{@"key":@"value"} success:^(MMXMessage *message) {
-							[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
-								MMXMessage *msg = messages[0];
-								[[msg should] beNonNil];
-								[[theValue(totalCount > 0) should] beYes];
-								_isSuccess = YES;
-							} failure:^(NSError *error) {
-								_isSuccess = NO;
-							}];
-						} failure:^(NSError *error) {
-							_isSuccess = NO;
-						}];
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+				[channel publish:@{@"key":@"value"} success:^(MMXMessage *message) {
+					[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
+						MMXMessage *msg = messages[0];
+						[[msg should] beNonNil];
+						[[theValue(totalCount > 0) should] beYes];
+						_isSuccess = YES;
 					} failure:^(NSError *error) {
 						_isSuccess = NO;
 					}];
-				} failure:^(NSError * error) {
+				} failure:^(NSError *error) {
 					_isSuccess = NO;
 				}];
-
 			} failure:^(NSError *error) {
 				_isSuccess = NO;
 			}];
@@ -444,28 +297,19 @@ describe(@"MMXMessage", ^{
 			NSString *channelName = [NSString stringWithFormat:@"privateChannelName_%f", [[NSDate date] timeIntervalSince1970]];
 			NSString *channelSummary = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 			
-			[MMUser login:senderCredential success:^{
-				[MagnetMax initModule:[MMX sharedInstance] success:^{
-					[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
-						[channel publish:@{@"key":@"value"} success:^(MMXMessage *message) {
-							[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
-								MMXMessage *msg = messages[0];
-								[[msg should] beNonNil];
-								[[theValue(totalCount > 0) should] beYes];
-								_isSuccess = YES;
-							} failure:^(NSError *error) {
-								_isSuccess = NO;
-							}];
-						} failure:^(NSError *error) {
-							_isSuccess = NO;
-						}];
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+				[channel publish:@{@"key":@"value"} success:^(MMXMessage *message) {
+					[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
+						MMXMessage *msg = messages[0];
+						[[msg should] beNonNil];
+						[[theValue(totalCount > 0) should] beYes];
+						_isSuccess = YES;
 					} failure:^(NSError *error) {
 						_isSuccess = NO;
 					}];
-				} failure:^(NSError * error) {
+				} failure:^(NSError *error) {
 					_isSuccess = NO;
 				}];
-
 			} failure:^(NSError *error) {
 				_isSuccess = NO;
 			}];
@@ -478,32 +322,36 @@ describe(@"MMXMessage", ^{
 		it(@"should return at least one user", ^{
 			__block BOOL _isSuccess = NO;
 			
-			[MMUser login:senderCredential success:^{
-				[MagnetMax initModule:[MMX sharedInstance] success:^{
-					[MMXChannel subscribedChannelsWithSuccess:^(NSArray *channels) {
-						MMXChannel *myChannel = channels.firstObject;
-						[[myChannel shouldNot] beNil];
-						[myChannel subscribersWithLimit:100 offset:0 success:^(int totalCount, NSArray *subscribers) {
-							MMUser *usr = subscribers[0];
-							[[usr should] beNonNil];
-							[[theValue(totalCount > 0) should] beYes];
-							_isSuccess = YES;
-						} failure:^(NSError *error) {
-							_isSuccess = NO;
-						}];
-					} failure:^(NSError *error) {
-						_isSuccess = NO;
-					}];
-				} failure:^(NSError * error) {
+			[MMXChannel subscribedChannelsWithSuccess:^(NSArray *channels) {
+				MMXChannel *myChannel = channels.firstObject;
+				[[myChannel shouldNot] beNil];
+				[myChannel subscribersWithLimit:100 offset:0 success:^(int totalCount, NSArray *subscribers) {
+					MMUser *usr = subscribers[0];
+					[[usr should] beNonNil];
+					[[theValue(totalCount > 0) should] beYes];
+					_isSuccess = YES;
+				} failure:^(NSError *error) {
 					_isSuccess = NO;
 				}];
-
-			} failure:^(NSError * error) {
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
 			}];
 			
 			// Assert
 			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 		});
+	});
+	
+	afterAll(^{
+		__block BOOL _isSuccess = NO;
+		
+		[MMUser logout:^{
+			_isSuccess = YES;
+		} failure:^(NSError * _Nonnull error) {
+			_isSuccess = NO;
+		}];
+		
+		[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 	});
 
 });
