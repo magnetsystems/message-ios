@@ -254,12 +254,16 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	msg.messageContent = message.metaData;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
-	MMUser *user = [MMUser new];
-	user.userName = message.senderUserID.username;
-	msg.sender = user;
-	[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
-														object:nil
-													  userInfo:@{MMXMessageKey:msg}];
+	[MMUser usersWithUserNames:@[message.senderUserID.username] success:^(NSArray *users) {
+		msg.sender = users.firstObject;
+		[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
+															object:nil
+														  userInfo:@{MMXMessageKey:msg}];
+		
+	} failure:^(NSError * error) {
+		[[MMLogger sharedLogger] error:@"Failed to get users for Delivery Confirmation\n%@",error];
+	}];
+
 }
 
 - (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID {
@@ -274,25 +278,36 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 }
 
 - (void)client:(MMXClient *)client didFailToSendMessage:(NSString *)messageID recipients:(NSArray *)recipients error:(NSError *)error {
-	[[NSNotificationCenter defaultCenter] postNotificationName:MMXMessageSendErrorNotification
-														object:nil
-													  userInfo:@{MMXMessageSendErrorNSErrorKey:error,
-																 MMXMessageSendErrorMessageIDKey:messageID,
-																 MMXMessageSendErrorRecipientsKey:recipients}];
+	if (recipients && recipients.count) {
+		NSArray *usernames = [recipients valueForKey:@"username"];
+		[MMUser usersWithUserNames:usernames success:^(NSArray *users) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:MMXMessageSendErrorNotification
+																object:nil
+															  userInfo:@{MMXMessageSendErrorNSErrorKey:error,
+																		 MMXMessageSendErrorMessageIDKey:messageID,
+																		 MMXMessageSendErrorRecipientsKey:users}];
+			
+		} failure:^(NSError * error) {
+			[[MMLogger sharedLogger] error:@"Failed to get users for Delivery Confirmation\n%@",error];
+		}];
+	}
 }
 
 - (void)client:(MMXClient *)client didDeliverMessage:(NSString *)messageID recipient:(id<MMXAddressable>)recipient {
-	MMUser *user = [MMUser new];
 	MMXInternalAddress *address = recipient.address;
 	if (address) {
 		//Converting to MMXUserID will handle any exscaping needed
 		MMXUserID *userID = [MMXUserID userIDFromAddress:address];
-		user.userName = userID.username;
+		[MMUser usersWithUserNames:@[userID.username] success:^(NSArray *users) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveDeliveryConfirmationNotification
+																object:nil
+															  userInfo:@{MMXRecipientKey:users.firstObject,
+																		 MMXMessageIDKey:messageID}];
+
+		} failure:^(NSError * error) {
+			[[MMLogger sharedLogger] error:@"Failed to get users for Delivery Confirmation\n%@",error];
+		}];
 	}
-	[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveDeliveryConfirmationNotification
-														object:nil
-													  userInfo:@{MMXRecipientKey:user,
-																 MMXMessageIDKey:messageID}];
 }
 
 + (NSError *)notLoggedInError {

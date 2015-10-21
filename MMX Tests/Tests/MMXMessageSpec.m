@@ -2,87 +2,79 @@
  * Copyright (c) 2012-2015 Magnet Systems, Inc. All rights reserved.
  */
 
-#import <Kiwi/Kiwi.h>
-#import "MMX.h"
-@import MagnetMobileServer;
+@import Kiwi;
+@import MagnetMax;
+@import MMX;
 
 #define DEFAULT_TEST_TIMEOUT 10.0
 
 SPEC_BEGIN(MMXMessageSpec)
-/*
-    describe(@"MMXMessage", ^{
 
-        NSString *senderUsername = [NSString stringWithFormat:@"sender_%f", [[NSDate date] timeIntervalSince1970]];
-        NSString *senderPassword = @"magnet";
-        NSURLCredential *senderCredential = [NSURLCredential credentialWithUser:senderUsername
-                                                                       password:senderPassword
-                                                                    persistence:NSURLCredentialPersistenceNone];
+	describe(@"MMXMessage", ^{
 
-        NSString *receiverUsername = [NSString stringWithFormat:@"receiver_%f", [[NSDate date] timeIntervalSince1970]];
-        NSString *receiverPassword = @"magnet";
-        NSURLCredential *receiverCredential = [NSURLCredential credentialWithUser:receiverUsername
-                                                                         password:receiverPassword
-                                                                      persistence:NSURLCredentialPersistenceNone];
-
-        MMUser *sender = [[MMUser alloc] init];
-        sender.userName = senderUsername;
-
-        MMUser *receiver = [[MMUser alloc] init];
-        receiver.userName = receiverUsername;
-
-        NSString *receiverDeviceID = [[NSUUID UUID] UUIDString];
-
-        NSDictionary *messageContent = @{
-                @"message": @"Hello Magnet"
-        };
-
-        __block NSString *_messageID;
-
-        beforeAll(^{
-            [MMXLogger sharedLogger].level = MMXLoggerLevelVerbose;
-            [[MMXLogger sharedLogger] startLogging];
-
-            [MMX setupWithConfiguration:@"default"];
-            [MMX start];
-
-            __block BOOL _isSuccess = NO;
-
-			[MMUser logout:^{
-                _isSuccess = YES;
-            } failure:^(NSError *error) {
-                _isSuccess = NO;
-            }];
-
-            [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-        });
+		NSString *senderUsername = [NSString stringWithFormat:@"sender_%f", [[NSDate date] timeIntervalSince1970]];
+		NSString *senderPassword = @"magnet";
+		NSString *firstName = @"first";
+		NSString *lastName = @"last";
+		NSString *email = @"sysadmin@company.com";
+		NSURLCredential *senderCredential = [NSURLCredential credentialWithUser:senderUsername
+																	   password:senderPassword
+																	persistence:NSURLCredentialPersistenceNone];
+		
+		MMUser *sender = [[MMUser alloc] init];
+		sender.userName = senderUsername;
+		sender.password = senderPassword;
+		sender.firstName = firstName;
+		sender.lastName = lastName;
+		sender.email = email;
+		
+		beforeAll(^{
+			
+//			NSString *filename = @"MagnetMax";
+//			NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:filename ofType:@"plist"];
+//			BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path];
+//			if (!exists) {
+//				//Try to fallover to mainBundle
+//				path = [[NSBundle mainBundle] pathForResource:filename ofType:@"plist"];
+//				
+//				exists = [[NSFileManager defaultManager] fileExistsAtPath:path];
+//				if (!exists) {
+//					NSAssert(exists, @"You must include your Configurations.plist file in the project. You can download this file on the Settings page of the Magnet Message Web Interface");
+//				}
+//			}
+//			id <MMServiceAdapterConfiguration> configuration = [[MMServiceAdapterPropertyListConfiguration alloc] initWithContentsOfFile:path];
+//			[MagnetMax configure:configuration];
+			
+			__block BOOL _isSuccess = NO;
+			
+			[sender register:^(MMUser * _Nonnull user) {
+				[MMUser login:senderCredential success:^{
+					[MagnetMax initModule:[MMX sharedInstance] success:^{
+						[MMX start];
+						_isSuccess = YES;
+					} failure:^(NSError * error) {
+						_isSuccess = NO;
+					}];
+				} failure:^(NSError * _Nonnull error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError * _Nonnull error) {
+				_isSuccess = NO;
+			}];
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
 
 		context(@"when sending a message", ^{
 
             it(@"should return success if the user is valid", ^{
 
-                MMXMessage *message = [MMXMessage messageToRecipients:[NSSet setWithArray:@[receiver]]
-                                                       messageContent:messageContent];
+                MMXMessage *message = [MMXMessage messageToRecipients:[NSSet setWithArray:@[sender]]
+													   messageContent:@{@"Something1":@"Content1"}];
 
                 __block BOOL _isSuccess = NO;
 				
-				[MMUser login:senderCredential success:^{
-                    _messageID = [message sendWithSuccess:^{
-                        _isSuccess = YES;
-                    }                             failure:^(NSError *error) {
-                        _isSuccess = NO;
-                    }];
-                }                    failure:^(NSError *error) {
-                    _isSuccess = NO;
-                }];
-
-                [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-            });
-
-            afterAll(^{
-
-                __block BOOL _isSuccess = NO;
-
-				[MMUser logout:^{
+				[message sendWithSuccess:^{
 					_isSuccess = YES;
 				} failure:^(NSError *error) {
 					_isSuccess = NO;
@@ -91,57 +83,108 @@ SPEC_BEGIN(MMXMessageSpec)
                 [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
             });
         });
-
         context(@"when receiving a message", ^{
 
-            it(@"should return the message", ^{
+			it(@"should return the message", ^{
+				
+				__block BOOL _isSuccess = NO;
+				
+				__block MMXMessage *receivedMessage;
+				
+				NSDictionary *messageContent = @{@"Something2":@"Content2"};
+				MMXMessage *message = [MMXMessage messageToRecipients:[NSSet setWithArray:@[sender]]
+													   messageContent:messageContent];
+				
+				NSString *messageID = [message sendWithSuccess:^{
+					_isSuccess = YES;
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+				
+				[[MMXDidReceiveMessageNotification shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] bePostedEvaluatingBlock:^(NSNotification *notification){
+					receivedMessage = notification.userInfo[MMXMessageKey];
+					NSLog(@"sent message with messageID: %@", messageID);
+					NSLog(@"received message with messageID: %@", receivedMessage.messageID);
+				}];
+				
+				[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+				[[expectFutureValue(receivedMessage.messageID) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNonNil];
+				[[expectFutureValue(receivedMessage.recipients) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] haveCountOf:1];
+				[[expectFutureValue(receivedMessage.messageContent) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:messageContent];
+				[[expectFutureValue(theValue(receivedMessage.messageType)) should] equal:theValue(MMXMessageTypeDefault)];
+				[[expectFutureValue(receivedMessage.sender.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
+				[[expectFutureValue(receivedMessage.channel) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNil];
+				
+			});
 
-                __block BOOL _isSuccess = NO;
+			it(@"should have fully hydrated MMUser objects for the sender and recipients", ^{
+				
+				__block BOOL _isSuccess = NO;
+				
+				__block MMXMessage *receivedMessage;
+				__block MMUser *senderUserObject;
+				__block MMUser *recipientUserObject;
+				
+				NSDictionary *messageContent = @{@"Something3":@"Content3"};
+				MMXMessage *message = [MMXMessage messageToRecipients:[NSSet setWithArray:@[sender]]
+													   messageContent:messageContent];
+				
+				NSString *messageID = [message sendWithSuccess:^{
+					_isSuccess = YES;
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+				
+				[[MMXDidReceiveMessageNotification shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] bePostedEvaluatingBlock:^(NSNotification *notification){
+					receivedMessage = notification.userInfo[MMXMessageKey];
+					[receivedMessage sendDeliveryConfirmation];
+					senderUserObject = receivedMessage.sender;
+					recipientUserObject = [receivedMessage.recipients allObjects].firstObject;
+					NSLog(@"sent message with messageID: %@", messageID);
+					NSLog(@"received message with messageID: %@", receivedMessage.messageID);
+				}];
 
-                NSString *originalDeviceID = [MMXDeviceManager deviceUUID];
+				__block NSString *confirmationMessageID;
+				__block MMUser *confirmationUserObject;
 
-                [MMXDeviceManager stub:@selector(deviceUUID) andReturn:receiverDeviceID];
+				[[MMXDidReceiveDeliveryConfirmationNotification shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] bePostedEvaluatingBlock:^(NSNotification *notification){
+					confirmationUserObject = notification.userInfo[MMXRecipientKey];
+					confirmationMessageID = notification.userInfo[MMXMessageIDKey];
+				}];
 
-				[MMUser login:receiverCredential success:^{
-                    [MMXDeviceManager stub:@selector(deviceUUID) andReturn:originalDeviceID];
-                    _isSuccess = YES;
-                }                    failure:^(NSError *error) {
-                    _isSuccess = NO;
-                }];
+				[[expectFutureValue(senderUserObject.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
+				[[expectFutureValue(senderUserObject.firstName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:firstName];
+				[[expectFutureValue(senderUserObject.lastName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:lastName];
+				[[expectFutureValue(senderUserObject.email) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:email];
 
-                __block MMXMessage *receivedMessage;
+				[[expectFutureValue(recipientUserObject.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
+				[[expectFutureValue(recipientUserObject.firstName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:firstName];
+				[[expectFutureValue(recipientUserObject.lastName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:lastName];
+				[[expectFutureValue(recipientUserObject.email) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:email];
+				
+				[[expectFutureValue(confirmationUserObject.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
+				[[expectFutureValue(confirmationUserObject.firstName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:firstName];
+				[[expectFutureValue(confirmationUserObject.lastName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:lastName];
+				[[expectFutureValue(confirmationUserObject.email) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:email];
 
-                [[MMXDidReceiveMessageNotification shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] bePostedEvaluatingBlock:^(NSNotification *notification){
-                    receivedMessage = notification.userInfo[MMXMessageKey];
-                    NSLog(@"sent message with messageID: %@", _messageID);
-                    NSLog(@"received message with messageID: %@", receivedMessage.messageID);
-                }];
+				[[expectFutureValue(confirmationMessageID) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:receivedMessage.messageID];
+			});
 
-                // FIXME: Below two issues need to be fixed!
-//                [[expectFutureValue(receivedMessage.messageID) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:_messageID];
-                [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-                [[expectFutureValue(receivedMessage.messageID) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNonNil];
-                [[expectFutureValue(receivedMessage.recipients) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] haveCountOf:1];
-                [[expectFutureValue(receivedMessage.messageContent) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:messageContent];
-                [[expectFutureValue(theValue(receivedMessage.messageType)) should] equal:theValue(MMXMessageTypeDefault)];
-                [[expectFutureValue(receivedMessage.sender.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
-                [[expectFutureValue(receivedMessage.channel) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNil];
-
-            });
-
-            afterAll(^{
-
-                __block BOOL _isSuccess = NO;
-
-				[MMUser logout:^{
-                    _isSuccess = YES;
-                } failure:^(NSError *error) {
-                    _isSuccess = NO;
-                }];
-
-                [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
-            });
         });
-    });
-*/
+		
+		afterAll(^{
+			
+			__block BOOL _isSuccess = NO;
+			
+			[MMUser logout:^{
+				_isSuccess = YES;
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+
+
+	});
 SPEC_END
