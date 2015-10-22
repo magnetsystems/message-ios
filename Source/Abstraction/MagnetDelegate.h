@@ -34,11 +34,11 @@
  *  @param failure - Block with an NSError with details about the call failure.
  */
 - (NSString *)sendMessage:(MMXMessage *)message
-				  success:(void (^)(void))success
+				  success:(void (^)(NSSet *invalidUsers))success
 				  failure:(void (^)(NSError *error))failure;
 
 - (NSString *)sendInternalMessageFormat:(MMXInternalMessageAdaptor *)message
-								success:(void (^)(void))success
+								success:(void (^)(NSSet *invalidUsers))success
 								failure:(void (^)(NSError *error))failure;
 
 + (NSError *)notLoggedInError;

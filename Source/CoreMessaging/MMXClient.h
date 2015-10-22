@@ -142,10 +142,11 @@ typedef NS_ENUM(NSInteger, MMXConnectionStatus){
 /**
  *  This method is called when the server successfully receives a message after sending
  *
- *  @param client    - The client providing the message.
- *  @param messageID - The message ID of the message that was received by the server
+ *  @param client		- The client providing the message.
+ *  @param messageID	- The message ID of the message that was received by the server
+ *  @param invalidUsers - A set of the usernames that the server was not able to send messages to
  */
-- (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID;
+- (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID invalidUsers:(NSSet *)invalidUsers;
 
 // PubSub
 /**

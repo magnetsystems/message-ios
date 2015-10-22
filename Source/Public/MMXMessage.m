@@ -89,7 +89,7 @@
 	return msg;
 }
 
-- (NSString *)sendWithSuccess:(void (^)(void))success
+- (NSString *)sendWithSuccess:(void (^)(NSSet *invalidUsers))success
 					  failure:(void (^)(NSError *))failure {
 	if (![MMXMessageUtils isValidMetaData:self.messageContent]) {
 		NSError * error = [MMXClient errorWithTitle:@"Not Valid" message:@"All values must be strings." code:401];
@@ -125,7 +125,7 @@
 			self.sender = [MMUser currentUser];
 			self.timestamp = [NSDate date];
 			if (success) {
-				success();
+				success([NSSet set]);
 			}
 		} failure:^(NSError *error) {
 			if (failure) {
@@ -154,11 +154,18 @@
 				failure(error);
 			}
 		} else {
-			[[MagnetDelegate sharedDelegate] sendMessage:self.copy success:^(void) {
+			[[MagnetDelegate sharedDelegate] sendMessage:self.copy success:^(NSSet *invalidUsers) {
 				self.sender = [MMUser currentUser];
 				self.timestamp = [NSDate date];
-				if (success) {
-					success();
+				if (self.recipients.count == invalidUsers.count) {
+					if (failure) {
+						NSError *error = [MMXClient errorWithTitle:@"Invalid User(s)" message:@"The user(s) you are trying to send a message to does not exist or does not have a valid device associated with them." code:500];
+						failure(error);
+					}
+				} else {
+					if (success) {
+						success(invalidUsers);
+					}
 				}
 			} failure:^(NSError *error) {
 				if (failure) {
@@ -171,7 +178,7 @@
 }
 
 - (NSString *)replyWithContent:(NSDictionary *)content
-					   success:(void (^)(void))success
+					   success:(void (^)(NSSet *invalidUsers))success
 					   failure:(void (^)(NSError *))failure {
 	NSSet *recipients = [NSSet setWithObject:self.sender];
 	NSError *error;
@@ -184,9 +191,9 @@
 	}
 	
 	MMXMessage *msg = [MMXMessage messageToRecipients:recipients messageContent:content];
-	NSString * messageID = [msg sendWithSuccess:^{
+	NSString * messageID = [msg sendWithSuccess:^(NSSet *invalidUsers) {
 		if (success) {
-			success();
+			success(invalidUsers);
 		}
 	} failure:^(NSError *error) {
 		if (failure) {
@@ -197,7 +204,7 @@
 }
 
 - (NSString *)replyAllWithContent:(NSDictionary *)content
-						  success:(void (^)(void))success
+						  success:(void (^)(NSSet *invalidUsers))success
 						  failure:(void (^)(NSError *))failure {
 	NSMutableSet *newSet = [NSMutableSet setWithSet:self.recipients];
 	[newSet addObject:self.sender];
@@ -214,9 +221,9 @@
 		return nil;
 	}
 	MMXMessage *msg = [MMXMessage messageToRecipients:newSet messageContent:content];
-	NSString * messageID = [msg sendWithSuccess:^{
+	NSString * messageID = [msg sendWithSuccess:^(NSSet *invalidUsers) {
 		if (success) {
-			success();
+			success(invalidUsers);
 		}
 	} failure:^(NSError *error) {
 		if (failure) {

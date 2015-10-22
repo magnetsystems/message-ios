@@ -30,7 +30,7 @@
                    success:(void (^)(void))success
                    failure:(void (^)(NSError *error))failure {
 	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor inviteResponseMessageToUser:self.sender forChannel:self.channel comments:comments response:YES];
-	[[MagnetDelegate sharedDelegate] sendInternalMessageFormat:msg success:^{
+	[[MagnetDelegate sharedDelegate] sendInternalMessageFormat:msg success:^(NSSet *invalidUsers){
 	} failure:^(NSError *error) {
 	}];
 	[self.channel subscribeWithSuccess:^{
@@ -48,7 +48,7 @@
                     success:(void (^)(void))success
                     failure:(void (^)(NSError *error))failure {
 	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor inviteResponseMessageToUser:self.sender forChannel:self.channel comments:comments response:NO];
-	[[MagnetDelegate sharedDelegate] sendInternalMessageFormat:msg success:^{
+	[[MagnetDelegate sharedDelegate] sendInternalMessageFormat:msg success:^(NSSet *invalidUsers){
 		if (success) {
 			success();
 		}

@@ -74,7 +74,7 @@ SPEC_BEGIN(MMXMessageSpec)
 
                 __block BOOL _isSuccess = NO;
 				
-				[message sendWithSuccess:^{
+				[message sendWithSuccess:^(NSSet *invalidUsers){
 					_isSuccess = YES;
 				} failure:^(NSError *error) {
 					_isSuccess = NO;
@@ -95,7 +95,7 @@ SPEC_BEGIN(MMXMessageSpec)
 				MMXMessage *message = [MMXMessage messageToRecipients:[NSSet setWithArray:@[sender]]
 													   messageContent:messageContent];
 				
-				NSString *messageID = [message sendWithSuccess:^{
+				NSString *messageID = [message sendWithSuccess:^(NSSet *invalidUsers){
 					_isSuccess = YES;
 				} failure:^(NSError *error) {
 					_isSuccess = NO;
@@ -129,7 +129,7 @@ SPEC_BEGIN(MMXMessageSpec)
 				MMXMessage *message = [MMXMessage messageToRecipients:[NSSet setWithArray:@[sender]]
 													   messageContent:messageContent];
 				
-				NSString *messageID = [message sendWithSuccess:^{
+				NSString *messageID = [message sendWithSuccess:^(NSSet *invalidUsers){
 					_isSuccess = YES;
 				} failure:^(NSError *error) {
 					_isSuccess = NO;

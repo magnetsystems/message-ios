@@ -35,7 +35,7 @@
 #import "MMXConstants.h"
 @import MagnetMobileServer;
 
-typedef void(^MessageSuccessBlock)(void);
+typedef void(^MessageSuccessBlock)(NSSet *);
 typedef void(^MessageFailureBlock)(NSError *);
 
 NSString  * const MMXMessageSuccessBlockKey = @"MMXMessageSuccessBlockKey";
@@ -125,7 +125,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 //}
 
 - (NSString *)sendMessage:(MMXMessage *)message
-				  success:(void (^)(void))success
+				  success:(void (^)(NSSet *invalidUsers))success
 				  failure:(void (^)(NSError *error))failure {
 	//FIXME: Needs to properly handle failure and success blocks
 	MMXOutboundMessage *msg = [MMXOutboundMessage messageTo:[message.recipients allObjects] withContent:nil metaData:message.messageContent];
@@ -148,7 +148,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 }
 
 - (NSString *)sendInternalMessageFormat:(MMXInternalMessageAdaptor *)message
-								success:(void (^)(void))success
+								success:(void (^)(NSSet *))success
 								failure:(void (^)(NSError *error))failure {
 
 	NSString *messageID = [[MMXClient sharedClient] sendMMXMessage:message withOptions:nil shouldValidate:NO];
@@ -266,12 +266,12 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 
 }
 
-- (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID {
+- (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID invalidUsers:(NSSet *)invalidUsers{
 	NSDictionary *messageBlockDict = [self.messageBlockQueue objectForKey:messageID];
 	if (messageBlockDict) {
 		MessageSuccessBlock success = messageBlockDict[MMXMessageSuccessBlockKey];
 		if (success) {
-			success();
+			success(invalidUsers);
 		}
 		[self.messageBlockQueue removeObjectForKey:messageID];
 	}

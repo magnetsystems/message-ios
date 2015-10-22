@@ -534,14 +534,21 @@
 		return nil;
 	}
 	MMXInternalMessageAdaptor *msg = [MMXInternalMessageAdaptor inviteMessageToUser:user forChannel:self.copy comments:comments];
-	NSString *messageID = [[MagnetDelegate sharedDelegate] sendInternalMessageFormat:msg success:^{
-		if (success) {
-			MMXInvite *invite = [MMXInvite new];
-			invite.comments = comments;
-			invite.channel = self.copy;
-			invite.sender = [MMUser currentUser];
-			invite.timestamp = [NSDate date];
-			success(invite);
+	NSString *messageID = [[MagnetDelegate sharedDelegate] sendInternalMessageFormat:msg success:^(NSSet *invalidUsers){
+		if (invalidUsers.count == 1) {
+			if (failure) {
+				NSError *error = [MMXClient errorWithTitle:@"Invalid User" message:@"The user you are trying to send a message to does not exist or does not have a valid device associated with them." code:500];
+				failure(error);
+			}
+		} else {
+			if (success) {
+				MMXInvite *invite = [MMXInvite new];
+				invite.comments = comments;
+				invite.channel = self.copy;
+				invite.sender = [MMUser currentUser];
+				invite.timestamp = [NSDate date];
+				success(invite);
+			}
 		}
 	} failure:^(NSError *error) {
 		if (failure) {

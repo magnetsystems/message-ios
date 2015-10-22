@@ -85,12 +85,12 @@
 /**
  *  Method to send the message
  *
- *  @param success - Block with the message ID for the sent message.
+ *  @param success - Block with the NSSet of usernames for any users that were not valid.
  *  @param failure - Block with an NSError with details about the call failure.
  *
  *  @return The messageID for the message sent
  */
-- (NSString *)sendWithSuccess:(void (^)(void))success
+- (NSString *)sendWithSuccess:(void (^)(NSSet *invalidUsers))success
 					  failure:(void (^)(NSError *error))failure;
 
 /**
@@ -103,8 +103,8 @@
  *  @return The messageID for the message sent
  */
 - (NSString *)replyWithContent:(NSDictionary *)content
-				 success:(void (^)(void))success
-				 failure:(void (^)(NSError * error))failure;
+					   success:(void (^)(NSSet *invalidUsers))success
+					   failure:(void (^)(NSError * error))failure;
 
 /**
  *  Method to send a message to all recipients of the received message including the sender
@@ -116,7 +116,7 @@
  *  @return The messageID for the message sent
  */
 - (NSString *)replyAllWithContent:(NSDictionary *)content
-						  success:(void (^)(void))success
+						  success:(void (^)(NSSet *invalidUsers))success
 						  failure:(void (^)(NSError * error))failure;
 
 /**
