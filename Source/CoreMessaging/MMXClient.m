@@ -412,45 +412,23 @@ int const kReconnectionTimerInterval = 4;
     }
 	
 	XMPPMessage *xmppMessage;
-	NSUInteger sentCount = 0;
-	NSMutableArray *failedList = @[].mutableCopy;
-	for (id<MMXAddressable> recipient in outboundMessage.recipients) {
-		MMXInternalAddress *address = recipient.address;
-		if (address) {
-			NSString *fullUsername = [NSString stringWithFormat:@"%@%%%@",address.username,self.appID];
-			XMPPJID *toAddress = [XMPPJID jidWithUser:fullUsername domain:[[self currentJID] domain] resource:address.deviceID];
-			xmppMessage = [[XMPPMessage alloc] initWithType:mType to:toAddress];
-			[xmppMessage addAttributeWithName:@"from" stringValue: [[self currentJID] full]];
-
-			if (options && options.shouldRequestDeliveryReceipt) {
-				NSXMLElement *deliveryReceiptElement = [[NSXMLElement alloc] initWithName:MXrequestElement xmlns:MXnsDeliveryReceipt];
-				[xmppMessage addChild:deliveryReceiptElement];
-			}
-			
-			[xmppMessage addChild:mmxElement.copy];
-			[xmppMessage addAttributeWithName:@"id" stringValue:outboundMessage.messageID];
-			
-			[[MMXLogger sharedLogger] verbose:@"About to send the message %@", outboundMessage.messageID];
-			
-			[self.xmppStream sendElement: xmppMessage];
-			sentCount++;
-		} else {
-			[failedList addObject:recipient];
-		}
+	NSString *fullUsername = [NSString stringWithFormat:@"mmx$multicast%%%@",self.appID];
+	XMPPJID *toAddress = [XMPPJID jidWithUser:fullUsername domain:[[self currentJID] domain] resource:nil];
+	xmppMessage = [[XMPPMessage alloc] initWithType:mType to:toAddress];
+	[xmppMessage addAttributeWithName:@"from" stringValue: [[self currentJID] full]];
+	
+	if (options && options.shouldRequestDeliveryReceipt) {
+		NSXMLElement *deliveryReceiptElement = [[NSXMLElement alloc] initWithName:MXrequestElement xmlns:MXnsDeliveryReceipt];
+		[xmppMessage addChild:deliveryReceiptElement];
 	}
 	
-	if (failedList.count > 0) {
-		if ([self.delegate respondsToSelector:@selector(client:didFailToSendMessage:recipients:error:)]) {
-			NSError * error = [MMXClient errorWithTitle:@"Recipient not valid" message:@"Recipient must conform to the MMXAddressable protocol." code:401];
-			[self.delegate client:self didFailToSendMessage:outboundMessage.messageID recipients:failedList.copy error:error];
-		}
-	}
+	[xmppMessage addChild:mmxElement.copy];
+	[xmppMessage addAttributeWithName:@"id" stringValue:outboundMessage.messageID];
 	
-	if (sentCount > 0) {
-		return outboundMessage.messageID;
-	} else {
-		return nil;
-	}
+	[[MMXLogger sharedLogger] verbose:@"About to send the message %@", outboundMessage.messageID];
+	
+	[self.xmppStream sendElement: xmppMessage];
+	return outboundMessage.messageID;
 }
 
 - (BOOL)validateAndRespondToErrorsForOutboundMessage:(MMXInternalMessageAdaptor *)outboundMessage {
@@ -885,7 +863,7 @@ int const kReconnectionTimerInterval = 4;
 			NSError* readError;
 			NSDictionary * mmxMetaDict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&readError];
 			if (readError == nil) {
-				NSDictionary *serverackDict = mmxMetaDict[@"serverack"];
+				NSDictionary *serverackDict = mmxMetaDict[@"endack"];
 				if (serverackDict) {
 					NSString *ackForMsgId = serverackDict[@"ackForMsgId"];
 					if (ackForMsgId && [self.delegate respondsToSelector:@selector(client:didReceiveServerAckForMessageID:)]) {
