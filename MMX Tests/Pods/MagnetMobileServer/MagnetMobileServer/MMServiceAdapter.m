@@ -445,9 +445,9 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
                                                                             self.username = username;
                                                                             self.HATToken = credential.accessToken;
                                                                             [self registerCurrentDeviceWithSuccess:nil failure:nil];
-                                                                            if (self.HATToken) {
-                                                                                [self passUserTokenToRegisteredServices];
-                                                                            }
+//                                                                            if (self.HATToken) {
+//                                                                                [self passUserTokenToRegisteredServices];
+//                                                                            }
                                                                             if (success) {
                                                                                 success(YES);
                                                                             }

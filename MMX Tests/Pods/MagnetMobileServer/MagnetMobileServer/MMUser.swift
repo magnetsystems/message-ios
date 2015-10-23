@@ -21,7 +21,7 @@ public extension MMUser {
             // Get current user now
             MMCoreConfiguration.serviceAdapter.getCurrentUserWithSuccess({ (user) -> Void in
                 currentlyLoggedInUser = user
-                let userInfo = ["userID": user.userName, "deviceID": MMServiceAdapter.deviceUUID(), "token": MMCoreConfiguration.serviceAdapter.HATToken]
+                let userInfo = ["userID": user.userID, "deviceID": MMServiceAdapter.deviceUUID(), "token": MMCoreConfiguration.serviceAdapter.HATToken]
                 NSNotificationCenter.defaultCenter().postNotificationName(MMServiceAdapterDidReceiveHATTokenNotification, object: self, userInfo: userInfo)
                 success?()
             }, failure: { (error) -> Void in
