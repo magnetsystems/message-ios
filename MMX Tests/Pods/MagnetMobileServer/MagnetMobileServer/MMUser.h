@@ -12,6 +12,8 @@
 
 @interface MMUser : MMModel
 
+@property (nonatomic, copy) NSString *userID;
+
 @property (nonatomic, copy) NSString *userName;
 
 @property (nonatomic, copy) NSString *password;

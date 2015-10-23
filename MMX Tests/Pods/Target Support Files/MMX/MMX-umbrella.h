@@ -55,6 +55,7 @@
 #import "MMXMessage.h"
 #import "MMXMessageTypes.h"
 #import "MMXNotificationConstants.h"
+#import "MMXPublishPermissionsEnum.h"
 #import "MMXRemoteNotification.h"
 #import "MMXGeoLocationMessage.h"
 #import "MMXGeoLocationMessage_Private.h"

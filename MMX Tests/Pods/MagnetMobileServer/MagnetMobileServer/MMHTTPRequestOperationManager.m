@@ -5,15 +5,16 @@
 #import "MMHTTPRequestOperationManager.h"
 #import "MMURLSessionDataTaskOperation.h"
 #import <AFNetworking/AFHTTPSessionManager.h>
+#import <MagnetMobileServer/MagnetMobileServer-Swift.h>
 
 
 @interface MMHTTPRequestOperationManager ()
 
 @property(nonatomic, strong) NSURL *URL;
 
-@property(nonatomic, readwrite) NSOperationQueue *operationQueue;
+@property(nonatomic, readwrite) OperationQueue *operationQueue;
 
-@property(nonatomic, readwrite) NSOperationQueue *reliableOperationQueue;
+@property(nonatomic, readwrite) OperationQueue *reliableOperationQueue;
 
 @end
 
@@ -53,17 +54,17 @@
 
 #pragma mark - Overriden getters
 
-- (NSOperationQueue *)operationQueue {
+- (OperationQueue *)operationQueue {
     if (!_operationQueue) {
-        _operationQueue = [[NSOperationQueue alloc] init];
+        _operationQueue = [[OperationQueue alloc] init];
     }
     
     return _operationQueue;
 }
 
-- (NSOperationQueue *)reliableOperationQueue {
+- (OperationQueue *)reliableOperationQueue {
     if (!_reliableOperationQueue) {
-        _reliableOperationQueue = [[NSOperationQueue alloc] init];
+        _reliableOperationQueue = [[OperationQueue alloc] init];
     }
     
     return _reliableOperationQueue;

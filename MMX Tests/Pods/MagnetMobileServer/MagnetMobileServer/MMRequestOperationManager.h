@@ -4,6 +4,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class OperationQueue;
 @class AFSecurityPolicy;
 
 @protocol MMRequestOperationManager <NSObject>
@@ -13,12 +14,12 @@
 /**
  The operation queue on which request operations are scheduled and run.
  */
-@property (nonatomic, readonly) NSOperationQueue *operationQueue;
+@property (nonatomic, readonly) OperationQueue *operationQueue;
 
 /**
  The operation queue on which reliable request operations are scheduled and run.
  */
-@property (nonatomic, readonly) NSOperationQueue *reliableOperationQueue;
+@property (nonatomic, readonly) OperationQueue *reliableOperationQueue;
 
 ///-------------------------------
 /// @name Managing Security Policy

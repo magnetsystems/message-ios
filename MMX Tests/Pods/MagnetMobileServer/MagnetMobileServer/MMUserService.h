@@ -91,6 +91,16 @@
                         success:(void (^)(NSArray <MMUser *>*response))success
                         failure:(void (^)(NSError *error))failure;
 
+/**
+ 
+ GET /com.magnet.server/user/users/ids
+ @param userIds style:QUERY
+ @return A 'MMCall' object.
+ */
+- (MMCall *)getUsersByUserIds:(NSArray <NSString *>*)userIds
+                      success:(void (^)(NSArray <MMUser *>*response))success
+                      failure:(void (^)(NSError *error))failure;
+
 @end
 
 @interface MMUserService : MMService<MMUserServiceProtocol>

@@ -294,6 +294,9 @@
             location = "group:MMXChannel.m">
          </FileRef>
          <FileRef
+            location = "group:MMXPublishPermissionsEnum.h">
+         </FileRef>
+         <FileRef
             location = "group:MMXInvite.h">
          </FileRef>
          <FileRef

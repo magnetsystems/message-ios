@@ -18,7 +18,7 @@
 		0E333FC81BC44060006B56BF /* MMXMessageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FB91BC44060006B56BF /* MMXMessageSpec.m */; settings = {ASSET_TAGS = (); }; };
 		0E333FCA1BC44060006B56BF /* MMXRemoteNotificationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FBB1BC44060006B56BF /* MMXRemoteNotificationSpec.m */; settings = {ASSET_TAGS = (); }; };
 		0E933B8E1BD5B74F008EE43A /* MagnetMax.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E933B8D1BD5B74F008EE43A /* MagnetMax.plist */; settings = {ASSET_TAGS = (); }; };
-		632B889AE4EED44692438F12 /* Pods_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E7C3DC8A699C0F7010B4FF7 /* Pods_ios.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		632B889AE4EED44692438F12 /* Pods_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E7C3DC8A699C0F7010B4FF7 /* Pods_ios.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */

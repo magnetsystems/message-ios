@@ -69,4 +69,14 @@ public extension MMUser {
             failure?(error: error)
         }.executeInBackground(nil)
     }
+    
+    static public func usersWithUserIDs(userIDs:[String], success: (([MMUser]) -> Void)?, failure: ((error: NSError) -> Void)?) {
+        
+        let userService = MMUserService()
+        userService.getUsersByUserIds(userIDs, success: { (users) -> Void in
+            success?(users)
+            }) { (error) -> Void in
+                failure?(error: error)
+            }.executeInBackground(nil)
+    }
 }

@@ -206,6 +206,30 @@
         getUsersByUserNamesSuccessFailure.returnTypeClass = MMUser.class;
         serviceMetaData[NSStringFromSelector(getUsersByUserNamesSuccessFailure.selector)] = getUsersByUserNamesSuccessFailure;
         
+        // schema for service method getUsersByUserIds:success:failure:
+        MMServiceMethod *getUsersByUserIdsSuccessFailure = [[MMServiceMethod alloc] init];
+        getUsersByUserIdsSuccessFailure.clazz = [self class];
+        getUsersByUserIdsSuccessFailure.selector = @selector(getUsersByUserIds:success:failure:);
+        getUsersByUserIdsSuccessFailure.path = @"com.magnet.server/user/users/ids";
+        getUsersByUserIdsSuccessFailure.requestMethod = MMRequestMethodGET;
+        getUsersByUserIdsSuccessFailure.produces = [NSSet setWithObjects:@"application/json", nil];
+        
+        NSMutableArray *getUsersByUserIdsSuccessFailureParams = [NSMutableArray array];
+        MMServiceMethodParameter *getUsersByUserIdsSuccessFailureParam0 = [[MMServiceMethodParameter alloc] init];
+        getUsersByUserIdsSuccessFailureParam0.name = @"userIds";
+        getUsersByUserIdsSuccessFailureParam0.requestParameterType = MMServiceMethodParameterTypeQuery;
+        getUsersByUserIdsSuccessFailureParam0.type = MMServiceIOTypeArray;
+        getUsersByUserIdsSuccessFailureParam0.componentType = MMServiceIOTypeString;
+        getUsersByUserIdsSuccessFailureParam0.isOptional = NO;
+        [getUsersByUserIdsSuccessFailureParams addObject:getUsersByUserIdsSuccessFailureParam0];
+        
+        getUsersByUserIdsSuccessFailure.parameters = getUsersByUserIdsSuccessFailureParams;
+        getUsersByUserIdsSuccessFailure.returnType = MMServiceIOTypeArray;
+        getUsersByUserIdsSuccessFailure.returnComponentType = MMServiceIOTypeMagnetNode;
+        getUsersByUserIdsSuccessFailure.returnTypeClass = MMUser.class;
+        serviceMetaData[NSStringFromSelector(getUsersByUserIdsSuccessFailure.selector)] = getUsersByUserIdsSuccessFailure;
+
+        
         __metaData = serviceMetaData;
     });
 

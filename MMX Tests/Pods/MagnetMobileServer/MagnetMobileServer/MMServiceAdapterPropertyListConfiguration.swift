@@ -11,7 +11,6 @@ public class MMServiceAdapterPropertyListConfiguration: NSObject, MMServiceAdapt
     public var clientSecret: String = ""
     
     public init(dictionary: NSDictionary?) {
-		print("dictionary = \(dictionary)")
         self.baseURL = NSURL(string: (dictionary?["BaseURL"] as! String))!
         self.clientID = dictionary?["ClientID"] as! String
         self.clientSecret = dictionary?["ClientSecret"] as! String

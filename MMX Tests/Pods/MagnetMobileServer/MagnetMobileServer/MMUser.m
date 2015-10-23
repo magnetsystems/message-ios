@@ -9,6 +9,7 @@
 
 + (NSDictionary *)attributeMappings {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                      @"userID": @"userIdentifier",
     }];
     [dictionary addEntriesFromDictionary:[super attributeMappings]];
     return dictionary;
