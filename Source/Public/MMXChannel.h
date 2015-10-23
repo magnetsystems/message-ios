@@ -17,6 +17,7 @@
 
 
 #import <Foundation/Foundation.h>
+#import "MMXPublishPermissionsEnum.h"
 @import MagnetMobileServer;
 @class MMUser;
 @class MMXMessage;
@@ -38,6 +39,16 @@
  *  An optional summary of the channel.
  */
 @property (nonatomic, copy) NSString *summary;
+
+/**
+ *  The required permissions needed to publish to this channel.
+ */
+@property (nonatomic, readonly) MMXPublishPermissions publishPermissions;
+
+/**
+ *  BOOL letting you know if the current user can publish to the channel.
+ */
+@property (nonatomic, readonly) BOOL canPublish;
 
 /**
  *  The owner/creator of the channel.
@@ -158,15 +169,17 @@
 /**
  *  Method to create a new channel.
  *
- *  @param name		The name you want for the new channel must be unique. Cannot have spaces. The valid character set is alphanumeric plus period, dash and underscore. .-_
- *  @param summary	The summary you want for the channel. (Used to give other users a better idea about the purpose of the channel).
- *  @param isPublic	Set to YES if you want the channel to be discoverable by other users.
- *  @param success	Block called if operation is successful.
- *  @param failure	Block with an NSError with details about the call failure.
+ *  @param name					The name you want for the new channel must be unique. Cannot have spaces. The valid character set is alphanumeric plus period, dash and underscore. .-_
+ *  @param summary				The summary you want for the channel. (Used to give other users a better idea about the purpose of the channel).
+ *  @param isPublic				Set to YES if you want the channel to be discoverable by other users.
+ *  @param publishPermissions	Permissions level required to be able to post; Owner/Creator only, Subscribers, Anyone. Owner can always publish.
+ *  @param success				Block called if operation is successful.
+ *  @param failure				Block with an NSError with details about the call failure.
  */
 + (void)createWithName:(NSString *)name
 			   summary:(NSString *)summary
 			  isPublic:(BOOL)isPublic
+	publishPermissions:(MMXPublishPermissions)publishPermissions
 			   success:(void (^)(MMXChannel *channel))success
 			   failure:(void (^)(NSError *))failure;
 /**

@@ -275,6 +275,7 @@
 + (void)createWithName:(NSString *)name
 			   summary:(NSString *)summary
 			  isPublic:(BOOL)isPublic
+	publishPermissions:(MMXPublishPermissions)publishPermissions
 			   success:(void (^)(MMXChannel *channel))success
 			   failure:(void (^)(NSError *))failure {
 	
@@ -287,7 +288,9 @@
 	}
 	MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic];
 	channel.ownerUsername = [MMUser currentUser].userName;
-	[[MMXClient sharedClient].pubsubManager createTopic:[channel asTopic] success:^(BOOL successful) {
+	MMXTopic *topic = [channel asTopic];
+	topic.publishPermissions = publishPermissions;
+	[[MMXClient sharedClient].pubsubManager createTopic:topic success:^(BOOL successful) {
 		[MMXChannel channelForName:channel.name isPublic:isPublic success:^(MMXChannel *channel) {
 			if (success) {
 				success(channel);

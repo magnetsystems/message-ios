@@ -71,7 +71,7 @@ describe(@"MMXChannel", ^{
 			NSString *channelSummary = [NSString stringWithFormat:@"channelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 			__block BOOL _isSuccess = NO;
 			
-			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
 				[[channel.name shouldNot] beNil];
 				[[channel.summary shouldNot] beNil];
 				[[channel.creationDate shouldNot] beNil];
@@ -90,7 +90,7 @@ describe(@"MMXChannel", ^{
 			NSString *channelSummary = [NSString stringWithFormat:@"channelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 			__block BOOL _isSuccess = NO;
 			
-			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
 				[MMXChannel channelsStartingWith:channelName limit:10 offset:0 success:^(int totalCount, NSArray *channels) {
 					MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
 					[[returnedChannel.creationDate shouldNot] beNil];
@@ -115,7 +115,7 @@ describe(@"MMXChannel", ^{
 			NSString *channelSummary = [NSString stringWithFormat:@"channelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 			__block BOOL _isSuccess = NO;
 			
-			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
 				[channel tagsWithSuccess:^(NSSet *tags) {
 					_isSuccess = YES;
 					[[expectFutureValue(theValue(tags.count)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beZero];
@@ -157,7 +157,7 @@ describe(@"MMXChannel", ^{
 			NSString *channelSummary = [NSString stringWithFormat:@"channelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 			__block BOOL _isSuccess = NO;
 			NSSet *tagSet = [NSSet setWithObjects:@"tag1",@"tag2", nil];
-			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
 				[channel setTags:tagSet success:^{
 					[channel tagsWithSuccess:^(NSSet *tags2) {
 						[[expectFutureValue(theValue(tags2.count)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:theValue(tagSet.count)];
@@ -248,7 +248,7 @@ describe(@"MMXChannel", ^{
 			
 			NSDictionary *messageContent = @{@"Something1":@"Content1"};
 
-			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
 				[[expectFutureValue(theValue(channel.isSubscribed)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
 				[channel publish:messageContent success:^(MMXMessage *message) {
 					_isSuccess = YES;
@@ -286,7 +286,7 @@ describe(@"MMXChannel", ^{
 			
 			NSDictionary *messageContent = @{@"Something2":@"Content2"};
 			
-			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES success:^(MMXChannel *channel) {
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:YES publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
 				[channel unSubscribeWithSuccess:^{
 					[[expectFutureValue(theValue(channel.isSubscribed)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNo];
 					[channel publish:messageContent success:^(MMXMessage *message) {
@@ -359,8 +359,8 @@ describe(@"MMXChannel", ^{
 			NSString *channelName2 = [NSString stringWithFormat:@"privateChannelName_%f", [[NSDate date] timeIntervalSince1970]];
 			NSString *channelSummary2 = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 
-			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
-				[MMXChannel createWithName:channelName2 summary:channelSummary2 isPublic:NO success:^(MMXChannel *channel) {
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
+				[MMXChannel createWithName:channelName2 summary:channelSummary2 isPublic:NO publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
 					[MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
 						_fetchedChannels = channels;
 						_totalCount = totalCount;
@@ -405,7 +405,7 @@ describe(@"MMXChannel", ^{
 			NSString *channelSummary = [NSString stringWithFormat:@"publicChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 			__block BOOL _isSuccess = NO;
 			
-			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
 				[channel publish:@{@"key":@"value"} success:^(MMXMessage *message) {
 					[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
 						MMXMessage *msg = messages[0];
@@ -431,7 +431,7 @@ describe(@"MMXChannel", ^{
 			NSString *channelName = [NSString stringWithFormat:@"privateChannelName_%f", [[NSDate date] timeIntervalSince1970]];
 			NSString *channelSummary = [NSString stringWithFormat:@"privateChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
 			
-			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO success:^(MMXChannel *channel) {
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
 				[channel publish:@{@"key":@"value"} success:^(MMXMessage *message) {
 					[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
 						MMXMessage *msg = messages[0];
