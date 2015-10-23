@@ -643,6 +643,23 @@
 	return _lastTimeActive ?: self.creationDate;
 }
 
+- (BOOL)canPublish {
+	switch (self.publishPermissions) {
+		case MMXPublishPermissionsAnyone:
+			return YES;
+		case MMXPublishPermissionsSubscribers:
+			return [self isOwner] || self.isSubscribed;
+		case MMXPublishPermissionsOwnerOnly:
+			return [self isOwner];
+		default:
+			break;
+	}
+}
+
+- (BOOL)isOwner {
+	return [[MMUser currentUser].userName.lowercaseString isEqualToString:self.ownerUsername.lowercaseString];
+}
+
 #pragma mark - Equality
 
 - (BOOL)isEqual:(id)other {
