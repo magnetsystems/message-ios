@@ -49,32 +49,10 @@
 	return msg;
 }
 
-+ (instancetype)messageFromPubSubMessage:(MMXPubSubMessage *)pubSubMessage {
-	MMXMessage *msg = [MMXMessage new];
-	msg.channel = [MMXChannel channelWithName:pubSubMessage.topic.topicName summary:pubSubMessage.topic.topicDescription isPublic:pubSubMessage.topic.inUserNameSpace];
-	if (pubSubMessage.topic.inUserNameSpace) {
-		msg.channel.isPublic = NO;
-		msg.channel.ownerUsername = pubSubMessage.topic.nameSpace;
-	} else {
-		msg.channel.isPublic = YES;
-	}
-	MMXInternalAddress *address = pubSubMessage.senderUserID.address;
-	MMUser *sender = [MMUser new];
-	//Converting to MMXUserID will handle any exscaping needed
-	MMXUserID *userID = [MMXUserID userIDFromAddress:address];
-	sender.userName = userID.username;
-	msg.sender = sender;
-	msg.messageID = pubSubMessage.messageID;
-	msg.messageContent = pubSubMessage.metaData;
-	msg.timestamp = pubSubMessage.timestamp;
-	msg.messageType = MMXMessageTypeChannel;
-	return msg;
-}
-
 + (instancetype)messageFromPubSubMessage:(MMXPubSubMessage *)pubSubMessage
 								  sender:(MMUser *)sender {
 	MMXMessage *msg = [MMXMessage new];
-	msg.channel = [MMXChannel channelWithName:pubSubMessage.topic.topicName summary:pubSubMessage.topic.topicDescription isPublic:pubSubMessage.topic.inUserNameSpace];
+	msg.channel = [MMXChannel channelWithName:pubSubMessage.topic.topicName summary:pubSubMessage.topic.topicDescription isPublic:pubSubMessage.topic.inUserNameSpace publishPermissions:pubSubMessage.topic.publishPermissions];
 	if (pubSubMessage.topic.inUserNameSpace) {
 		msg.channel.isPublic = NO;
 		msg.channel.ownerUsername = pubSubMessage.topic.nameSpace;

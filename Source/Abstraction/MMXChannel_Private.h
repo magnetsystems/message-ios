@@ -32,6 +32,7 @@
 
 + (instancetype)channelWithName:(NSString *)name
 						summary:(NSString *)summary
-					   isPublic:(BOOL)isPublic;
+					   isPublic:(BOOL)isPublic
+			 publishPermissions:(MMXPublishPermissions)publishPermissions;
 
 @end

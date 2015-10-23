@@ -35,7 +35,8 @@
 
 + (instancetype)channelWithName:(NSString *)name
 						summary:(NSString *)summary
-					   isPublic:(BOOL)isPublic {
+					   isPublic:(BOOL)isPublic
+			 publishPermissions:(MMXPublishPermissions)publishPermissions {
 	MMXChannel *channel = [MMXChannel new];
 	channel.name = name;
 	channel.summary = summary;
@@ -286,10 +287,9 @@
 		
 		return;
 	}
-	MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic];
+	MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions];
 	channel.ownerUsername = [MMUser currentUser].userName;
 	MMXTopic *topic = [channel asTopic];
-	topic.publishPermissions = publishPermissions;
 	[[MMXClient sharedClient].pubsubManager createTopic:topic success:^(BOOL successful) {
 		[MMXChannel channelForName:channel.name isPublic:isPublic success:^(MMXChannel *channel) {
 			if (success) {
@@ -588,7 +588,7 @@
 + (NSArray *)channelsFromTopics:(NSArray *)topics summaries:(NSArray *)summaries subscriptions:(NSArray *)subscriptions {
 	NSMutableDictionary *channelDict = [NSMutableDictionary dictionaryWithCapacity:topics.count];
 	for (MMXTopic *topic in topics) {
-		MMXChannel *channel = [MMXChannel channelWithName:topic.topicName summary:topic.topicDescription isPublic:!topic.inUserNameSpace];
+		MMXChannel *channel = [MMXChannel channelWithName:topic.topicName summary:topic.topicDescription isPublic:!topic.inUserNameSpace publishPermissions:topic.publishPermissions];
 		channel.ownerUsername = topic.topicCreator.username;
 		channel.isPublic = !topic.inUserNameSpace;
 		channel.creationDate = topic.creationDate;
@@ -626,6 +626,7 @@
 - (MMXTopic *)asTopic {
 	MMXTopic *newTopic = [MMXTopic topicWithName:self.name];
 	newTopic.topicDescription = self.summary;
+	newTopic.publishPermissions = self.publishPermissions;
 	if (!self.isPublic) {
 		if (self.ownerUsername) {
 			newTopic.nameSpace = self.ownerUsername;

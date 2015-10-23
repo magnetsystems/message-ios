@@ -243,7 +243,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 - (void)client:(MMXClient *)client didReceivePubSubMessage:(MMXPubSubMessage *)message {
 	MMXMessage *msg = [MMXMessage new];
 	msg.messageType = MMXMessageTypeChannel;
-	MMXChannel *channel = [MMXChannel channelWithName:message.topic.topicName summary:nil isPublic:YES];
+	MMXChannel *channel = [MMXChannel channelWithName:message.topic.topicName summary:nil isPublic:YES publishPermissions:message.topic.publishPermissions];
 	if (message.topic.inUserNameSpace) {
 		channel.isPublic = NO;
 		channel.ownerUsername = message.topic.nameSpace;
