@@ -97,7 +97,7 @@ describe(@"MMXChannel", ^{
 					[[theValue(totalCount) should] equal:theValue(1)];
 					[[returnedChannel shouldNot] beNil];
 					[[theValue([channelSummary isEqualToString:returnedChannel.summary]) should] beYes];
-					[[theValue([returnedChannel.ownerUserID isEqualToString:[MMUser currentUser].userName]) should] beYes];
+					[[theValue([returnedChannel.ownerUserID isEqualToString:[MMUser currentUser].userID]) should] beYes];
 					_isSuccess = YES;
 				} failure:^(NSError *error) {
 					_isSuccess = NO;
