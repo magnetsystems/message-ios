@@ -136,7 +136,7 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 	msg.recipients = @[recipient];
 	msg.metaData = @{@"inviteResponseText":comments ?: [NSNull null],
 					 @"channelIsPublic":@(channel.isPublic),
-					 @"channelPublishPermissions":@(channel.publishPermissions),
+					 @"channelPublishPermissions":[MMXTopic publishPermissionsAsString:channel.publishPermissions],
 					 @"channelName":channel.name,
 					 @"channelSummary":channel.summary ?: [NSNull null],
 					 @"channelCreatorUsername":channel.ownerUsername ?: [NSNull null],
@@ -151,7 +151,7 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 	msg.recipients = @[recipient];
 	msg.metaData = @{@"text":comments ?: [NSNull null],
 					 @"channelIsPublic":@(channel.isPublic),
-					 @"channelPublishPermissions":@(channel.publishPermissions),
+					 @"channelPublishPermissions":[MMXTopic publishPermissionsAsString:channel.publishPermissions],
 					 @"channelName":channel.name,
 					 @"channelSummary":channel.summary ?: [NSNull null],
 					 @"channelCreatorUsername":channel.ownerUsername ?: [NSNull null],

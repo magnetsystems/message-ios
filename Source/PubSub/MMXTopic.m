@@ -105,7 +105,7 @@
     }
     NSDictionary * options = @{@"maxItems":@(self.maxItemsToBePersisted),
                                @"description":self.topicDescription ? self.topicDescription :[NSNull null],
-							   @"publisherType":[self publisherType],
+							   @"publisherType":[MMXTopic publishPermissionsAsString:self.publishPermissions],
 							   @"subscribeOnCreate":@(YES)
                                };
     return @{@"topicName":self.topicName,
@@ -138,21 +138,31 @@
 
 #pragma mark - Helper Methods
 
-- (NSString *)publisherType {
-    switch (self.publishPermissions) {
-        case MMXPublishPermissionsAnyone:
-            return @"anyone";
-            break;
-        case MMXPublishPermissionsSubscribers:
-            return @"subscribers";
-            break;
-        case MMXPublishPermissionsOwnerOnly:
-            return @"owner";
-            break;
-        default:
-            return @"anyone";
-            break;
-    }
++ (NSString *)publishPermissionsAsString:(MMXPublishPermissions)publishPermissions {
+	switch (publishPermissions) {
+		case MMXPublishPermissionsAnyone:
+			return @"anyone";
+			break;
+		case MMXPublishPermissionsSubscribers:
+			return @"subscribers";
+			break;
+		case MMXPublishPermissionsOwnerOnly:
+			return @"owner";
+			break;
+		default:
+			return @"anyone";
+			break;
+	}
+}
+
++ (MMXPublishPermissions)publishPermissionsFromString:(NSString *)publishPermissionsString {
+	if ([publishPermissionsString isEqualToString:@"owner"]) {
+		return MMXPublishPermissionsOwnerOnly;
+	} else if ([publishPermissionsString isEqualToString:@"subscribers"]) {
+		return MMXPublishPermissionsSubscribers;
+	} else {
+		return MMXPublishPermissionsAnyone;
+	}
 }
 
 - (NSString *)nameSpace {
