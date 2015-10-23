@@ -85,8 +85,8 @@
 			NSDate *channelCreationDate = [MMXUtils dateFromiso8601Format:metaData[@"channelCreationDate"]];
 			channel.creationDate = channelCreationDate;
 		}
-		NSString * ownerUsername = [MMXUtils objectIsValidString:metaData[@"channelCreatorUsername"]] ? metaData[@"channelCreatorUsername"] : @"";
-		channel.ownerUsername = ownerUsername;
+		NSString * ownerUserID = [MMXUtils objectIsValidString:metaData[@"channelCreatorUsername"]] ? metaData[@"channelCreatorUsername"] : @"";
+		channel.ownerUserID = ownerUserID;
 		return channel;
 	}
 	return nil;

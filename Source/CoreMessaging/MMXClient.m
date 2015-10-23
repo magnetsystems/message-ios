@@ -922,7 +922,7 @@ int const kReconnectionTimerInterval = 4;
 											 messageID:(NSString *)messageID {
 
 	NSArray *usernamesArray = [message.recipients valueForKey:@"username"];
-	[MMUser usersWithUserNames:usernamesArray success:^(NSArray *users) {
+	[MMUser usersWithUserIDs:usernamesArray success:^(NSArray *users) {
 		MMXMessage *msg = [MMXMessage messageToRecipients:[NSSet setWithArray:users]
 										   messageContent:message.metaData];
 		
@@ -955,7 +955,7 @@ int const kReconnectionTimerInterval = 4;
 												   to:(XMPPJID *)to
 											messageID:(NSString *)messageID {
 	MMXInvite *invite = [MMXInvite inviteFromMMXInternalMessage:message];
-	[MMUser usersWithUserNames:@[invite.sender.userName] success:^(NSArray *users) {
+	[MMUser usersWithUserIDs:@[invite.sender.userName] success:^(NSArray *users) {
 		if (users.count) {
 			invite.sender = users.firstObject;
 		}
@@ -974,7 +974,7 @@ int const kReconnectionTimerInterval = 4;
 													messageID:(NSString *)messageID {
 
 	MMXInviteResponse *inviteResponse = [MMXInviteResponse inviteResponseFromMMXInternalMessage:message];
-	[MMUser usersWithUserNames:@[inviteResponse.sender.userName] success:^(NSArray *users) {
+	[MMUser usersWithUserIDs:@[inviteResponse.sender.userName] success:^(NSArray *users) {
 		if (users.count) {
 			inviteResponse.sender = users.firstObject;
 		}
@@ -991,7 +991,7 @@ int const kReconnectionTimerInterval = 4;
 - (void)handlePubSubMessages:(NSArray *)messageArray {
 	NSArray *usernames = [[messageArray valueForKey:@"senderUserID"] valueForKey:@"username"];
 	if (usernames && usernames.count) {
-		[MMUser usersWithUserNames:usernames success:^(NSArray *users) {
+		[MMUser usersWithUserIDs:usernames success:^(NSArray *users) {
 			for (MMXPubSubMessage *pubMsg in messageArray) {
 				NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userName = %@",pubMsg.senderUserID.username];
 				MMUser *sender = [users filteredArrayUsingPredicate:usernamePredicate].firstObject;

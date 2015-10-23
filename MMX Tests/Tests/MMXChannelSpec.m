@@ -75,7 +75,7 @@ describe(@"MMXChannel", ^{
 				[[channel.name shouldNot] beNil];
 				[[channel.summary shouldNot] beNil];
 				[[channel.creationDate shouldNot] beNil];
-				[[channel.ownerUsername shouldNot] beNil];
+				[[channel.ownerUserID shouldNot] beNil];
 				_isSuccess = YES;
 			} failure:^(NSError *error) {
 				_isSuccess = NO;
@@ -97,7 +97,7 @@ describe(@"MMXChannel", ^{
 					[[theValue(totalCount) should] equal:theValue(1)];
 					[[returnedChannel shouldNot] beNil];
 					[[theValue([channelSummary isEqualToString:returnedChannel.summary]) should] beYes];
-					[[theValue([returnedChannel.ownerUsername isEqualToString:[MMUser currentUser].userName]) should] beYes];
+					[[theValue([returnedChannel.ownerUserID isEqualToString:[MMUser currentUser].userName]) should] beYes];
 					_isSuccess = YES;
 				} failure:^(NSError *error) {
 					_isSuccess = NO;
@@ -136,7 +136,7 @@ describe(@"MMXChannel", ^{
 			[MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
 				[[theValue([MMXUtils objectIsValidString:channel.name]) should] beYes];
 				[[theValue([MMXUtils objectIsValidString:channel.summary]) should] beYes];
-				[[theValue([MMXUtils objectIsValidString:channel.ownerUsername]) should] beYes];
+				[[theValue([MMXUtils objectIsValidString:channel.ownerUserID]) should] beNonNil];
 				[[theValue(channel.isPublic) should] beYes];
 				[[channel.creationDate shouldNot] beNil];
 				_isSuccess = YES;
@@ -188,7 +188,7 @@ describe(@"MMXChannel", ^{
 				[[returnedChannel shouldNot] beNil];
 				[[theValue([MMXUtils objectIsValidString:returnedChannel.name]) should] beYes];
 				[[theValue([MMXUtils objectIsValidString:returnedChannel.summary]) should] beYes];
-				[[theValue([MMXUtils objectIsValidString:returnedChannel.ownerUsername]) should] beYes];
+				[[theValue([MMXUtils objectIsValidString:returnedChannel.ownerUserID]) should] beNonNil];
 				[[theValue(returnedChannel.isPublic) should] beYes];
 				[[returnedChannel.creationDate shouldNot] beNil];
 				_isSuccess = YES;

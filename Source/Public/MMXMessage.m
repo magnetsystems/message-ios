@@ -55,7 +55,7 @@
 	msg.channel = [MMXChannel channelWithName:pubSubMessage.topic.topicName summary:pubSubMessage.topic.topicDescription isPublic:pubSubMessage.topic.inUserNameSpace publishPermissions:pubSubMessage.topic.publishPermissions];
 	if (pubSubMessage.topic.inUserNameSpace) {
 		msg.channel.isPublic = NO;
-		msg.channel.ownerUsername = pubSubMessage.topic.nameSpace;
+		msg.channel.ownerUserID = pubSubMessage.topic.nameSpace;
 	} else {
 		msg.channel.isPublic = YES;
 	}

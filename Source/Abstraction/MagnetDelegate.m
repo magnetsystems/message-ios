@@ -246,7 +246,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	MMXChannel *channel = [MMXChannel channelWithName:message.topic.topicName summary:nil isPublic:YES publishPermissions:message.topic.publishPermissions];
 	if (message.topic.inUserNameSpace) {
 		channel.isPublic = NO;
-		channel.ownerUsername = message.topic.nameSpace;
+		channel.ownerUserID = message.topic.nameSpace;
 	} else {
 		channel.isPublic = YES;
 	}
@@ -254,16 +254,14 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	msg.messageContent = message.metaData;
 	msg.timestamp = message.timestamp;
 	msg.messageID = message.messageID;
-	[MMUser usersWithUserNames:@[message.senderUserID.username] success:^(NSArray *users) {
+	[MMUser usersWithUserIDs:@[message.senderUserID.username] success:^(NSArray *users) {
 		msg.sender = users.firstObject;
 		[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
 															object:nil
 														  userInfo:@{MMXMessageKey:msg}];
-		
-	} failure:^(NSError * error) {
+	} failure:^(NSError *error) {
 		[[MMLogger sharedLogger] error:@"Failed to get users for Delivery Confirmation\n%@",error];
 	}];
-
 }
 
 - (void)client:(MMXClient *)client didReceiveServerAckForMessageID:(NSString *)messageID invalidUsers:(NSSet *)invalidUsers{
@@ -280,7 +278,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 - (void)client:(MMXClient *)client didFailToSendMessage:(NSString *)messageID recipients:(NSArray *)recipients error:(NSError *)error {
 	if (recipients && recipients.count) {
 		NSArray *usernames = [recipients valueForKey:@"username"];
-		[MMUser usersWithUserNames:usernames success:^(NSArray *users) {
+		[MMUser usersWithUserIDs:usernames success:^(NSArray *users) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:MMXMessageSendErrorNotification
 																object:nil
 															  userInfo:@{MMXMessageSendErrorNSErrorKey:error,
@@ -298,7 +296,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	if (address) {
 		//Converting to MMXUserID will handle any exscaping needed
 		MMXUserID *userID = [MMXUserID userIDFromAddress:address];
-		[MMUser usersWithUserNames:@[userID.username] success:^(NSArray *users) {
+		[MMUser usersWithUserIDs:@[userID.username] success:^(NSArray *users) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveDeliveryConfirmationNotification
 																object:nil
 															  userInfo:@{MMXRecipientKey:users.firstObject,

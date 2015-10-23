@@ -288,7 +288,7 @@
 		return;
 	}
 	MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions];
-	channel.ownerUsername = [MMUser currentUser].userName;
+	channel.ownerUserID = [MMUser currentUser].userID;
 	MMXTopic *topic = [channel asTopic];
 	[[MMXClient sharedClient].pubsubManager createTopic:topic success:^(BOOL successful) {
 		[MMXChannel channelForName:channel.name isPublic:isPublic success:^(MMXChannel *channel) {
@@ -474,7 +474,7 @@
 	MMXPubSubFetchRequest * fetch = [[MMXPubSubFetchRequest alloc] init];
 	MMXTopic *topic = [MMXTopic topicWithName:self.name];
 	if (!self.isPublic) {
-		topic.nameSpace = self.ownerUsername;
+		topic.nameSpace = self.ownerUserID;
 	}
 	fetch.topic = topic;
 	fetch.since = startDate;
@@ -486,7 +486,7 @@
 		NSMutableArray *channelMessageArray = [[NSMutableArray alloc] initWithCapacity:messages.count];
 		NSArray *usernames = [[messages valueForKey:@"senderUserID"] valueForKey:@"username"];
 		if (usernames && usernames.count) {
-			[MMUser usersWithUserNames:usernames success:^(NSArray *users) {
+			[MMUser usersWithUserIDs:usernames success:^(NSArray *users) {
 				for (MMXPubSubMessage *pubMsg in messages) {
 					NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userName = %@",pubMsg.senderUserID.username];
 					MMUser *sender = [users filteredArrayUsingPredicate:usernamePredicate].firstObject;
@@ -529,7 +529,7 @@
 		}
 		return nil;
 	}
-	if (nil == self.ownerUsername || [self.ownerUsername isEqualToString:@""]) {
+	if (nil == self.ownerUserID || [self.ownerUserID isEqualToString:@""]) {
 		if (failure) {
 			NSError * error = [MMXClient errorWithTitle:@"Invalid Channel Invite" message:@"It looks like you are trying to send an invite from an invalid channel. Please user the channelForName:isPublic:success:failure API to get the valid channel object." code:500];
 			failure(error);
@@ -589,7 +589,7 @@
 	NSMutableDictionary *channelDict = [NSMutableDictionary dictionaryWithCapacity:topics.count];
 	for (MMXTopic *topic in topics) {
 		MMXChannel *channel = [MMXChannel channelWithName:topic.topicName summary:topic.topicDescription isPublic:!topic.inUserNameSpace publishPermissions:topic.publishPermissions];
-		channel.ownerUsername = topic.topicCreator.username;
+		channel.ownerUserID = topic.topicCreator.username;
 		channel.isPublic = !topic.inUserNameSpace;
 		channel.creationDate = topic.creationDate;
 		[channelDict setObject:channel forKey:[MMXChannel channelKeyFromTopic:topic]];
@@ -628,8 +628,8 @@
 	newTopic.topicDescription = self.summary;
 	newTopic.publishPermissions = self.publishPermissions;
 	if (!self.isPublic) {
-		if (self.ownerUsername) {
-			newTopic.nameSpace = self.ownerUsername;
+		if (self.ownerUserID) {
+			newTopic.nameSpace = self.ownerUserID;
 		} else {
 			return nil;
 		}
@@ -657,7 +657,7 @@
 }
 
 - (BOOL)isOwner {
-	return [[MMUser currentUser].userName.lowercaseString isEqualToString:self.ownerUsername.lowercaseString];
+	return [[MMUser currentUser].userID.lowercaseString isEqualToString:self.ownerUserID.lowercaseString];
 }
 
 #pragma mark - Equality
@@ -680,7 +680,7 @@
 		return NO;
 	if (self.isPublic != channel.isPublic)
 		return NO;
-	if (!self.isPublic && !channel.isPublic && ![self.ownerUsername isEqualToString:channel.ownerUsername])
+	if (!self.isPublic && !channel.isPublic && ![self.ownerUserID.lowercaseString isEqualToString:channel.ownerUserID.lowercaseString])
 		return NO;
 	return YES;
 }
@@ -688,7 +688,7 @@
 - (NSUInteger)hash {
 	NSUInteger hash = [self.name hash];
 	if (!self.isPublic) {
-		hash = hash * 31u + [self.ownerUsername hash];
+		hash = hash * 31u + [self.ownerUserID hash];
 	}
 	return hash;
 }

@@ -51,9 +51,9 @@
 @property (nonatomic, readonly) BOOL canPublish;
 
 /**
- *  The owner/creator of the channel.
+ *  The userID for the owner/creator of the channel.
  */
-@property (nonatomic, readonly) NSString *ownerUsername;
+@property (nonatomic, readonly) NSString *ownerUserID;
 
 /**
  *  The date the channel was created.
