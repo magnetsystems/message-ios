@@ -42,7 +42,6 @@ extern int const kTempVersionMinor;
 @property (nonatomic, copy) NSString *appID;
 @property (nonatomic, copy) NSString *deviceID;
 @property (nonatomic, assign) MMXConnectionStatus connectionStatus;
-@property (nonatomic, strong) MMXUserProfile *currentProfile;
 
 - (XMPPJID *)currentJID;
 - (NSString *)generateMessageID;

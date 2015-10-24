@@ -404,7 +404,7 @@ int const kReconnectionTimerInterval = 4;
 
 	NSString * mType = @"chat";
     NSXMLElement *mmxElement = [[NSXMLElement alloc] initWithName:MXmmxElement xmlns:MXnsDataPayload];
-	[mmxElement addChild:[MMXInternalMessageAdaptor xmlFromRecipients:outboundMessage.recipients senderAddress:self.currentProfile.address]];
+	[mmxElement addChild:[MMXInternalMessageAdaptor xmlFromRecipients:outboundMessage.recipients senderAddress:nil]];
 	[mmxElement addChild:[outboundMessage contentToXML]];
 
     if (outboundMessage.metaData) {
@@ -930,7 +930,7 @@ int const kReconnectionTimerInterval = 4;
 		
 		MMUser *sender;
 		for (MMUser *user in users) {
-			if ([user.userName.lowercaseString isEqualToString:message.senderUserID.username.lowercaseString]) {
+			if ([user.userID.lowercaseString isEqualToString:message.senderUserID.username.lowercaseString]) {
 				sender = user.copy;
 			}
 		}
@@ -993,7 +993,7 @@ int const kReconnectionTimerInterval = 4;
 	if (usernames && usernames.count) {
 		[MMUser usersWithUserIDs:usernames success:^(NSArray *users) {
 			for (MMXPubSubMessage *pubMsg in messageArray) {
-				NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userName = %@",pubMsg.senderUserID.username];
+				NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userID = %@",pubMsg.senderUserID.username];
 				MMUser *sender = [users filteredArrayUsingPredicate:usernamePredicate].firstObject;
 				MMXMessage *channelMessage = [MMXMessage messageFromPubSubMessage:pubMsg sender:sender];
 				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification

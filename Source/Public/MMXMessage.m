@@ -253,6 +253,14 @@
 	if (recipients == nil || recipients.count < 1) {
 		*error = [MMXClient errorWithTitle:@"Recipients not set" message:@"Recipients cannot be nil" code:401];
 		return NO;
+	} else {
+		for (MMUser *user in recipients) {
+			if (user.userID == nil || [user.userID isEqualToString:@""]) {
+				*error = [MMXClient errorWithTitle:@"Invalid Recipients" message:@"One or more recipients are not valid because their userID is nil" code:401];
+				return NO;
+			}
+		}
+
 	}
 	
 	if (![MMXMessageUtils isValidMetaData:content]) {
