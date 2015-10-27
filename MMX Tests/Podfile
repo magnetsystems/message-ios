@@ -23,3 +23,7 @@ end
 #   link_with 'OS X Tests'
 #   import_pods
 # end
+
+post_install do |installer|
+ `find Pods -regex 'Pods\\/Mantle\\/Mantle\\/Mantle\\.h' -print0 | xargs -0 sed -i '' 's/\\(<\\)Mantle\\/\\(.*\\)\\(>\\)/\\"\\2\\"/'`
+end

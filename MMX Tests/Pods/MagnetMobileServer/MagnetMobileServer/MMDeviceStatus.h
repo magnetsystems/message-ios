@@ -3,7 +3,7 @@
 //  @See Also: http://developer.magnet.com
 //
 #import <Foundation/Foundation.h>
-//#import <MagnetMobileServer/MagnetMobileServer.h>
+//@import MagnetMobileServer;
 
 #import "MMEnumAttributeContainer.h"
 

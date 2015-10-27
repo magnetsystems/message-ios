@@ -5,7 +5,7 @@
 //  @See Also: http://developer.magnet.com
 //
 
-//#import <MagnetMobileServer/MagnetMobileServer.h>
+//@import MagnetMobileServer;
 
 
 #import "MMDeviceStatus.h"

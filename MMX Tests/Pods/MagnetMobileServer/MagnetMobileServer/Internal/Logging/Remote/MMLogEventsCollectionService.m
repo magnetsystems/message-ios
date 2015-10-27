@@ -8,7 +8,7 @@
 #import "MMLogEvent.h"
 #import "MMServiceMethod.h"
 #import "MMServiceMethodParameter.h"
-#import "MMCall.h"
+#import <MagnetMobileServer/MagnetMobileServer-Swift.h>
 
 @implementation MMLogEventsCollectionService
 

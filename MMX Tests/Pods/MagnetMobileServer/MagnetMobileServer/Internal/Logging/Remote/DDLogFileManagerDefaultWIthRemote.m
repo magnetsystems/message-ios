@@ -6,7 +6,7 @@
 #import "DDLogFileManagerDefaultWIthRemote.h"
 #import "MMLogEventsCollectionService.h"
 #import "MMData.h"
-#import "MMCall.h"
+#import <MagnetMobileServer/MagnetMobileServer-Swift.h>
 
 
 @implementation DDLogFileManagerDefaultWIthRemote

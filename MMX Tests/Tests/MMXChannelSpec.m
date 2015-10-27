@@ -131,7 +131,7 @@ describe(@"MMXChannel", ^{
 	});
 
 	context(@"when finding a channel by name", ^{
-		it(@"should only return one valid channel", ^{
+		xit(@"should only return one valid channel", ^{
 			__block BOOL _isSuccess = NO;
 			[MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
 				[[theValue([MMXUtils objectIsValidString:channel.name]) should] beYes];
@@ -179,7 +179,7 @@ describe(@"MMXChannel", ^{
 
 	context(@"when searching by tags", ^{
 		
-		it(@"should only return one valid channel for the test tag", ^{
+		xit(@"should only return one valid channel for the test tag", ^{
 			__block BOOL _isSuccess = NO;
 			[MMXChannel findByTags:[NSSet setWithObject:@"test_topic_tag"] limit:100 offset:0 success:^(int totalCount, NSArray *channels) {
 				MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
@@ -203,7 +203,7 @@ describe(@"MMXChannel", ^{
 
 	context(@"when sending an invite", ^{
 
-		it(@"should succeed if trying to send from a channel object that is fully hydrated", ^{
+		xit(@"should succeed if trying to send from a channel object that is fully hydrated", ^{
 			__block BOOL _isSuccess = NO;
 			[MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
 				[channel inviteUser:[MMUser currentUser] comments:@"No commment" success:^(MMXInvite *invite) {
