@@ -158,7 +158,7 @@ SPEC_BEGIN(MMXMessageSpec)
 				[[MMXDidReceiveMessageNotification shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] bePostedEvaluatingBlock:^(NSNotification *notification){
 					receivedMessage = notification.userInfo[MMXMessageKey];
 					[receivedMessage sendDeliveryConfirmation];
-					senderUserObject = receivedMessage.sender;
+					senderUserObject = receivedMessage.sender.copy;
 					recipientUserObject = [receivedMessage.recipients allObjects].firstObject;
 					NSLog(@"sent message with messageID: %@", messageID);
 					NSLog(@"received message with messageID: %@", receivedMessage.messageID);
@@ -170,23 +170,25 @@ SPEC_BEGIN(MMXMessageSpec)
 				[[MMXDidReceiveDeliveryConfirmationNotification shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] bePostedEvaluatingBlock:^(NSNotification *notification){
 					confirmationUserObject = notification.userInfo[MMXRecipientKey];
 					confirmationMessageID = notification.userInfo[MMXMessageIDKey];
+					NSLog(@"received confirmationMessageID with messageID: %@", confirmationMessageID);
+					NSLog(@"received confirmationMessageID with messageID: %@", confirmationMessageID);
 				}];
 
 				//Temporarily commented these out. Values seem to be correct but failing for some reason
-//				[[expectFutureValue(senderUserObject.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
-//				[[expectFutureValue(senderUserObject.firstName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:firstName];
-//				[[expectFutureValue(senderUserObject.lastName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:lastName];
-//				[[expectFutureValue(senderUserObject.email) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:email];
-//
-//				[[expectFutureValue(recipientUserObject.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
-//				[[expectFutureValue(recipientUserObject.firstName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:firstName];
-//				[[expectFutureValue(recipientUserObject.lastName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:lastName];
-//				[[expectFutureValue(recipientUserObject.email) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:email];
-//				
-//				[[expectFutureValue(confirmationUserObject.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
-//				[[expectFutureValue(confirmationUserObject.firstName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:firstName];
-//				[[expectFutureValue(confirmationUserObject.lastName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:lastName];
-//				[[expectFutureValue(confirmationUserObject.email) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:email];
+				[[expectFutureValue(senderUserObject.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
+				[[expectFutureValue(senderUserObject.firstName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:firstName];
+				[[expectFutureValue(senderUserObject.lastName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:lastName];
+				[[expectFutureValue(senderUserObject.email) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:email];
+
+				[[expectFutureValue(recipientUserObject.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
+				[[expectFutureValue(recipientUserObject.firstName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:firstName];
+				[[expectFutureValue(recipientUserObject.lastName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:lastName];
+				[[expectFutureValue(recipientUserObject.email) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:email];
+				
+				[[expectFutureValue(confirmationUserObject.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
+				[[expectFutureValue(confirmationUserObject.firstName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:firstName];
+				[[expectFutureValue(confirmationUserObject.lastName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:lastName];
+				[[expectFutureValue(confirmationUserObject.email) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:email];
 
 				[[expectFutureValue(confirmationMessageID) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:receivedMessage.messageID];
 			});
