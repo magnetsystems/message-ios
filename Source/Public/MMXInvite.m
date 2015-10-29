@@ -64,11 +64,6 @@
 	MMXInvite *invite = [MMXInvite new];
 	invite.comments = message.metaData[@"text"];
 	MMXInternalAddress *address = message.senderUserID.address;
-	MMUser *user = [MMUser new];
-	//Converting to MMXUserID will handle any exscaping needed
-	MMXUserID *userID = [MMXUserID userIDFromAddress:address];
-	user.userName = userID.username;
-	invite.sender = user;
 	invite.channel = [MMXInvite channelFromMessageMetaData:message.metaData];
 	invite.timestamp = message.timestamp;
 	return invite;

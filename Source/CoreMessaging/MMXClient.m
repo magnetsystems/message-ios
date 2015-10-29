@@ -914,8 +914,6 @@ int const kReconnectionTimerInterval = 4;
 
 #pragma mark - Message Handling
 
-//FIXME: Move all logic for inbound messages to be delivered to the developer here
-//Send server ack after successfully parsed message and notification to dev sent
 - (void)handleInboundMessageFromInternalMessageAdaptor:(MMXInternalMessageAdaptor *)message
 												  from:(XMPPJID *)from
 													to:(XMPPJID *)to
@@ -954,6 +952,7 @@ int const kReconnectionTimerInterval = 4;
 															object:nil
 														  userInfo:@{MMXMessageKey:msg}];
 		if (![message.mType isEqualToString:@"normal"]) {
+			//Send server ack after successfully parsed message and notification to dev sent
 			[self sendSDKAckMessageId:messageID sourceFrom:from sourceTo:to];
 		}
 	} failure:^(NSError * error) {
@@ -967,13 +966,14 @@ int const kReconnectionTimerInterval = 4;
 												   to:(XMPPJID *)to
 											messageID:(NSString *)messageID {
 	MMXInvite *invite = [MMXInvite inviteFromMMXInternalMessage:message];
-	[MMUser usersWithUserIDs:@[invite.sender.userName] success:^(NSArray *users) {
+	[MMUser usersWithUserIDs:@[message.senderUserID.username] success:^(NSArray *users) {
 		if (users.count) {
 			invite.sender = users.firstObject;
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteNotification
 															object:nil
 														  userInfo:@{MMXInviteKey:invite}];
+		//Send server ack after successfully parsed message and notification to dev sent
 		[self sendSDKAckMessageId:messageID sourceFrom:from sourceTo:to];
 	} failure:^(NSError * error) {
 		[[MMLogger sharedLogger] error:@"Failed to get users for Invite\n%@",error];
@@ -986,13 +986,14 @@ int const kReconnectionTimerInterval = 4;
 													messageID:(NSString *)messageID {
 
 	MMXInviteResponse *inviteResponse = [MMXInviteResponse inviteResponseFromMMXInternalMessage:message];
-	[MMUser usersWithUserIDs:@[inviteResponse.sender.userName] success:^(NSArray *users) {
+	[MMUser usersWithUserIDs:@[message.senderUserID.username] success:^(NSArray *users) {
 		if (users.count) {
 			inviteResponse.sender = users.firstObject;
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveChannelInviteResponseNotification
 															object:nil
 														  userInfo:@{MMXInviteResponseKey:inviteResponse}];
+		//Send server ack after successfully parsed message and notification to dev sent
 		[self sendSDKAckMessageId:messageID sourceFrom:from sourceTo:to];
 	} failure:^(NSError * error) {
 		[[MMLogger sharedLogger] error:@"Failed to get users for Invite Response\n%@",error];
