@@ -1,6 +1,6 @@
 {
   "name": "MMX",
-  "version": "2.0",
+  "version": "2.0.0",
   "license": {
     "type": "Apache 2.0"
   },
@@ -37,11 +37,11 @@
     "MDMCoreData": [
       "1.5.0"
     ],
-    "MagnetMobileServer": [
-      "~>3.0"
+    "MagnetMaxCore": [
+      "~> 2.0.0"
     ],
     "CocoaLumberjack": [
-      "~>2.0.2"
+      "~> 2.0.2"
     ],
     "CocoaAsyncSocket": [
       "7.4.1"

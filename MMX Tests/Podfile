@@ -9,7 +9,7 @@ def import_pods
   use_frameworks!
   pod 'Kiwi', '~> 2.3'
   pod 'MMX', :path => '../'
-  pod 'MagnetMax', '~>3.0'
+  pod 'MagnetMax', '~> 2.0.0'
 end
 
 target :ios do
@@ -24,6 +24,3 @@ end
 #   import_pods
 # end
 
-post_install do |installer|
- `find Pods -regex 'Pods\\/Mantle\\/Mantle\\/Mantle\\.h' -print0 | xargs -0 sed -i '' 's/\\(<\\)Mantle\\/\\(.*\\)\\(>\\)/\\"\\2\\"/'`
-end

@@ -93,9 +93,8 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-ios/MMX.framework"
   install_framework "Pods-ios/MMXXMPPFramework.framework"
   install_framework "Pods-ios/MagnetMax.framework"
-  install_framework "Pods-ios/MagnetMobileServer.framework"
+  install_framework "Pods-ios/MagnetMaxCore.framework"
   install_framework "Pods-ios/Mantle.framework"
-  install_framework "Pods-ios/libextobjc.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-ios/AFNetworking.framework"
@@ -107,7 +106,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-ios/MMX.framework"
   install_framework "Pods-ios/MMXXMPPFramework.framework"
   install_framework "Pods-ios/MagnetMax.framework"
-  install_framework "Pods-ios/MagnetMobileServer.framework"
+  install_framework "Pods-ios/MagnetMaxCore.framework"
   install_framework "Pods-ios/Mantle.framework"
-  install_framework "Pods-ios/libextobjc.framework"
 fi
