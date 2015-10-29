@@ -18,6 +18,6 @@
 import Foundation
 
 @objc public class MMCoreConfiguration: NSObject {
-    static public var currentConfiguration: MMServiceAdapterConfiguration!
+    static public var currentConfiguration: MMConfiguration!
     static public var serviceAdapter: MMServiceAdapter!
 }

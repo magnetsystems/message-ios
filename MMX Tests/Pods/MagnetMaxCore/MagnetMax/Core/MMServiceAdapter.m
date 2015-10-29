@@ -210,11 +210,11 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-+ (instancetype)adapterWithConfiguration:(id<MMServiceAdapterConfiguration>)configuration {
++ (instancetype)adapterWithConfiguration:(id<MMConfiguration>)configuration {
     return [self adapterWithConfiguration:configuration client:nil];
 }
 
-+ (instancetype)adapterWithConfiguration:(id<MMServiceAdapterConfiguration>)configuration
++ (instancetype)adapterWithConfiguration:(id<MMConfiguration>)configuration
                                   client:(id<MMClientFacade>)client {
     return [self adapterWithEndpoint:[MMEndPoint endPointWithURL:configuration.baseURL] clientID:configuration.clientID clientSecret:configuration.clientSecret client:client];
 }

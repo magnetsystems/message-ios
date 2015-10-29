@@ -17,7 +17,7 @@
 
 import Foundation
 
-public class MMServiceAdapterPropertyListConfiguration: NSObject, MMServiceAdapterConfiguration {
+public class MMPropertyListConfiguration: NSObject, MMConfiguration {
 
     public var baseURL: NSURL
     public var clientID: String = ""

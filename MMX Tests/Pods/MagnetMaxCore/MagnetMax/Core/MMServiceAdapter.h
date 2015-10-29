@@ -22,7 +22,7 @@
 @class MMUser;
 @class MMCall;
 @class MMDevice;
-@protocol MMServiceAdapterConfiguration;
+@protocol MMConfiguration;
 @class AFHTTPSessionManager;
 @protocol MMRequestOperationManager;
 
@@ -109,9 +109,9 @@ The timeout interval, in seconds, for created requests. The default timeout inte
 
 + (instancetype)adapter;
 
-+ (instancetype)adapterWithConfiguration:(id<MMServiceAdapterConfiguration>)configuration;
++ (instancetype)adapterWithConfiguration:(id<MMConfiguration>)configuration;
 
-+ (instancetype)adapterWithConfiguration:(id<MMServiceAdapterConfiguration>)configuration
++ (instancetype)adapterWithConfiguration:(id<MMConfiguration>)configuration
                                   client:(id<MMClientFacade>)client;
 
 + (instancetype)adapterWithEndpoint:(MMEndPoint *)endpoint

@@ -31,7 +31,7 @@ import MMX
         - Parameters:
             - configuration: The configuration to be used.
     */
-    static public func configure(configuration: MMServiceAdapterConfiguration) {
+    static public func configure(configuration: MMConfiguration) {
         registerObservers()
         serviceAdapter = MMServiceAdapter(configuration: configuration)
         MMCoreConfiguration.currentConfiguration = configuration

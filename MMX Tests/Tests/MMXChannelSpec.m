@@ -1,10 +1,19 @@
-//
-//  MMXChannelSpec.m
-//  MMX
-//
-//  Created by Jason Ferguson on 8/26/15.
-//  Copyright (c) 2015 Magnet Systems, Inc. All rights reserved.
-//
+/*
+ * Copyright (c) 2015 Magnet Systems, Inc.
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You
+ * may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
 
 #import <Kiwi/Kiwi.h>
 @import MagnetMax;
@@ -28,6 +37,8 @@ describe(@"MMXChannel", ^{
 	
 	beforeAll(^{
 		
+		[MMXLogger sharedLogger].level = MMXLoggerLevelVerbose;
+		[[MMXLogger sharedLogger] startLogging];
 		NSString *filename = @"MagnetMax";
 		NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:filename ofType:@"plist"];
 		BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path];
@@ -40,7 +51,7 @@ describe(@"MMXChannel", ^{
 				NSAssert(exists, @"You must include your Configurations.plist file in the project. You can download this file on the Settings page of the Magnet Message Web Interface");
 			}
 		}
-		id <MMServiceAdapterConfiguration> configuration = [[MMServiceAdapterPropertyListConfiguration alloc] initWithContentsOfFile:path];
+		id <MMConfiguration> configuration = [[MMPropertyListConfiguration alloc] initWithContentsOfFile:path];
 		[MagnetMax configure:configuration];
 
 		__block BOOL _isSuccess = NO;

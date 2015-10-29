@@ -24,7 +24,7 @@ PODS:
   - Kiwi (2.4.0)
   - MagnetMax (2.0.0):
     - MagnetMaxCore (~> 2.0.0)
-    - MMX (~> 2.0)
+    - MMX (~> 2.0.0)
   - MagnetMaxCore (2.0.0):
     - AFNetworking/NSURLConnection (= 2.6.1)
     - AFNetworking/NSURLSession (= 2.6.1)
@@ -51,7 +51,7 @@ PODS:
     - MDMCoreData/MDMCoreDataCore
   - MMX (2.0.0):
     - CocoaAsyncSocket (= 7.4.1)
-    - CocoaLumberjack (~> 2.0.2)
+    - CocoaLumberjack (~> 2.0)
     - MagnetMaxCore (~> 2.0.0)
     - MDMCoreData (= 1.5.0)
     - MMXXMPPFramework (= 3.6.13)
@@ -100,11 +100,11 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
   CocoaLumberjack: f58d8a19629f4d8379ae14bb3534def24161430e
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
-  MagnetMax: 2c2799752eb27f57ce3a44fbe608363a6a97a7c1
+  MagnetMax: 1d7b77e0731cd927b7ccb513d2fce056d2191ac4
   MagnetMaxCore: 5fb46e7f8d0eb5472b141b6a2bead4bdf2b43b92
   Mantle: b02515dd223fa86771241c8c44d92212f479eff9
   MDMCoreData: 402f754cda90865026a209243f1667824e775649
-  MMX: e94c1b17110ef5f9ea57fcbbd76c63f09e19f8d4
+  MMX: 3d9e65debc156299359ebe7665bfbf13355aba77
   MMXXMPPFramework: af652c05a32674c3d0d8631f52f8a3171f42e859
 
 COCOAPODS: 0.39.0

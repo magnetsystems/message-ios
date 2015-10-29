@@ -42,7 +42,7 @@ SPEC_BEGIN(MMXMessageSpec)
 //					NSAssert(exists, @"You must include your Configurations.plist file in the project. You can download this file on the Settings page of the Magnet Message Web Interface");
 //				}
 //			}
-//			id <MMServiceAdapterConfiguration> configuration = [[MMServiceAdapterPropertyListConfiguration alloc] initWithContentsOfFile:path];
+//			id <MMConfiguration> configuration = [[MMPropertyListConfiguration alloc] initWithContentsOfFile:path];
 //			[MagnetMax configure:configuration];
 			
 			__block BOOL _isSuccess = NO;

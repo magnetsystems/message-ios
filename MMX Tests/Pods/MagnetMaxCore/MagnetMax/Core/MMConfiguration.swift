@@ -17,7 +17,7 @@
 
 import Foundation
 
-@objc public protocol MMServiceAdapterConfiguration : class {
+@objc public protocol MMConfiguration : class {
     var baseURL: NSURL { get }
     var clientID: String { get }
     var clientSecret: String { get }
