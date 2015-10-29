@@ -22,7 +22,7 @@
 #import "MMXUserID_Private.h"
 #import "MagnetDelegate.h"
 #import "MMXUtils.h"
-@import MagnetMobileServer;
+@import MagnetMaxCore;
 
 @implementation MMXInvite
 

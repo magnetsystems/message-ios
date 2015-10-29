@@ -19,7 +19,7 @@
 #import "MMXInternalMessageAdaptor_Private.h"
 #import "MMXUserID_Private.h"
 #import "MMXInvite_Private.h"
-@import MagnetMobileServer;
+@import MagnetMaxCore;
 
 @implementation MMXInviteResponse
 

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@import MagnetMobileServer;
+@import MagnetMaxCore;
 
 @interface MMXInternalAddress : MMModel
 

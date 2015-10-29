@@ -55,7 +55,7 @@
 #import <AssertMacros.h>
 
 @import CoreLocation;
-@import MagnetMobileServer;
+@import MagnetMaxCore;
 // Taken from https://github.com/AFNetworking/AFNetworking/blob/master/AFNetworking/AFSecurityPolicy.m
 static BOOL MMXServerTrustIsValid(SecTrustRef serverTrust) {
     BOOL isValid = NO;
