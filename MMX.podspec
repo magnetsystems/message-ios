@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.dependency     'MMXXMPPFramework', '3.6.13'
   s.dependency     'MDMCoreData', '1.5.0'
   s.dependency     'MagnetMaxCore', '~> 2.2'
-  s.dependency     'CocoaLumberjack', '~> 2.0'
+  s.dependency     'CocoaLumberjack', '~> 2.2'
   s.dependency     'CocoaAsyncSocket', '7.4.1'
 
 end
