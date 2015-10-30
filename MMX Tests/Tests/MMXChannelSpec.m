@@ -48,7 +48,7 @@ describe(@"MMXChannel", ^{
 			
 			exists = [[NSFileManager defaultManager] fileExistsAtPath:path];
 			if (!exists) {
-				NSAssert(exists, @"You must include your Configurations.plist file in the project. You can download this file on the Settings page of the Magnet Message Web Interface");
+				NSAssert(exists, @"You must include your MagnetMax.plist file in the project. You can download this file on the Settings page of the Magnet Message Web Interface");
 			}
 		}
 		id <MMConfiguration> configuration = [[MMPropertyListConfiguration alloc] initWithContentsOfFile:path];
