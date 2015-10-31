@@ -1,5 +1,5 @@
-source 'https://github.com/CocoaPods/Specs'
-source 'https://github.com/magnetsystems/iOS-Distribution.git'
+source 'https://github.com/CocoaPods/Specs.git'
+source 'https://github.com/magnetsystems/Specs.git'
 
 xcodeproj 'MMX Tests'
 workspace '../MMX'
