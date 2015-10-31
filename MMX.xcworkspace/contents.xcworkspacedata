@@ -1,10 +1,538 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
+   <Group
+      location = "group:Source"
+      name = "Source">
+      <FileRef
+         location = "group:MMXInternal_Private.h">
+      </FileRef>
+      <Group
+         location = "group:Abstraction"
+         name = "Abstraction">
+         <FileRef
+            location = "group:MagnetDelegate.h">
+         </FileRef>
+         <FileRef
+            location = "group:MagnetDelegate.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMUser+Addressable.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMUser+Addressable.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXAsyncOperation.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXAsyncOperation.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXChannel_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXConnectionOperation.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXConnectionOperation.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInternalAddress.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInternalAddress.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInvite_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInviteResponse_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXLogInOperation.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXLogInOperation.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXMessage_Private.h">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Categories"
+         name = "Categories">
+         <FileRef
+            location = "group:XMPPIQ+MMX.h">
+         </FileRef>
+         <FileRef
+            location = "group:XMPPIQ+MMX.m">
+         </FileRef>
+         <FileRef
+            location = "group:XMPPJID+MMX.h">
+         </FileRef>
+         <FileRef
+            location = "group:XMPPJID+MMX.m">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Configuration"
+         name = "Configuration">
+         <FileRef
+            location = "group:MMXConfiguration.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXConfiguration.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXConfigurationRegistry.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXConfigurationRegistry.m">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Constants"
+         name = "Constants">
+         <FileRef
+            location = "group:MMXConstants.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXConstants.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXErrorSeverityEnum.h">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:CoreData"
+         name = "CoreData">
+         <FileRef
+            location = "group:_MMXOutboxEntry.h">
+         </FileRef>
+         <FileRef
+            location = "group:_MMXOutboxEntry.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMX.xcdatamodeld">
+         </FileRef>
+         <FileRef
+            location = "group:MMXDataModel.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXDataModel.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXKeyedArchiver.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXKeyedArchiver.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXKeyedUnarchiver.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXKeyedUnarchiver.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXOutboxEntry.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXOutboxEntry.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXOutboxTransformer.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXOutboxTransformer.m">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:CoreMessaging"
+         name = "CoreMessaging">
+         <Group
+            location = "group:Addressable"
+            name = "Addressable">
+            <FileRef
+               location = "group:MMXAddressable.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXEndpoint.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXEndpoint.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXEndpoint_Private.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXUserID.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXUserID.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXUserID_Private.h">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:Messages"
+            name = "Messages">
+            <FileRef
+               location = "group:MMXInboundMessage.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXInboundMessage.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXInboundMessage_Private.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXMessageOptions.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXMessageOptions.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXMessageOptions_Private.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXOutboundMessage.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXOutboundMessage.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXOutboundMessage_Private.h">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:MMXClient.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXClient.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXClient_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInternalAck.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInternalAck.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInternalMessageAdaptor.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInternalMessageAdaptor.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInternalMessageAdaptor_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXIQResponse.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXIQResponse.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXMessageStateQueryResponse.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXMessageStateQueryResponse.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXMessageStateQueryResponse_Private.h">
+         </FileRef>
+         <Group
+            location = "group:Query"
+            name = "Query">
+            <FileRef
+               location = "group:MMXQuery.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXQuery.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXQuery_Private.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXQueryFilter.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXQueryFilter.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXQueryFilter_Private.h">
+            </FileRef>
+         </Group>
+      </Group>
+      <Group
+         location = "group:OAuth"
+         name = "OAuth">
+         <FileRef
+            location = "group:MMXOAuthPlatformAuthentication.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXOAuthPlatformAuthentication.m">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Public"
+         name = "Public">
+         <FileRef
+            location = "group:MMX.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMX.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXChannel.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXChannel.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPublishPermissionsEnum.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInvite.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInvite.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInviteResponse.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXInviteResponse.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXLogger.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXLogger.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXMessage.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXMessage.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXMessageTypes.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXNotificationConstants.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXNotificationConstants.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXRemoteNotification.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXRemoteNotification.m">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:PubSub"
+         name = "PubSub">
+         <FileRef
+            location = "group:MMXGeoLocationMessage.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXGeoLocationMessage.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXGeoLocationMessage_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPubSubFetchRequest.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPubSubFetchRequest.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPubSubFetchRequest_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPubSubManager.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPubSubManager.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPubSubManager_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPubSubMessage.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPubSubMessage.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPubSubMessage_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXTopic.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXTopic.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXTopic_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXTopicListResponse.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXTopicListResponse.m">
+         </FileRef>
+         <Group
+            location = "group:TopicQuery"
+            name = "TopicQuery">
+            <FileRef
+               location = "group:MMXTopicQueryFilter.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicQueryFilter.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicQueryFilter_Private.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicQueryResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicQueryResponse.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicQueryResponse_Private.h">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:TopicSubscription"
+            name = "TopicSubscription">
+            <FileRef
+               location = "group:MMXSubscriptionListResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSubscriptionListResponse.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSubscriptionResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSubscriptionResponse.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSubscriptionResponse_Private.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicSubscribersResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicSubscribersResponse.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicSubscription.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicSubscription.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicSubscription_Private.h">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:TopicSummary"
+            name = "TopicSummary">
+            <FileRef
+               location = "group:MMXTopicSummary.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicSummary.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicSummary_Private.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicSummaryRequestResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXTopicSummaryRequestResponse.m">
+            </FileRef>
+         </Group>
+      </Group>
+      <Group
+         location = "group:User"
+         name = "User">
+         <FileRef
+            location = "group:MMXUserProfile.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUserProfile.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUserProfile_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUserQueryFilter.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUserQueryFilter.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUserQueryFilter_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUserQueryResponse.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUserQueryResponse.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUserQueryResponse_Private.h">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Utilities"
+         name = "Utilities">
+         <FileRef
+            location = "group:MMXAssert.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXiso8601DateTransformer.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXiso8601DateTransformer.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXMessageUtils.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXMessageUtils.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXTestingUtils.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXTestingUtils.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUtils.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUtils.m">
+         </FileRef>
+      </Group>
+   </Group>
    <FileRef
-      location = "group:MMX.xcodeproj">
+      location = "group:MMX Tests/MMX Tests.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Pods/Pods.xcodeproj">
+      location = "group:MMX Tests/Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

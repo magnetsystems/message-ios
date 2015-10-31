@@ -1,0 +1,1 @@
+../../../../../Source/CoreMessaging/MMXInternalMessageAdaptor.h
