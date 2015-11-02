@@ -231,12 +231,6 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 		case MMXConnectionStatusReconnecting: {
 		}
 			break;
-		case MMXConnectionStatusAnonReady: {
-		}
-			break;
-		case MMXConnectionStatusUserReady: {
-		}
-			break;
 	}
 }
 
