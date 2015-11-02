@@ -768,14 +768,11 @@ int const kReconnectionTimerInterval = 4;
 		if (self.reconnectionTryCount >= kMaxReconnectionTries) {
 			self.reconnectionTryCount = 0;
 			[self.xmppReconnect stop];
-			[self updateConnectionStatus:MMXConnectionStatusDisconnected error:error];
 		} else {
 			self.reconnectionTryCount++;
 			return;
 		}
-	} else {
-        [self updateConnectionStatus:MMXConnectionStatusDisconnected error:error];
-    }
+	}
 }
 
 #pragma mark - XMPPStreamDelegate Message/IQ Methods
