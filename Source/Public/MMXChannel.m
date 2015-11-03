@@ -47,7 +47,7 @@
 
 + (void)allPublicChannelsWithLimit:(int)limit
 							offset:(int)offset
-						   success:(void (^)(int totalCount, NSArray *channels))success
+						   success:(void (^)(int totalCount, NSArray <MMXChannel *>*channels))success
 						   failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
@@ -69,7 +69,7 @@
 
 + (void)allPrivateChannelsWithLimit:(int)limit
 							 offset:(int)offset
-							success:(void (^)(int totalCount, NSArray *channels))success
+							success:(void (^)(int totalCount, NSArray <MMXChannel *>*channels))success
 							failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
@@ -135,7 +135,7 @@
 + (void)channelsStartingWith:(NSString *)name
 					   limit:(int)limit
 					  offset:(int)offset
-					 success:(void (^)(int, NSArray *))success
+					 success:(void (^)(int, NSArray <MMXMessage *>*))success
 					 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
@@ -166,7 +166,7 @@
 + (void)findByTags:(NSSet *)tags
 			 limit:(int)limit
 			offset:(int)offset
-		   success:(void (^)(int, NSArray *))success
+		   success:(void (^)(int, NSArray <MMXChannel *>*))success
 		   failure:(void (^)(NSError *))failure {
 	
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
@@ -373,7 +373,7 @@
 	}];
 }
 
-+ (void)subscribedChannelsWithSuccess:(void (^)(NSArray *))success
++ (void)subscribedChannelsWithSuccess:(void (^)(NSArray <MMXChannel *>*))success
 							  failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
@@ -407,7 +407,7 @@
 
 - (void)subscribersWithLimit:(int)limit
 					  offset:(int)offset
-					 success:(void (^)(int totalCount, NSArray *subscribers))success
+					 success:(void (^)(int totalCount, NSArray <MMUser *>*subscribers))success
 					 failure:(void (^)(NSError *error))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
@@ -463,7 +463,7 @@
 						   limit:(int)limit
 						  offset:(int)offset
 					   ascending:(BOOL)ascending
-						 success:(void (^)(int, NSArray *))success
+						 success:(void (^)(int, NSArray <MMXMessage *>*))success
 						 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {
