@@ -410,6 +410,28 @@ describe(@"MMXChannel", ^{
 	
 	context(@"when fetching messages from a channel", ^{
 		
+		it(@"should return success if the fetch returns an empty array of message because no one has posted yet", ^{
+			
+			NSString *channelName = [NSString stringWithFormat:@"publicChannelName_%f", [[NSDate date] timeIntervalSince1970]];
+			NSString *channelSummary = [NSString stringWithFormat:@"publicChannelSummary_%f", [[NSDate date] timeIntervalSince1970]];
+			__block BOOL _isSuccess = NO;
+			
+			[MMXChannel createWithName:channelName summary:channelSummary isPublic:NO publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
+				[channel messagesBetweenStartDate:nil endDate:nil limit:100 offset:0 ascending:YES success:^(int totalCount, NSArray *messages) {
+					
+					[[theValue(totalCount == 0) should] beYes];
+					[[theValue(messages.count == 0) should] beYes];
+					_isSuccess = YES;
+				} failure:^(NSError *error) {
+					_isSuccess = NO;
+				}];
+			} failure:^(NSError *error) {
+				_isSuccess = NO;
+			}];
+			
+			[[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+		});
+		
 		it(@"should return success if the fetch returns valid messages(Public Channel)", ^{
 			
 			NSString *channelName = [NSString stringWithFormat:@"publicChannelName_%f", [[NSDate date] timeIntervalSince1970]];
