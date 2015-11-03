@@ -135,7 +135,7 @@
 + (void)channelsStartingWith:(NSString *)name
 					   limit:(int)limit
 					  offset:(int)offset
-					 success:(void (^)(int, NSArray <MMXMessage *>*))success
+					 success:(void (^)(int, NSArray <MMXChannel *>*))success
 					 failure:(void (^)(NSError *))failure {
 	if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
 		if (failure) {

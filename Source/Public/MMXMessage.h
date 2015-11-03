@@ -103,7 +103,7 @@
  *  @return The messageID for the message sent
  */
 - (NSString *)replyWithContent:(NSDictionary *)content
-					   success:(void (^)(NSSet <MMUser *>*invalidUsers))success
+					   success:(void (^)(NSSet <NSString *>*invalidUsers))success
 					   failure:(void (^)(NSError * error))failure;
 
 /**
