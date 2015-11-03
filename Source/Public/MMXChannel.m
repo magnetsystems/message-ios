@@ -484,34 +484,40 @@
 	fetch.offset = offset;
 	fetch.ascending = ascending;
 	[[MMXClient sharedClient].pubsubManager fetchItems:fetch success:^(NSArray *messages) {
-		NSMutableArray *channelMessageArray = [[NSMutableArray alloc] initWithCapacity:messages.count];
-		NSArray *usernames = [[messages valueForKey:@"senderUserID"] valueForKey:@"username"];
-		if (usernames && usernames.count) {
-			[MMUser usersWithUserIDs:usernames success:^(NSArray *users) {
-				for (MMXPubSubMessage *pubMsg in messages) {
-					NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userID == %@",pubMsg.senderUserID.username];
-					MMUser *sender = [users filteredArrayUsingPredicate:usernamePredicate].firstObject;
-					MMXMessage *channelMessage = [MMXMessage messageFromPubSubMessage:pubMsg sender:sender];
-					[channelMessageArray addObject:channelMessage];
-				}
-				[[MMXClient sharedClient].pubsubManager summaryOfTopics:@[topic] since:startDate until:endDate success:^(NSArray *summaries) {
-					int count = 0;
-					if (summaries.count) {
-						MMXTopicSummary *sum = summaries[0];
-						count =  sum.numItemsPublished;
+		if (messages && messages.count) {
+			NSMutableArray *channelMessageArray = [[NSMutableArray alloc] initWithCapacity:messages.count];
+			NSArray *usernames = [[messages valueForKey:@"senderUserID"] valueForKey:@"username"];
+			if (usernames && usernames.count) {
+				[MMUser usersWithUserIDs:usernames success:^(NSArray *users) {
+					for (MMXPubSubMessage *pubMsg in messages) {
+						NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userID == %@",pubMsg.senderUserID.username];
+						MMUser *sender = [users filteredArrayUsingPredicate:usernamePredicate].firstObject;
+						MMXMessage *channelMessage = [MMXMessage messageFromPubSubMessage:pubMsg sender:sender];
+						[channelMessageArray addObject:channelMessage];
 					}
-					if (success) {
-						success(count, channelMessageArray);
-					}
-				} failure:^(NSError *error) {
-					if (failure) {
-						failure(error);
-					}
+					[[MMXClient sharedClient].pubsubManager summaryOfTopics:@[topic] since:startDate until:endDate success:^(NSArray *summaries) {
+						int count = 0;
+						if (summaries.count) {
+							MMXTopicSummary *sum = summaries[0];
+							count =  sum.numItemsPublished;
+						}
+						if (success) {
+							success(count, channelMessageArray);
+						}
+					} failure:^(NSError *error) {
+						if (failure) {
+							failure(error);
+						}
+					}];
+				} failure:^(NSError * error) {
+					[[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n%@",error];
 				}];
-			} failure:^(NSError * error) {
-				[[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n%@",error];
-			}];
-			return;
+				return;
+			}
+		} else {
+			if (success) {
+				success(0, @[]);
+			}
 		}
 	} failure:^(NSError *error) {
 		if (failure) {
