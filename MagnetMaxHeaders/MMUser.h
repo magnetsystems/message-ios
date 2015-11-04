@@ -112,13 +112,13 @@
  *  Search for users based on some criteria.
  *  
  *  @param query The DSL can be found here: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax
- *  @param take The number of records to retrieve.
- *  @param skip The offset to start from.
+ *  @param limit The number of records to retrieve.
+ *  @param offset The offset to start from.
  *  @param sort The sort criteria.
  *  @param success A block object to be executed when the call finishes successfully. This block has no return value and takes one argument: the list of users that match the specified criteria.
  *  @param failure A block object to be executed when the call finishes with an error. This block has no return value and takes one argument: the error object.
  */
-+ (void)searchUsers:(NSString * __nonnull)query take:(NSInteger)take skip:(NSInteger)skip sort:(NSString * __nonnull)sort success:(void (^ __nullable)(NSArray<MMUser *> * __nonnull))success failure:(void (^ __nullable)(NSError * __nonnull))failure;
++ (void)searchUsers:(NSString * __nonnull)query limit:(NSInteger)limit offset:(NSInteger)offset sort:(NSString * __nonnull)sort success:(void (^ __nullable)(NSArray<MMUser *> * __nonnull))success failure:(void (^ __nullable)(NSError * __nonnull))failure;
 
 /**
  *  Get users with userNames.
