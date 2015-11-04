@@ -104,7 +104,7 @@
  */
 - (NSString *)replyWithContent:(NSDictionary *)content
 					   success:(void (^)(NSSet <NSString *>*invalidUsers))success
-					   failure:(void (^)(NSError * error))failure;
+					   failure:(void (^)(NSError *error))failure;
 
 /**
  *  Method to send a message to all recipients of the received message including the sender
@@ -117,7 +117,7 @@
  */
 - (NSString *)replyAllWithContent:(NSDictionary *)content
 						  success:(void (^)(NSSet <NSString *>*invalidUsers))success
-						  failure:(void (^)(NSError * error))failure;
+						  failure:(void (^)(NSError *error))failure;
 
 /**
  *  Send a delivery confimation message to the sender of the message.

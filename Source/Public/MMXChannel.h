@@ -87,7 +87,7 @@
 + (void)allPublicChannelsWithLimit:(int)limit
 							offset:(int)offset
 						   success:(void (^)(int totalCount, NSArray <MMXChannel *>*channels))success
-						   failure:(void (^)(NSError *))failure;
+						   failure:(void (^)(NSError *error))failure;
 
 /**
  *  Method used to get private channels created by the current user.
@@ -100,7 +100,7 @@
 + (void)allPrivateChannelsWithLimit:(int)limit
 							 offset:(int)offset
 							success:(void (^)(int totalCount, NSArray <MMXChannel *>*channels))success
-							failure:(void (^)(NSError *))failure;
+							failure:(void (^)(NSError *error))failure;
 
 /**
  *  Get a channel object by name
@@ -181,7 +181,7 @@
 			  isPublic:(BOOL)isPublic
 	publishPermissions:(MMXPublishPermissions)publishPermissions
 			   success:(void (^)(MMXChannel *channel))success
-			   failure:(void (^)(NSError *))failure;
+			   failure:(void (^)(NSError *error))failure;
 /**
  *  Method to delete an existing new channel.
  *	Current user must be the owner of the channel to delete it.
@@ -190,7 +190,7 @@
  *  @param failure - Block with an NSError with details about the call failure.
  */
 - (void)deleteWithSuccess:(void (^)(void))success
-				  failure:(void (^)(NSError * error))failure;
+				  failure:(void (^)(NSError *error))failure;
 
 /**
  *  Method to subscribe to an existing channel.
@@ -199,7 +199,7 @@
  *  @param failure - Block with an NSError with details about the call failure.
  */
 - (void)subscribeWithSuccess:(void (^)(void))success
-					 failure:(void (^)(NSError * error))failure;
+					 failure:(void (^)(NSError *error))failure;
 
 /**
  *  Method to unsubscribe to an existing channel.
@@ -208,7 +208,7 @@
  *  @param failure - Block with an NSError with details about the call failure.
  */
 - (void)unSubscribeWithSuccess:(void (^)(void))success
-					   failure:(void (^)(NSError * error))failure;
+					   failure:(void (^)(NSError *error))failure;
 
 
 /**
