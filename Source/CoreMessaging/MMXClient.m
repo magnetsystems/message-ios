@@ -277,7 +277,11 @@ int const kReconnectionTimerInterval = 4;
         }
         [[MMXLogger sharedLogger] verbose:@"connection completed"];
     } else {
+		if (error == nil) {
+			error = [MMXClient errorWithTitle:@"Unknown Messaging Error" message:@"Unable to connect to the Messaging server" code:500];
+		}
         [[MMXLogger sharedLogger] verbose:@"Authentication Attempt Error:%@", error.description];
+		[self updateConnectionStatus:MMXConnectionStatusAuthenticationFailure error:error];
     }
 }
 
