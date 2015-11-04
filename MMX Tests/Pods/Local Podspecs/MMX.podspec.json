@@ -12,7 +12,7 @@
   },
   "source": {
     "git": "https://github.com/magnetsystems/message-ios.git",
-    "branch": "mmx-blowfish-reorg"
+    "tag": "2.0.0"
   },
   "platforms": {
     "ios": "8.0"

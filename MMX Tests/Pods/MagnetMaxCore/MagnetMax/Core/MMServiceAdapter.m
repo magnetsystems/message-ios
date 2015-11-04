@@ -45,6 +45,7 @@ NSString * const MMServiceAdapterDidReceiveConfigurationNotification = @"com.mag
 NSString * const MMServiceAdapterDidReceiveCATTokenNotification = @"com.magnet.networking.cattoken.receive";
 NSString * const MMServiceAdapterDidReceiveHATTokenNotification = @"com.magnet.networking.hattoken.receive";
 NSString * const MMServiceAdapterDidInvalidateHATTokenNotification = @"com.magnet.networking.hattoken.invalidate";
+NSString * const MMServiceAdapterDidReceiveInvalidCATTokenNotification = @"com.magnet.networking.cattoken.challenge.receive";
 NSString * const MMServiceAdapterDidReceiveAuthenticationChallengeNotification = @"com.magnet.networking.challenge.receive";
 NSString * const MMServiceAdapterDidReceiveAuthenticationChallengeURLKey = @"com.magnet.networking.challenge.receive.url";
 
@@ -177,30 +178,55 @@ NSString *const kMMDeviceUUIDKey = @"kMMDeviceUUIDKey";
 }
 
 - (void)networkingTaskDidComplete:(NSNotification *)notification {
-
+    
     NSURLSessionTask *task = [notification object];
     NSHTTPURLResponse *response = (NSHTTPURLResponse *) task.response;
-
+    
     if (response.statusCode == 401) {
-
-        NSError *error = notification.userInfo[AFNetworkingTaskDidCompleteErrorKey];
-        NSData *errorData = error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
-        NSError *jsonError;
-        NSDictionary *errorDictionary = [[AFJSONResponseSerializer serializer] responseObjectForResponse:response data:errorData error:&jsonError];
-
-        // Cant use jsonError here as the response statusCode is 401
-//        if (!jsonError) {
-        NSURL *authorizeUrl = [NSURL URLWithString:errorDictionary[@"authorize_uri"]];
-        NSDictionary *userInfo = nil;
-        if (authorizeUrl) {
-            userInfo = @{
-                         MMServiceAdapterDidReceiveAuthenticationChallengeURLKey : authorizeUrl,
-                         };
+        NSURLRequest *originalRequest = task.originalRequest;
+        // Invalid CAT token request
+        
+        if ([self isCATTokenRequest:originalRequest]) {
+            
+            self.CATToken = nil;
+            
+            NSAssert(NO, @"An invalid set of clientID/clientSecret are used to configure MagnetMax. Please check them again.");
+            [[NSNotificationCenter defaultCenter] postNotificationName:MMServiceAdapterDidReceiveInvalidCATTokenNotification
+                                                                object:nil
+                                                              userInfo:nil];
+        } else if ([self isLogoutRequest:originalRequest]) {
+            // Swallow
+        } else {
+            
+            self.HATToken = nil;
+            
+            NSError *error = notification.userInfo[AFNetworkingTaskDidCompleteErrorKey];
+            NSData *errorData = error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
+            NSError *jsonError;
+            NSDictionary *errorDictionary = [[AFJSONResponseSerializer serializer] responseObjectForResponse:response data:errorData error:&jsonError];
+            
+            // Cant use jsonError here as the response statusCode is 401
+            //        if (!jsonError) {
+            NSURL *authorizeUrl = [NSURL URLWithString:errorDictionary[@"authorize_uri"]];
+            NSDictionary *userInfo = nil;
+            if (authorizeUrl) {
+                userInfo = @{
+                             MMServiceAdapterDidReceiveAuthenticationChallengeURLKey : authorizeUrl,
+                             };
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:MMServiceAdapterDidReceiveAuthenticationChallengeNotification
+                                                                object:nil
+                                                              userInfo:userInfo];
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:MMServiceAdapterDidReceiveAuthenticationChallengeNotification
-                                                            object:nil
-                                                          userInfo:userInfo];
     }
+}
+
+- (BOOL)isCATTokenRequest:(NSURLRequest *)request {
+    return (MMRequestMethodFromString(request.HTTPMethod) == MMRequestMethodPOST) && [request.URL.path hasSuffix:@"com.magnet.server/applications/session"];
+}
+
+- (BOOL)isLogoutRequest:(NSURLRequest *)request {
+    return (MMRequestMethodFromString(request.HTTPMethod) == MMRequestMethodDELETE) && [request.URL.path hasSuffix:[NSString stringWithFormat:@"com.magnet.server/devices/%@", [MMDevice currentDevice].deviceID]];
 }
 
 - (void)dealloc {
