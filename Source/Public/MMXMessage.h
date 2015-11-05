@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The content you want to send.
  *	NSDictionary can only contain objects that are JSON serializable.
  */
-@property(nonatomic, readonly) NSDictionary *messageContent;
+@property(nonatomic, readonly) NSDictionary <NSString *,NSString *>*messageContent;
 
 /**
  *  Initializer for creating a new MMXMessage object
@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return New MMXMessage
  */
 + (instancetype)messageToRecipients:(NSSet <MMUser *>*)recipients
-					 messageContent:(NSDictionary *)messageContent;
+					 messageContent:(NSDictionary <NSString *,NSString *>*)messageContent;
 
 /**
  *  Initializer for creating a new MMXMessage object
@@ -81,7 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return New MMXMessage
  */
 + (instancetype)messageToChannel:(MMXChannel *)channel
-				  messageContent:(NSDictionary *)messageContent;
+				  messageContent:(NSDictionary <NSString *,NSString *>*)messageContent;
 
 /**
  *  Method to send the message
@@ -103,7 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return The messageID for the message sent
  */
-- (nullable NSString *)replyWithContent:(NSDictionary *)content
+- (nullable NSString *)replyWithContent:(NSDictionary <NSString *,NSString *>*)content
 					   success:(nullable void (^)(NSSet <NSString *>*invalidUsers))success
 					   failure:(nullable void (^)(NSError *error))failure;
 
@@ -116,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return The messageID for the message sent
  */
-- (nullable NSString *)replyAllWithContent:(NSDictionary *)content
+- (nullable NSString *)replyAllWithContent:(NSDictionary <NSString *,NSString *>*)content
 						  success:(nullable void (^)(NSSet <NSString *>*invalidUsers))success
 						  failure:(nullable void (^)(NSError *error))failure;
 

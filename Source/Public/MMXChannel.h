@@ -140,7 +140,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success  Block with the number of channels that match the query and a NSArray of MMXChannels that match the criteria.
  *  @param failure  Block with a NSError with details about the call failure.
  */
-+ (void)findByTags:(NSSet *)tags
++ (void)findByTags:(NSSet <NSString *>*)tags
 			 limit:(int)limit
 			offset:(int)offset
 		   success:(nullable void (^)(int totalCount, NSArray <MMXChannel *>*channels))success
@@ -152,7 +152,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success - Block with a NSSet of tags(NSStrings)
  *  @param failure - Block with a NSError with details about the call failure.
  */
-- (void)tagsWithSuccess:(nullable void (^)(NSSet * tags))success
+- (void)tagsWithSuccess:(nullable void (^)(NSSet <NSString *>*tags))success
 				failure:(nullable void (^)(NSError * error))failure;
 
 /**
@@ -163,7 +163,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success - Block called if operation is successful.
  *  @param failure - Block with a NSError with details about the call failure.
  */
-- (void)setTags:(NSSet *)tags
+- (void)setTags:(NSSet <NSString *>*)tags
 		success:(nullable void (^)(void))success
 		failure:(nullable void (^)(NSError *error))failure;
 
@@ -242,7 +242,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success		  Block with the published message
  *  @param failure		  Block with an NSError with details about the call failure.
  */
-- (void)publish:(NSDictionary *)messageContent
+- (void)publish:(NSDictionary <NSString *,NSString *>*)messageContent
 		success:(nullable void (^)(MMXMessage *message))success
 		failure:(nullable void (^)(NSError *error))failure;
 
