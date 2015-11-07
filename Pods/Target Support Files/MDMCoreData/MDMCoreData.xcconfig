@@ -1,1 +1,0 @@
-MDMCOREDATA_OTHER_LDFLAGS = -framework "CoreData"

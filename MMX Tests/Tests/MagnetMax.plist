@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BaseURL</key>
+	<string>http://Jason-MacBook-Pro.local:8443/api</string>
+	<key>ClientID</key>
+	<string>799f1a5f-9fda-4011-bd51-ce8b176a3022</string>
+	<key>ClientSecret</key>
+	<string>UTCnvpRb2DzzJpdjDBDG9GewYJ-4NGAvatmB2hTIvUc</string>
+</dict>
+</plist>

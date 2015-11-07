@@ -70,7 +70,11 @@ task :doc do
   sh "cp ./Source/Public/MMXMessageTypes.h ./tempheaders/MMXMessageTypes.h"
   sh "cp ./Source/Public/MMXNotificationConstants.h ./tempheaders/MMXNotificationConstants.h"
   sh "cp ./Source/Public/MMXRemoteNotification.h ./tempheaders/MMXRemoteNotification.h"
-  sh "cp ./Source/Public/MMXUser.h ./tempheaders/MMXUser.h"
+  sh "cp ./MagnetMaxHeaders/MagnetMax.h ./tempheaders/MagnetMax.h"
+  sh "cp ./MagnetMaxHeaders/MMConfiguration.h ./tempheaders/MMConfiguration.h"
+  sh "cp ./MagnetMaxHeaders/MMDevice.h ./tempheaders/MMDevice.h"
+  sh "cp ./MagnetMaxHeaders/MMPropertyListConfiguration.h ./tempheaders/MMPropertyListConfiguration.h"
+  sh "cp ./MagnetMaxHeaders/MMUser.h ./tempheaders/MMUser.h"
   sh 'appledoc .'
   sh '[ -d Documentation ] || mkdir Documentation'
   sh 'cp -fR ~/Library/Developer/Shared/Documentation/DocSets/com.magnet.iOS.MagnetMessage.docset/Contents/Resources/Documents/ ./Documentation/'
