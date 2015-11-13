@@ -138,7 +138,7 @@ int const kReconnectionTimerInterval = 4;
 		config.baseURL = [NSURL URLWithString:urlString];
 		config.shouldForceTLS = [configurationDict[@"tls-enabled"] boolValue];
 		config.allowInvalidCertificates = [configurationDict[@"security-policy"] isEqualToString:@"NONE"] || [configurationDict[@"security-policy"] isEqualToString:@"RELAXED"];
-		self.appID = configurationDict[@"mmx_app_id"];
+		self.appID = configurationDict[@"mmx-appId"];
 		self.configuration = config;
 	} else {
 		[[MMXLogger sharedLogger] error:@"Configuration ERROR (mmx-host == nil)"];
