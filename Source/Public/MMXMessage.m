@@ -251,22 +251,25 @@
 }
 
 - (void)addAttachment:(MMAttachment *)attachment {
+    NSString *fileName;
     if ([attachment isKindOfClass:[MMFileAttachment class]]) {
         MMFileAttachment *fileAttachment = (MMFileAttachment *)attachment;
+        fileName = fileAttachment.fileName;
         NSAssert(fileAttachment.fileURL != nil, @"fileURL cannot be nil");
     } else if ([attachment isKindOfClass:[MMDataAttachment class]]) {
         MMDataAttachment *dataAttachment = (MMDataAttachment *)attachment;
+        fileName = dataAttachment.fileName;
         NSAssert(dataAttachment.data != nil, @"data cannot be nil");
     }
+    NSAssert([[self.mutableAttachments valueForKey:@"fileName"] containsObject:fileName] == NO, @"attachment fileNames should be unique");
     [self.mutableAttachments addObject:attachment];
 }
 
-- (void)addAttachments:(NSArray<MMAttachment *>*)attachments {
+- (void)addAttachments:(NSArray<MMAttachment *> *)attachments {
     for (MMAttachment *attachment in attachments) {
         [self addAttachment:attachment];
     }
 }
-
 
 #pragma mark - Offline
 

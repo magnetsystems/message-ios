@@ -131,12 +131,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sendDeliveryConfirmation;
 
 /**
- *  Add an attachment.
+ *  Add an attachment. fileNames should be unique within a message.
  */
 - (void)addAttachment:(MMAttachment *)attachment;
 
 /**
- *  Add attachments.
+ *  Add attachments. fileNames should be unique within a message.
  */
 - (void)addAttachments:(NSArray <MMAttachment *> *)attachments;
 
