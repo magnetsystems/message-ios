@@ -1001,24 +1001,37 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (void)handlePubSubMessages:(NSArray *)messageArray {
-	NSArray *usernames = [[messageArray valueForKey:@"senderUserID"] valueForKey:@"username"];
-	if (usernames && usernames.count) {
-		[MMUser usersWithUserIDs:usernames success:^(NSArray *users) {
-			for (MMXPubSubMessage *pubMsg in messageArray) {
-				NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userID = %@",pubMsg.senderUserID.username];
-				MMUser *sender = [users filteredArrayUsingPredicate:usernamePredicate].firstObject;
-				MMXMessage *channelMessage = [MMXMessage messageFromPubSubMessage:pubMsg sender:sender];
-				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
-																	object:nil
-																  userInfo:@{MMXMessageKey:channelMessage}];
-	
-			}
-		} failure:^(NSError * error) {
-			[[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n%@",error];
-		}];
-		return;
-	}
-	[[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n"];
+    NSArray *usernames = [[messageArray valueForKey:@"senderUserID"] valueForKey:@"username"];
+    if (usernames && usernames.count) {
+        [MMUser usersWithUserIDs:usernames success:^(NSArray *users) {
+            for (MMXPubSubMessage *pubMsg in messageArray) {
+                NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userID = %@",pubMsg.senderUserID.username];
+                MMUser *sender = [users filteredArrayUsingPredicate:usernamePredicate].firstObject;
+                // Handle attachments
+                NSArray *receivedAttachments = pubMsg.metaData[@"_attachments"];
+                NSMutableDictionary *metaData = pubMsg.metaData.mutableCopy;
+                [metaData removeObjectForKey:@"_attachments"];
+                pubMsg.metaData = metaData;
+                
+                MMXMessage *channelMessage = [MMXMessage messageFromPubSubMessage:pubMsg sender:sender];
+                if (receivedAttachments.count > 0) {
+                    NSMutableArray *attachments = [NSMutableArray arrayWithCapacity:receivedAttachments.count];
+                    for (NSString *attachmentJsonString in receivedAttachments) {
+                        [attachments addObject:[MMFileAttachment fromJSONString:attachmentJsonString]];
+                    }
+                    channelMessage.attachments = attachments;
+                }
+                [[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
+                                                                    object:nil
+                                                                  userInfo:@{MMXMessageKey:channelMessage}];
+                
+            }
+        } failure:^(NSError * error) {
+            [[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n%@",error];
+        }];
+        return;
+    }
+    [[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n"];
 }
 
 #pragma mark Error Message Handling

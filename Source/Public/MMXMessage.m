@@ -101,17 +101,48 @@
                 return nil;
             }
         }
-        [[MMXClient sharedClient].pubsubManager publishPubSubMessage:msg success:^(BOOL successful, NSString *messageID) {
-            self.sender = [MMUser currentUser];
-            self.timestamp = [NSDate date];
-            if (success) {
-                success([NSSet set]);
-            }
-        } failure:^(NSError *error) {
-            if (failure) {
-                failure(error);
-            }
-        }];
+        // Handle attachments
+        if (self.mutableAttachments.count > 0) {
+            [MMAttachmentService upload:self.mutableAttachments success:^{
+                NSMutableDictionary *messageContent = self.messageContent.mutableCopy;
+                NSMutableArray *attachmentsToSend = [NSMutableArray arrayWithCapacity:self.mutableAttachments.count];
+                for (MMAttachment *attachment in self.mutableAttachments) {
+                    [attachmentsToSend addObject:[attachment toJSONString]];
+                }
+                messageContent[@"_attachments"] = attachmentsToSend;
+                self.messageContent = messageContent;
+                msg.metaData = self.messageContent;
+                
+                [[MMXClient sharedClient].pubsubManager publishPubSubMessage:msg success:^(BOOL successful, NSString *messageID) {
+                    self.sender = [MMUser currentUser];
+                    self.timestamp = [NSDate date];
+                    if (success) {
+                        success([NSSet set]);
+                    }
+                } failure:^(NSError *error) {
+                    if (failure) {
+                        failure(error);
+                    }
+                }];
+                
+            } failure:^(NSError * _Nonnull error) {
+                if (failure) {
+                    failure(error);
+                }
+            }];
+        } else {
+            [[MMXClient sharedClient].pubsubManager publishPubSubMessage:msg success:^(BOOL successful, NSString *messageID) {
+                self.sender = [MMUser currentUser];
+                self.timestamp = [NSDate date];
+                if (success) {
+                    success([NSSet set]);
+                }
+            } failure:^(NSError *error) {
+                if (failure) {
+                    failure(error);
+                }
+            }];
+        }
         return messageID;
     } else {
         NSString *messageID = [[MMXClient sharedClient] generateMessageID];
