@@ -28,6 +28,7 @@
 @property (nonatomic, readwrite) BOOL isSubscribed;
 @property (nonatomic, readwrite) NSDate * creationDate;
 @property (nonatomic, readwrite) MMXPublishPermissions publishPermissions;
+@property (nonatomic, strong) NSArray <NSString *>* subscribers;
 
 - (MMXTopic *)asTopic;
 

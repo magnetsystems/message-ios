@@ -29,7 +29,24 @@
 #import "MMXInternalMessageAdaptor.h"
 #import "MMXDataModel.h"
 #import "MMXPubSubMessage_Private.h"
+#import "MMXPubSubService.h"
 @import MagnetMaxCore;
+
+@interface MMXPublishPermissionsContainer : NSObject <MMEnumAttributeContainer>
+
+@end
+
+@implementation MMXPublishPermissionsContainer
+
++ (NSDictionary *)mappings {
+    return @{
+             @"anyone" : @(MMXPublishPermissionsAnyone),
+             @"owner" : @(MMXPublishPermissionsOwnerOnly),
+             @"subscribers" : @(MMXPublishPermissionsSubscribers),
+             };
+}
+
+@end
 
 @implementation MMXChannel
 
@@ -306,6 +323,29 @@
 			failure(error);
 		}
 	}];
+}
+
++ (void)createWithName:(NSString *)name
+               summary:(nullable NSString *)summary
+              isPublic:(BOOL)isPublic
+    publishPermissions:(MMXPublishPermissions)publishPermissions
+           subscribers:(NSSet <MMUser *>*)subscribers
+               success:(nullable void (^)(MMXChannel *channel))success
+               failure:(nullable void (^)(NSError *error))failure {
+    
+    MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions];
+    channel.subscribers = [[subscribers valueForKey:@"userID"] allObjects];
+    MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
+    MMCall *call = [pubSubService createChannel:channel success:^(NSString *response) {
+        if (success) {
+            success(channel);
+        }
+    } failure:^(NSError *error) {
+        if (failure) {
+            failure(error);
+        }
+    }];
+    [call executeInBackground:nil];
 }
 
 - (void)deleteWithSuccess:(void (^)(void))success
@@ -700,5 +740,50 @@
 	return hash;
 }
 
+#pragma mark - MMModel methods
+
++ (NSDictionary *)attributeMappings {
+    NSDictionary *dictionary = @{
+                                 @"name": @"channelName",
+                                 @"isPublic": @"privateChannel",
+                                 @"summary": @"description",
+                                 @"publishPermissions": @"publishPermission",
+                                 @"subscribers": @"subscribers",
+                                 };
+    //    NSMutableDictionary *attributeMappings = [[super attributeMappings] mutableCopy];
+    //    [attributeMappings addEntriesFromDictionary:dictionary];
+    
+    //    return attributeMappings;
+    return dictionary;
+}
+
++ (NSDictionary *)listAttributeTypes {
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                      }];
+    [dictionary addEntriesFromDictionary:[super listAttributeTypes]];
+    return dictionary;
+}
+
++ (NSDictionary *)mapAttributeTypes {
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                      }];
+    [dictionary addEntriesFromDictionary:[super mapAttributeTypes]];
+    return dictionary;
+}
+
++ (NSDictionary *)enumAttributeTypes {
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                                      @"publishPermissions" : MMXPublishPermissionsContainer.class,
+                                                                                      }];
+    [dictionary addEntriesFromDictionary:[super enumAttributeTypes]];
+    return dictionary;
+}
+
++ (NSArray *)charAttributes {
+    NSMutableArray *array = [NSMutableArray arrayWithArray:@[
+                                                             ]];
+    [array addObjectsFromArray:[super charAttributes]];
+    return array;
+}
 
 @end
