@@ -743,13 +743,13 @@
 #pragma mark - MMModel methods
 
 - (BOOL)privateChannel {
-    return self.isPublic;
+    return !self.isPublic;
 }
 
 + (NSDictionary *)attributeMappings {
     NSDictionary *dictionary = @{
                                  @"name": @"channelName",
-                                 @"isPublic": @"privateChannel",
+                                 @"privateChannel": @"privateChannel",
                                  @"summary": @"description",
                                  @"publishPermissions": @"publishPermission",
                                  @"subscribers": @"subscribers",

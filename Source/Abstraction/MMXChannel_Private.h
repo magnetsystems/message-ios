@@ -29,7 +29,7 @@
 @property (nonatomic, readwrite) NSDate * creationDate;
 @property (nonatomic, readwrite) MMXPublishPermissions publishPermissions;
 @property (nonatomic, strong) NSArray <NSString *>* subscribers;
-@property (nonatomic, readonly) BOOL privateChannel;
+@property (nonatomic, assign) BOOL privateChannel;
 
 - (MMXTopic *)asTopic;
 
