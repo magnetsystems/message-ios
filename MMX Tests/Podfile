@@ -1,5 +1,6 @@
 source 'https://github.com/CocoaPods/Specs.git'
 source 'https://github.com/magnetsystems/Specs.git'
+source 'https://github.com/magnetsystems/iOS-Distribution'
 
 xcodeproj 'MMX Tests'
 workspace '../MMX'
@@ -9,7 +10,7 @@ def import_pods
   use_frameworks!
   pod 'Kiwi', '~> 2.3'
   pod 'MMX', :path => '../'
-  pod 'MagnetMax', '~> 2.0.0'
+  pod 'MagnetMax', '~> 2.1'
 end
 
 target :ios do

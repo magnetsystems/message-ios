@@ -340,6 +340,12 @@
          location = "group:PubSub"
          name = "PubSub">
          <FileRef
+            location = "group:MMXPubSubService.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPubSubService.m">
+         </FileRef>
+         <FileRef
             location = "group:MMXGeoLocationMessage.h">
          </FileRef>
          <FileRef
