@@ -3,10 +3,10 @@
 <plist version="1.0">
 <dict>
 	<key>BaseURL</key>
-	<string>http://Jason-MacBook-Pro.local:8443/api</string>
+	<string>http://192.168.101.142:8443/api</string>
 	<key>ClientID</key>
-	<string>799f1a5f-9fda-4011-bd51-ce8b176a3022</string>
+	<string>d042612a-ae11-4c26-a9fb-b2e39b9c81af</string>
 	<key>ClientSecret</key>
-	<string>UTCnvpRb2DzzJpdjDBDG9GewYJ-4NGAvatmB2hTIvUc</string>
+	<string>ZxFwwP_u8n5vgirXQEcwaT2LrzuGDK5NRUbRD1NENxc</string>
 </dict>
 </plist>

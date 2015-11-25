@@ -5,13 +5,12 @@
 @import Kiwi;
 @import MagnetMax;
 @import MMX;
-
 #define DEFAULT_TEST_TIMEOUT 10.0
 
 SPEC_BEGIN(MMXMessageSpec)
 
 	describe(@"MMXMessage", ^{
-
+        
 		NSString *senderUsername = [NSString stringWithFormat:@"sender_%f", [[NSDate date] timeIntervalSince1970]];
 		NSString *senderPassword = @"magnet";
 		NSString *firstName = @"first";
@@ -86,6 +85,29 @@ SPEC_BEGIN(MMXMessageSpec)
 					_isSuccess = NO;
 				}];
 				
+                [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+            });
+        });
+        context(@"when sending a push message", ^{
+            
+            it(@"should return success if user has device", ^{
+                
+                __block BOOL _isSuccess = NO;
+                
+                [MMUser usersWithUserNames:@[@"QuickstartUser2"] success:^(NSArray *users) {
+                    if (users.count) {
+                        MMXPushMessage  *pmsg = [MMXPushMessage pushMessageWithRecipient:users.firstObject body:@"Test Push"];
+                        
+                        [pmsg sendPushMessage:^(NSSet<MMDevice *> * invalidDevices) {
+                            _isSuccess = YES;
+                        } failure:^(NSError * error) {
+                            
+                        }];
+                    }
+                } failure:^(NSError * error) {
+                    [[MMLogger sharedLogger] error:@"Failed to get users for Invite Response\n%@",error];
+                }];
+                
                 [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
             });
         });
