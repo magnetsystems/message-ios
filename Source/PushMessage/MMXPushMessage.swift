@@ -18,11 +18,13 @@
 
 
 import MagnetMaxCore
-import MMX
 import UIKit
 
 
-@objc public class MMXPushMessage: MMXMessage {
+@objc public class MMXPushMessage : NSObject {
+    
+    public var recipients : Set<MMUser>?
+    public var messageContent : Dictionary<String, String>?
     
     public class func pushMessageWithRecipients(recipients : Set <MMUser>, body : String) -> MMXPushMessage {
         return pushMessageWithRecipients(recipients, body: body, title : nil, icon: nil, sound: nil, badge: nil, userDefinedObjects: nil)
