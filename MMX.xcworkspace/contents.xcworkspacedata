@@ -337,6 +337,13 @@
          </FileRef>
       </Group>
       <Group
+         location = "group:PushMessage"
+         name = "PushMessage">
+         <FileRef
+            location = "group:MMXPushMessage.swift">
+         </FileRef>
+      </Group>
+      <Group
          location = "group:PubSub"
          name = "PubSub">
          <FileRef

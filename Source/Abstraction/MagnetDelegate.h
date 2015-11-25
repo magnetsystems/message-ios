@@ -37,6 +37,10 @@
 				  success:(void (^)(NSSet *invalidUsers))success
 				  failure:(void (^)(NSError *error))failure;
 
+- (NSString *)sendPushMessage:(MMXMessage *)message
+                      success:(void (^)(NSSet * invalidDevices))success
+                      failure:(void (^)(NSError *error))failure;
+
 - (NSString *)sendInternalMessageFormat:(MMXInternalMessageAdaptor *)message
 								success:(void (^)(NSSet *invalidUsers))success
 								failure:(void (^)(NSError *error))failure;

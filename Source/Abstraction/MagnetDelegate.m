@@ -33,7 +33,9 @@
 #import "MMXOutboundMessage_Private.h"
 #import "MMXMessage_Private.h"
 #import "MMXConstants.h"
+
 @import MagnetMaxCore;
+@import MMX;
 
 typedef void(^MessageSuccessBlock)(NSSet *);
 typedef void(^MessageFailureBlock)(NSError *);
@@ -111,6 +113,28 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 
 	return messageID;
 }
+
+- (NSString *)sendPushMessage:(MMXMessage *)message
+                      success:(void (^)(NSSet * invalidDevices))success
+                      failure:(void (^)(NSError *error))failure {
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:message.messageContent
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    NSString *json = [[NSString alloc] initWithData:jsonData
+                                           encoding:NSUTF8StringEncoding];
+    MMXOutboundMessage *msg = [MMXOutboundMessage messageTo:[message.recipients allObjects] withContent:json metaData:nil];
+    msg.messageID = message.messageID;
+    
+    NSString *messageID = [[MMXClient sharedClient] sendPushMessage:msg
+                                                            success:^(NSSet *invalidDevices) {
+                                                                invalidDevices = invalidDevices ? invalidDevices : [NSSet new];
+                                                                success(invalidDevices);
+                                                            } failure:failure];
+    return messageID;
+}
+
 
 - (NSString *)sendInternalMessageFormat:(MMXInternalMessageAdaptor *)message
 								success:(void (^)(NSSet *))success
