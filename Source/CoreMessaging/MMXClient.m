@@ -937,7 +937,7 @@ int const kReconnectionTimerInterval = 4;
         if (receivedAttachments.count > 0) {
             NSMutableArray *attachments = [NSMutableArray arrayWithCapacity:receivedAttachments.count];
             for (NSString *attachmentJsonString in receivedAttachments) {
-                [attachments addObject:[MMFileAttachment fromJSONString:attachmentJsonString]];
+                [attachments addObject:[MMAttachment fromJSONString:attachmentJsonString]];
             }
             msg.attachments = attachments;
         }
