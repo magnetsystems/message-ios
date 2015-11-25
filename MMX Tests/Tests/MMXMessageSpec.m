@@ -5,7 +5,6 @@
 @import Kiwi;
 @import MagnetMax;
 @import MMX;
-#import "MMX-Swift.h"
 #define DEFAULT_TEST_TIMEOUT 10.0
 
 SPEC_BEGIN(MMXMessageSpec)
