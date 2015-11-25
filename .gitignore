@@ -30,3 +30,6 @@ Documentation/
 # http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
 #
 # Pods/
+MMX Tests/Pods
+MMX Tests/Podfile.lock
+MMX Tests/MMX Tests.xcodeproj/xcshareddata/xcschemes/

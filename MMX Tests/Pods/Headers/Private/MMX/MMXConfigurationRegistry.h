@@ -1,1 +1,0 @@
-../../../../../Source/Configuration/MMXConfigurationRegistry.h

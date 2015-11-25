@@ -903,50 +903,61 @@ int const kReconnectionTimerInterval = 4;
 #pragma mark - Message Handling
 
 - (void)handleInboundMessageFromInternalMessageAdaptor:(MMXInternalMessageAdaptor *)message
-												  from:(XMPPJID *)from
-													to:(XMPPJID *)to
-											 messageID:(NSString *)messageID {
-	
-	NSMutableArray *usernamesArray = [NSMutableArray arrayWithArray:[message.recipients valueForKey:@"username"]];
-	BOOL recipientsContainSender = NO;
-	if ([usernamesArray containsObject:message.senderUserID.username]) {
-		recipientsContainSender = YES;
-	} else {
-		[usernamesArray addObject:message.senderUserID.username];
-	}
-	[usernamesArray addObject:message.senderUserID.username];
-	[MMUser usersWithUserIDs:usernamesArray success:^(NSArray *users) {
-		MMUser *sender;
-		NSMutableArray *usersCopy = users.mutableCopy;
-		for (MMUser *user in users) {
-			if ([user.userID.lowercaseString isEqualToString:message.senderUserID.username.lowercaseString]) {
-				sender = user.copy;
-			}
-		}
-		if (!recipientsContainSender) {
-			[usersCopy removeObject:sender];
-		}
-		
-		MMXMessage *msg = [MMXMessage messageToRecipients:[NSSet setWithArray:usersCopy]
-										   messageContent:message.metaData];
-		
-		msg.messageType = MMXMessageTypeDefault;
-		
-		msg.sender = sender;
-		msg.timestamp = message.timestamp;
-		msg.messageID = message.messageID;
-		msg.senderDeviceID = message.senderEndpoint.deviceID;
-		[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
-															object:nil
-														  userInfo:@{MMXMessageKey:msg}];
-		if (![message.mType isEqualToString:@"normal"]) {
-			//Send server ack after successfully parsed message and notification to dev sent
-			[self sendSDKAckMessageId:messageID sourceFrom:from sourceTo:to];
-		}
-	} failure:^(NSError * error) {
-		[[MMLogger sharedLogger] error:@"Failed to get users for Inbound Message\n%@",error];
-	}];
-	
+                                                  from:(XMPPJID *)from
+                                                    to:(XMPPJID *)to
+                                             messageID:(NSString *)messageID {
+    
+    NSMutableArray *usernamesArray = [NSMutableArray arrayWithArray:[message.recipients valueForKey:@"username"]];
+    BOOL recipientsContainSender = NO;
+    if ([usernamesArray containsObject:message.senderUserID.username]) {
+        recipientsContainSender = YES;
+    } else {
+        [usernamesArray addObject:message.senderUserID.username];
+    }
+    [usernamesArray addObject:message.senderUserID.username];
+    [MMUser usersWithUserIDs:usernamesArray success:^(NSArray *users) {
+        MMUser *sender;
+        NSMutableArray *usersCopy = users.mutableCopy;
+        for (MMUser *user in users) {
+            if ([user.userID.lowercaseString isEqualToString:message.senderUserID.username.lowercaseString]) {
+                sender = user.copy;
+            }
+        }
+        if (!recipientsContainSender) {
+            [usersCopy removeObject:sender];
+        }
+        
+        // Handle attachments
+        NSArray *receivedAttachments = message.metaData[@"_attachments"];
+        NSMutableDictionary *metaData = message.metaData.mutableCopy;
+        [metaData removeObjectForKey:@"_attachments"];
+        
+        MMXMessage *msg = [MMXMessage messageToRecipients:[NSSet setWithArray:usersCopy]
+                                           messageContent:metaData.copy];
+        if (receivedAttachments.count > 0) {
+            NSMutableArray *attachments = [NSMutableArray arrayWithCapacity:receivedAttachments.count];
+            for (NSString *attachmentJsonString in receivedAttachments) {
+                [attachments addObject:[MMAttachment fromJSONString:attachmentJsonString]];
+            }
+            msg.attachments = attachments;
+        }
+        msg.messageType = MMXMessageTypeDefault;
+        
+        msg.sender = sender;
+        msg.timestamp = message.timestamp;
+        msg.messageID = message.messageID;
+        msg.senderDeviceID = message.senderEndpoint.deviceID;
+        [[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
+                                                            object:nil
+                                                          userInfo:@{MMXMessageKey:msg}];
+        if (![message.mType isEqualToString:@"normal"]) {
+            //Send server ack after successfully parsed message and notification to dev sent
+            [self sendSDKAckMessageId:messageID sourceFrom:from sourceTo:to];
+        }
+    } failure:^(NSError * error) {
+        [[MMLogger sharedLogger] error:@"Failed to get users for Inbound Message\n%@",error];
+    }];
+    
 }
 
 - (void)handleInviteMessageFromInternalMessageAdaptor:(MMXInternalMessageAdaptor *)message
@@ -990,24 +1001,37 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (void)handlePubSubMessages:(NSArray *)messageArray {
-	NSArray *usernames = [[messageArray valueForKey:@"senderUserID"] valueForKey:@"username"];
-	if (usernames && usernames.count) {
-		[MMUser usersWithUserIDs:usernames success:^(NSArray *users) {
-			for (MMXPubSubMessage *pubMsg in messageArray) {
-				NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userID = %@",pubMsg.senderUserID.username];
-				MMUser *sender = [users filteredArrayUsingPredicate:usernamePredicate].firstObject;
-				MMXMessage *channelMessage = [MMXMessage messageFromPubSubMessage:pubMsg sender:sender];
-				[[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
-																	object:nil
-																  userInfo:@{MMXMessageKey:channelMessage}];
-	
-			}
-		} failure:^(NSError * error) {
-			[[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n%@",error];
-		}];
-		return;
-	}
-	[[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n"];
+    NSArray *usernames = [[messageArray valueForKey:@"senderUserID"] valueForKey:@"username"];
+    if (usernames && usernames.count) {
+        [MMUser usersWithUserIDs:usernames success:^(NSArray *users) {
+            for (MMXPubSubMessage *pubMsg in messageArray) {
+                NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userID = %@",pubMsg.senderUserID.username];
+                MMUser *sender = [users filteredArrayUsingPredicate:usernamePredicate].firstObject;
+                // Handle attachments
+                NSArray *receivedAttachments = pubMsg.metaData[@"_attachments"];
+                NSMutableDictionary *metaData = pubMsg.metaData.mutableCopy;
+                [metaData removeObjectForKey:@"_attachments"];
+                pubMsg.metaData = metaData;
+                
+                MMXMessage *channelMessage = [MMXMessage messageFromPubSubMessage:pubMsg sender:sender];
+                if (receivedAttachments.count > 0) {
+                    NSMutableArray *attachments = [NSMutableArray arrayWithCapacity:receivedAttachments.count];
+                    for (NSString *attachmentJsonString in receivedAttachments) {
+                        [attachments addObject:[MMFileAttachment fromJSONString:attachmentJsonString]];
+                    }
+                    channelMessage.attachments = attachments;
+                }
+                [[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
+                                                                    object:nil
+                                                                  userInfo:@{MMXMessageKey:channelMessage}];
+                
+            }
+        } failure:^(NSError * error) {
+            [[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n%@",error];
+        }];
+        return;
+    }
+    [[MMLogger sharedLogger] error:@"Failed to get users for MMXMessages from Channels\n"];
 }
 
 #pragma mark Error Message Handling

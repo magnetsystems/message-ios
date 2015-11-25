@@ -214,6 +214,7 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 	}
 }
 
+// TODO: Delete me! This method is not used anymore. Double check.
 - (void)client:(MMXClient *)client didReceivePubSubMessage:(MMXPubSubMessage *)message {
 	MMXMessage *msg = [MMXMessage new];
 	msg.messageType = MMXMessageTypeChannel;
