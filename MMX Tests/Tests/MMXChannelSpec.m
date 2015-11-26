@@ -142,6 +142,35 @@ describe(@"MMXChannel", ^{
 	});
 
 	context(@"when finding a channel by name", ^{
+        
+        it(@"should succeed if created or exists.", ^{
+            
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-retain-cycles"
+            
+            NSString *channelName = @"test_topic";
+            NSString *channelSummary = @"test_topic";
+            NSSet *tagSet = [NSSet setWithObjects:@"test_topic_tag", nil];
+            
+            __block BOOL _isSuccess = NO;
+            [MMXChannel createWithName:channelName summary:channelSummary isPublic:YES publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
+                [channel setTags:tagSet success:^{
+                    [channel tagsWithSuccess:^(NSSet *tags2) {
+                        [[expectFutureValue(theValue(tags2.count)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:theValue(tagSet.count)];
+                        _isSuccess = YES;
+                    } failure:^(NSError *error) {
+                        _isSuccess = NO;
+                    }];
+                } failure:^(NSError *error) {
+                    _isSuccess = NO;
+                }];
+            } failure:^(NSError *error) {
+                _isSuccess = error.code == 409;
+            }];
+            
+            [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+        });
+        
 		it(@"should only return one valid channel", ^{
 			__block BOOL _isSuccess = NO;
 			[MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
@@ -213,7 +242,7 @@ describe(@"MMXChannel", ^{
 	});
 
 	context(@"when sending an invite", ^{
-
+    
 		it(@"should succeed if trying to send from a channel object that is fully hydrated", ^{
 			__block BOOL _isSuccess = NO;
 			[MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
