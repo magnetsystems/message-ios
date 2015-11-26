@@ -334,6 +334,7 @@
                failure:(nullable void (^)(NSError *error))failure {
     
     MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions];
+    channel.ownerUserID = [MMUser currentUser].userID;
     channel.subscribers = [[subscribers valueForKey:@"userID"] allObjects];
     MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
     MMCall *call = [pubSubService createChannel:channel success:^(NSString *response) {
