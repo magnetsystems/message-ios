@@ -20,7 +20,7 @@
 
 NSString *const kMMXRemoteNotificationTypeKey = @"ty";
 NSString *const kMMXRemoteNotificationCallbackURLKey = @"cu";
-NSString *const kMMXRemoteNotificationWakeupType = @"mmx:w:retrieve";
+NSString *const kMMXRemoteNotificationWakeupType = @"pubsub";
 NSString *const kMMXRemoteNotificationPushType = @"mmx:p:";
 NSString *const kMMXRemoteNotificationFrameworkKey = @"_mmx";
 
