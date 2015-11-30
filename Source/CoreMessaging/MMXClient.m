@@ -420,6 +420,45 @@ int const kReconnectionTimerInterval = 4;
 	return outboundMessage.messageID;
 }
 
+- (NSString *)sendPushMessage:(MMXOutboundMessage *)message success:(void (^)(NSSet* invalidDevices))success  failure:(void (^)(NSError * error))failure  {
+    NSString *messageID = [self generateMessageID];
+    XMPPIQ *pushIQ = [[XMPPIQ alloc] initWithType:@"set" child:nil];
+    for (MMUser *user in message.recipients) {
+        DDXMLElement *mmxElement = [[DDXMLElement alloc] initWithName:MXmmxElement xmlns:MXnsPushPayload];
+        [mmxElement addAttributeWithName:MXctype stringValue:MXctypeJSON];
+        [mmxElement addAttributeWithName:MXcommandString stringValue:MXcommandNotify];
+        NSString *username = [NSString stringWithFormat:@"%@%%%@",[user userID],self.appID];
+        XMPPJID *toAddress = [XMPPJID jidWithUser:username domain:[[self currentJID] domain] resource:nil];
+        [mmxElement addAttributeWithName:@"dst" stringValue:toAddress.bare];
+        [mmxElement setStringValue:message.messageContent];
+        [pushIQ addChild:mmxElement];
+    }
+    
+    [pushIQ addAttributeWithName:@"from" stringValue:[[self currentJID] full]];
+    [pushIQ addAttributeWithName:@"id" stringValue:messageID];
+    [self sendIQ:pushIQ completion:^(id obj, id<XMPPTrackingInfo> info) {
+        if (obj) {
+            XMPPIQ * iq = (XMPPIQ *)obj;
+            MMXMessageStateQueryResponse *queryResponse = [MMXMessageStateQueryResponse initWithIQ:iq];
+            NSMutableSet *unsentDevices = [NSMutableSet new];
+            for (NSDictionary *dict in queryResponse.queryResult[@"unsentList"]) {
+                MMDevice *myDevice = [[MMDevice alloc] init];
+                myDevice.deviceID = dict[@"deviceId"];
+                [unsentDevices addObject:myDevice];
+            }
+            success(unsentDevices.copy);
+            
+        } else {
+            if (failure) {
+                NSError * error = [MMXClient errorWithTitle:@"IQ Error" message:@"Timed Out" code:401];
+                failure(error);
+            }
+        }
+    }];
+    
+    return messageID;
+}
+
 - (BOOL)validateAndRespondToErrorsForOutboundMessage:(MMXInternalMessageAdaptor *)outboundMessage {
 	MMXAssert(!(outboundMessage.messageContent == nil && outboundMessage.metaData == nil),@"MMXClient sendMessage: messageContent && metaData cannot both be nil");
 	if (outboundMessage == nil) {
