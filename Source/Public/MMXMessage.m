@@ -282,7 +282,7 @@
 }
 
 - (void)addAttachment:(MMAttachment *)attachment {
-    NSAssert((attachment.fileURL != nil || attachment.data != nil || attachment.inputStream != nil), @"fileURL, data & inputStream cannot be nil");
+    NSAssert((attachment.fileURL != nil || attachment.data != nil || attachment.inputStream != nil || attachment.content != nil), @"fileURL, data, inputStream & content cannot be nil");
     [self.mutableAttachments addObject:attachment];
 }
 
