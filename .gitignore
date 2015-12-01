@@ -33,3 +33,4 @@ Documentation/
 MMX Tests/Pods
 MMX Tests/Podfile.lock
 MMX Tests/MMX Tests.xcodeproj/xcshareddata/xcschemes/
+npm-debug.log
