@@ -191,7 +191,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param summary				The summary you want for the channel. (Used to give other users a better idea about the purpose of the channel).
  *  @param isPublic				Set to YES if you want the channel to be discoverable by other users.
  *  @param publishPermissions	Permissions level required to be able to post; Owner/Creator only, Subscribers, Anyone. Owner can always publish.
- *  @param subscribers          The list of users to auto-subscribe.
+ *  @param subscribers          The set of users to auto-subscribe.
  *  @param success				Block called if operation is successful.
  *  @param failure				Block with an NSError with details about the call failure.
  */
