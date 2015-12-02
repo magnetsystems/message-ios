@@ -203,7 +203,7 @@ import UIKit
     
     - Returns: a new MMXPushMessage object
     */
-    public func sendPushMessage(success : ((invalidDevices : Set<MMDevice>?) -> Void)?, failure : ((error : NSError) -> Void)?) {
+    public func sendPushMessage(success : (() -> Void)?, failure : ((error : NSError) -> Void)?) {
         if MMXMessageUtils.isValidMetaData(self.messageContent) == false {
             let error : NSError = MMXClient.errorWithTitle("Not Valid", message: "All values must be strings.", code: 401)
             failure?(error : error)
@@ -215,8 +215,8 @@ import UIKit
         }
         
         MagnetDelegate.sharedDelegate().sendPushMessage(self, success: { (invalidDevices : Set<NSObject>!) -> Void in
-            success?(invalidDevices : invalidDevices.count == 0 ? nil : invalidDevices as? Set<MMDevice>)
-            }, failure: { (error) -> Void in
+            success?()
+            }, failure: { error in
                 failure?(error: error)
         });
     }
