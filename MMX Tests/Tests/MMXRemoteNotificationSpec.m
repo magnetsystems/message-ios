@@ -52,14 +52,24 @@ SPEC_BEGIN(MMXRemoteNotificationSpec)
 
             context(@"should return YES", ^{
 
-                it(@"when the remote notification is of the correct type", ^{
+                it(@"when the remote notification is pubsub", ^{
                     NSDictionary *userInfo = @{
                             @"_mmx" : @{
-                                    @"ty" : @"mmx:w:retrieve",
+                                    @"ty" : @"pubsub",
                             }
                     };
                     [[theValue([MMXRemoteNotification isWakeupRemoteNotification:userInfo]) should] beYes];
                 });
+                
+                it(@"when the remote notification is from direct message", ^{
+                    NSDictionary *userInfo = @{
+                                               @"_mmx" : @{
+                                                       @"ty" : @"retrieve",
+                                                       }
+                                               };
+                    [[theValue([MMXRemoteNotification isWakeupRemoteNotification:userInfo]) should] beYes];
+                });
+
             });
 
             context(@"should return NO", ^{
