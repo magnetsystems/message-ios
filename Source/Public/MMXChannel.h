@@ -274,7 +274,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param failure  Block with an NSError with details about the call failure.
  */
 - (void)publishMessage:(MMXMessage *)message
-               success:(nullable void (^)(MMXMessage *message))success
+               success:(nullable void (^)())success
                failure:(nullable void (^)(NSError *error))failure;
 
 /**
