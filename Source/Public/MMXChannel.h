@@ -267,6 +267,17 @@ NS_ASSUME_NONNULL_BEGIN
 		failure:(nullable void (^)(NSError *error))failure;
 
 /**
+ *  Method to publish to a channel.
+ *
+ *  @param message  The message you want to publish
+ *  @param success  Block with the published message
+ *  @param failure  Block with an NSError with details about the call failure.
+ */
+- (void)publishMessage:(MMXMessage *)message
+               success:(nullable void (^)())success
+               failure:(nullable void (^)(NSError *error))failure;
+
+/**
  *  Get messages previous posted to this channel.
  *
  *  @param startDate    The earliest date you would like messages from.
