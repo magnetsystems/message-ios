@@ -64,10 +64,10 @@ import UIKit
      
      - parameter Dictionary: The Remote Dictionary is the UserInfo recieved from a push notification.
      */
-    convenience public init(remoteDictionary : NSDictionary) {
+    convenience public init(pushUserInfo : NSDictionary) {
         self.init()
-        let mmxDictionary : Dictionary? = remoteDictionary["_mmx"] as? Dictionary<String, AnyObject>;
-        let apsDictionary : AnyObject? = remoteDictionary["aps"];
+        let mmxDictionary : Dictionary? = pushUserInfo["_mmx"] as? Dictionary<String, AnyObject>;
+        let apsDictionary : AnyObject? = pushUserInfo["aps"];
         var messageContent : Dictionary = [String : String]()
         
         if let mmx = mmxDictionary {
@@ -99,6 +99,9 @@ import UIKit
                 if let title : String = aps["alert"]?["title"] as? String {
                     self.title = title
                     messageContent["title"] = title
+                    if self.body == nil {
+                        self.body = self.title
+                    }
                 }
             }
             if let badge : Int = aps["badge"] as? Int {
@@ -203,26 +206,18 @@ import UIKit
     public func sendPushMessage(success : ((invalidDevices : Set<MMDevice>?) -> Void)?, failure : ((error : NSError) -> Void)?) {
         if MMXMessageUtils.isValidMetaData(self.messageContent) == false {
             let error : NSError = MMXClient.errorWithTitle("Not Valid", message: "All values must be strings.", code: 401)
-            if let _ = failure {
-                failure!(error : error)
-            }
+            failure?(error : error)
         }
         
         if MMUser.currentUser() == nil {
             let error : NSError = MMXClient.errorWithTitle("Not Logged In", message: "You must be logged in to send a message.", code: 401)
-            if let _ = failure {
-                failure!(error : error)
-            }
+            failure?(error : error)
         }
         
         MagnetDelegate.sharedDelegate().sendPushMessage(self, success: { (invalidDevices : Set<NSObject>!) -> Void in
-            if let _ = success {
-                success!(invalidDevices : invalidDevices.count == 0 ? nil : invalidDevices as? Set<MMDevice>)
-            }
+            success?(invalidDevices : invalidDevices.count == 0 ? nil : invalidDevices as? Set<MMDevice>)
             }, failure: { (error) -> Void in
-                if let _ = failure {
-                    failure!(error: error)
-                }
+                failure?(error: error)
         });
     }
     
