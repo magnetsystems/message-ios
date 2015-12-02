@@ -30,6 +30,7 @@
 #import "MMXDataModel.h"
 #import "MMXPubSubMessage_Private.h"
 #import "MMXPubSubService.h"
+#import "MMXMessage.h"
 @import MagnetMaxCore;
 
 @interface MMXPublishPermissionsContainer : NSObject <MMEnumAttributeContainer>
@@ -497,6 +498,24 @@
 			failure(error);
 		}
 	}];
+}
+
+- (void)publishMessage:(MMXMessage *)message
+               success:(nullable void (^)())success
+               failure:(nullable void (^)(NSError *error))failure {
+
+    // Ignore the recipients
+    message.recipients = [NSSet set];
+    message.channel = self;
+    [message sendWithSuccess:^(NSSet<NSString *> * _Nonnull __unused invalidUsers) {
+        if (success) {
+            success();
+        }
+    } failure:^(NSError * _Nonnull error) {
+        if (failure) {
+            failure(error);
+        }
+    }];
 }
 
 - (void)messagesBetweenStartDate:(NSDate *)startDate
