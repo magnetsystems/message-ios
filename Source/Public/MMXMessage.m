@@ -103,7 +103,12 @@
         }
         // Handle attachments
         if (self.mutableAttachments.count > 0) {
-            [MMAttachmentService upload:self.mutableAttachments metaData:nil success:^{
+            NSDictionary *metaData = @{
+                                       @"channel_name": self.channel.name,
+                                       @"channel_is_public": self.channel.isPublic ? @"true" : @"false",
+                                       @"message_id": messageID,
+                                       };
+            [MMAttachmentService upload:self.mutableAttachments metaData:metaData success:^{
                 NSMutableDictionary *messageContent = self.messageContent.mutableCopy;
                 NSMutableArray *attachmentsToSend = [NSMutableArray arrayWithCapacity:self.mutableAttachments.count];
                 for (MMAttachment *attachment in self.mutableAttachments) {
@@ -168,7 +173,11 @@
 
             // Handle attachments
             if (self.mutableAttachments.count > 0) {
-                [MMAttachmentService upload:self.mutableAttachments metaData:nil success:^{
+                NSDictionary *metaData = @{
+                                           @"recipients": [[self.recipients valueForKey:@"userID"] componentsSeparatedByString:@","],
+                                           @"message_id": messageID,
+                                           };
+                [MMAttachmentService upload:self.mutableAttachments metaData:metaData success:^{
                     NSMutableDictionary *messageContent = self.messageContent.mutableCopy;
                     NSMutableArray *attachmentsToSend = [NSMutableArray arrayWithCapacity:self.mutableAttachments.count];
                     for (MMAttachment *attachment in self.mutableAttachments) {
