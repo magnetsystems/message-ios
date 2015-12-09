@@ -339,6 +339,10 @@
     channel.subscribers = [[subscribers valueForKey:@"userID"] allObjects];
     MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
     MMCall *call = [pubSubService createChannel:channel success:^(NSString *response) {
+        NSMutableArray *subscribers = [channel.subscribers mutableCopy];
+        [subscribers addObject:[MMUser currentUser].userID];
+        channel.subscribers = subscribers;
+        channel.isSubscribed = YES;
         if (success) {
             success(channel);
         }

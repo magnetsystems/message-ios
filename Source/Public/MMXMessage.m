@@ -103,7 +103,7 @@
         }
         // Handle attachments
         if (self.mutableAttachments.count > 0) {
-            [MMAttachmentService upload:self.mutableAttachments success:^{
+            [MMAttachmentService upload:self.mutableAttachments, metaData:nil, success:^{
                 NSMutableDictionary *messageContent = self.messageContent.mutableCopy;
                 NSMutableArray *attachmentsToSend = [NSMutableArray arrayWithCapacity:self.mutableAttachments.count];
                 for (MMAttachment *attachment in self.mutableAttachments) {
@@ -165,10 +165,10 @@
                 failure(error);
             }
         } else {
-            
+
             // Handle attachments
             if (self.mutableAttachments.count > 0) {
-                [MMAttachmentService upload:self.mutableAttachments success:^{
+                [MMAttachmentService upload:self.mutableAttachments, metaData:nil, success:^{
                     NSMutableDictionary *messageContent = self.messageContent.mutableCopy;
                     NSMutableArray *attachmentsToSend = [NSMutableArray arrayWithCapacity:self.mutableAttachments.count];
                     for (MMAttachment *attachment in self.mutableAttachments) {
