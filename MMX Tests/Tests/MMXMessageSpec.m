@@ -98,7 +98,7 @@ SPEC_BEGIN(MMXMessageSpec)
                     if (users.count) {
                         MMXPushMessage  *pmsg = [MMXPushMessage pushMessageWithRecipient:users.firstObject body:@"Test Push"];
                         
-                        [pmsg sendPushMessage:^(NSSet<MMDevice *> * invalidDevices) {
+                        [pmsg sendPushMessage:^{
                             _isSuccess = YES;
                         } failure:^(NSError * error) {
                             

@@ -62,6 +62,30 @@
 		msg.channel.isPublic = YES;
 	}
 	msg.sender = sender;
+    
+    // Handle attachments
+    NSMutableDictionary *metaData = pubSubMessage.metaData.mutableCopy;
+    NSArray *receivedAttachments;
+    NSString *attachmentsJSONString = pubSubMessage.metaData[@"_attachments"];
+    if (attachmentsJSONString) {
+        NSData *attachmentsJSON = [attachmentsJSONString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *serializationError;
+        id attachments = [NSJSONSerialization JSONObjectWithData:attachmentsJSON options:0 error:&serializationError];
+        if (!serializationError) {
+            receivedAttachments = attachments;
+        }
+        [metaData removeObjectForKey:@"_attachments"];
+    }
+    pubSubMessage.metaData = metaData;
+    
+    if (receivedAttachments.count > 0) {
+        NSMutableArray *attachments = [NSMutableArray arrayWithCapacity:receivedAttachments.count];
+        for (NSDictionary *attachmentDictionary in receivedAttachments) {
+            [attachments addObject:[MMAttachment fromDictionary:attachmentDictionary]];
+        }
+        msg.attachments = attachments;
+    }
+    
 	msg.messageID = pubSubMessage.messageID;
 	msg.messageContent = pubSubMessage.metaData;
 	msg.timestamp = pubSubMessage.timestamp;
@@ -103,13 +127,18 @@
         }
         // Handle attachments
         if (self.mutableAttachments.count > 0) {
-            [MMAttachmentService upload:self.mutableAttachments success:^{
+            NSDictionary *metaData = @{
+                                       @"channel_name": self.channel.name,
+                                       @"channel_is_public": self.channel.isPublic ? @"true" : @"false",
+                                       @"message_id": messageID,
+                                       };
+            [MMAttachmentService upload:self.mutableAttachments metaData:metaData success:^{
                 NSMutableDictionary *messageContent = self.messageContent.mutableCopy;
                 NSMutableArray *attachmentsToSend = [NSMutableArray arrayWithCapacity:self.mutableAttachments.count];
                 for (MMAttachment *attachment in self.mutableAttachments) {
                     [attachmentsToSend addObject:[attachment toJSONString]];
                 }
-                messageContent[@"_attachments"] = attachmentsToSend;
+                messageContent[@"_attachments"] = [NSString stringWithFormat:@"%@%@%@", @"[", [attachmentsToSend componentsJoinedByString:@","], @"]"];
                 self.messageContent = messageContent;
                 msg.metaData = self.messageContent;
                 
@@ -165,16 +194,20 @@
                 failure(error);
             }
         } else {
-            
+
             // Handle attachments
             if (self.mutableAttachments.count > 0) {
-                [MMAttachmentService upload:self.mutableAttachments success:^{
+                NSDictionary *metaData = @{
+                                           @"recipients": [[[self.recipients valueForKey:@"userID"] allObjects] componentsJoinedByString:@","],
+                                           @"message_id": messageID,
+                                           };
+                [MMAttachmentService upload:self.mutableAttachments metaData:metaData success:^{
                     NSMutableDictionary *messageContent = self.messageContent.mutableCopy;
                     NSMutableArray *attachmentsToSend = [NSMutableArray arrayWithCapacity:self.mutableAttachments.count];
                     for (MMAttachment *attachment in self.mutableAttachments) {
                         [attachmentsToSend addObject:[attachment toJSONString]];
                     }
-                    messageContent[@"_attachments"] = attachmentsToSend;
+                    messageContent[@"_attachments"] = [NSString stringWithFormat:@"%@%@%@", @"[", [attachmentsToSend componentsJoinedByString:@","], @"]"];
                     self.messageContent = messageContent;
                     
                     [[MagnetDelegate sharedDelegate] sendMessage:self success:^(NSSet *invalidUsers) {

@@ -967,16 +967,25 @@ int const kReconnectionTimerInterval = 4;
         }
         
         // Handle attachments
-        NSArray *receivedAttachments = message.metaData[@"_attachments"];
         NSMutableDictionary *metaData = message.metaData.mutableCopy;
-        [metaData removeObjectForKey:@"_attachments"];
+        NSArray *receivedAttachments;
+        NSString *attachmentsJSONString = message.metaData[@"_attachments"];
+        if (attachmentsJSONString) {
+            NSData *attachmentsJSON = [attachmentsJSONString dataUsingEncoding:NSUTF8StringEncoding];
+            NSError *serializationError;
+            id attachments = [NSJSONSerialization JSONObjectWithData:attachmentsJSON options:0 error:&serializationError];
+            if (!serializationError) {
+                receivedAttachments = attachments;
+            }
+            [metaData removeObjectForKey:@"_attachments"];
+        }
         
         MMXMessage *msg = [MMXMessage messageToRecipients:[NSSet setWithArray:usersCopy]
                                            messageContent:metaData.copy];
         if (receivedAttachments.count > 0) {
             NSMutableArray *attachments = [NSMutableArray arrayWithCapacity:receivedAttachments.count];
-            for (NSString *attachmentJsonString in receivedAttachments) {
-                [attachments addObject:[MMAttachment fromJSONString:attachmentJsonString]];
+            for (NSDictionary *attachmentDictionary in receivedAttachments) {
+                [attachments addObject:[MMAttachment fromDictionary:attachmentDictionary]];
             }
             msg.attachments = attachments;
         }
@@ -1046,20 +1055,7 @@ int const kReconnectionTimerInterval = 4;
             for (MMXPubSubMessage *pubMsg in messageArray) {
                 NSPredicate *usernamePredicate = [NSPredicate predicateWithFormat:@"userID = %@",pubMsg.senderUserID.username];
                 MMUser *sender = [users filteredArrayUsingPredicate:usernamePredicate].firstObject;
-                // Handle attachments
-                NSArray *receivedAttachments = pubMsg.metaData[@"_attachments"];
-                NSMutableDictionary *metaData = pubMsg.metaData.mutableCopy;
-                [metaData removeObjectForKey:@"_attachments"];
-                pubMsg.metaData = metaData;
-                
                 MMXMessage *channelMessage = [MMXMessage messageFromPubSubMessage:pubMsg sender:sender];
-                if (receivedAttachments.count > 0) {
-                    NSMutableArray *attachments = [NSMutableArray arrayWithCapacity:receivedAttachments.count];
-                    for (NSString *attachmentJsonString in receivedAttachments) {
-                        [attachments addObject:[MMAttachment fromJSONString:attachmentJsonString]];
-                    }
-                    channelMessage.attachments = attachments;
-                }
                 [[NSNotificationCenter defaultCenter] postNotificationName:MMXDidReceiveMessageNotification
                                                                     object:nil
                                                                   userInfo:@{MMXMessageKey:channelMessage}];
