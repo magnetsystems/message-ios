@@ -198,7 +198,7 @@
             // Handle attachments
             if (self.mutableAttachments.count > 0) {
                 NSDictionary *metaData = @{
-                                           @"recipients": [[self.recipients valueForKey:@"userID"] componentsJoinedByString:@","],
+                                           @"recipients": [[[self.recipients valueForKey:@"userID"] allObjects] componentsJoinedByString:@","],
                                            @"message_id": messageID,
                                            };
                 [MMAttachmentService upload:self.mutableAttachments metaData:metaData success:^{
