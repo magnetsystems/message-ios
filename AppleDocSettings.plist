@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
-	"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>--create-html</key>
 	<true/>
-    <key>--input</key>
-    <array>
-        <string>./tempheaders</string>
-    </array>
-    <key>--exit-threshold</key>
-	<integer>2</integer>
-    <key>--ignore</key>
+	<key>--input</key>
 	<array>
+		<string>./MagnetMaxHeaders</string>
+		<string>./Source/Public</string>
+		<string>./templates</string>
+	</array>
+	<key>--exit-threshold</key>
+	<integer>2</integer>
+	<key>--ignore</key>
+	<array>
+		<string>Public/MMXNotificationConstants.h</string>
+		<string>MMXLogger.h</string>
 		<string>.m</string>
 		<string>Build</string>
 		<string>MMX</string>
@@ -33,7 +36,7 @@
 		<string>build-x86_64</string>
 		<string>Source</string>
 	</array>
-    <key>--project-company</key>
+	<key>--project-company</key>
 	<string>Magnet Systems, Inc</string>
 	<key>--project-name</key>
 	<string>MagnetMessage</string>
