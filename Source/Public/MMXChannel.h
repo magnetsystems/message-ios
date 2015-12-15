@@ -310,5 +310,27 @@ NS_ASSUME_NONNULL_BEGIN
 				comments:(nullable NSString *)comments
 				 success:(nullable void (^)(MMXInvite *invite))success
 				 failure:(nullable void (^)(NSError *error))failure;
+
+/**
+ *  Method to add subscribers to a channel. (Owner Only)
+ *
+ *  @param subscribers    The users you want to subscribe
+ *  @param success		  Block with the invalid users
+ *  @param failure		  Block with an NSError with details about the call failure.
+ */
+- (void)addSubscribers:(NSArray <MMUser *> *)subscribers
+               success:(nullable void (^)(NSSet <NSString *>*invalidUsers))success
+               failure:(nullable void (^)(NSError *error))failure;
+
+/**
+ *  Method to remove subscribers from a channel. (Owner Only)
+ *
+ *  @param subscribers    The users you want remove
+ *  @param success		  Block with the invalid users
+ *  @param failure		  Block with an NSError with details about the call failure.
+ */
+- (void)removeSubscribers:(NSArray <MMUser *> *)subscribers
+                  success:(nullable void (^)(NSSet <NSString *>*invalidUsers))success
+                  failure:(nullable void (^)(NSError *error))failure;
 NS_ASSUME_NONNULL_END
 @end
