@@ -346,11 +346,33 @@
       <Group
          location = "group:PubSub"
          name = "PubSub">
+         <Group
+            location = "group:ChannelRequest"
+            name = "ChannelRequest">
+            <FileRef
+               location = "group:MMXChannelSummaryRequest.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXChannelSummaryRequest.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXMatchType.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXMatchType.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXQueryChannelRequest.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXQueryChannelRequest.m">
+            </FileRef>
+         </Group>
          <FileRef
             location = "group:MMXPubSubService.h">
          </FileRef>
          <FileRef
-            location = "group:MMXPubSubService.m">
+            location = "group:/Users/lorenzo.stanton/message-ios/Source/PubSub/MMXPubSubService.m">
          </FileRef>
          <FileRef
             location = "group:MMXGeoLocationMessage.h">
