@@ -18,12 +18,12 @@
 #import <Foundation/Foundation.h>
 @import MagnetMaxCore;
 
-@interface MMXChannelSummaryRequest : MMModel
+@interface MMXSubscribeResponse : MMModel
 
-@property (nonatomic, assign) int numOfMessages;
+@property (nonatomic, copy) NSString *subId;
 
-@property (nonatomic, assign) int numOfSubcribers;
+@property (nonatomic, assign) int code;
 
-@property (nonatomic, copy) NSArray *channelIds;
+@property (nonatomic, copy) NSString *message;
 
 @end

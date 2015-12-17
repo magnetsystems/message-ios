@@ -15,9 +15,9 @@
  * permissions and limitations under the License.
  */
 
-#import "MMXQueryChannelRequest.h"
+#import "MMXPubSubPayload.h"
 
-@implementation MMXQueryChannelRequest
+@implementation MMXPubSubPayload
 
 + (NSDictionary *)attributeMappings {
     NSDictionary *dictionary = @{
@@ -44,7 +44,6 @@
 
 + (NSDictionary *)enumAttributeTypes {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
-        @"matchFilter" : MMXMatchTypeContainer.class,
     }];
     [dictionary addEntriesFromDictionary:[super enumAttributeTypes]];
     return dictionary;

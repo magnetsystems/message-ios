@@ -31,6 +31,12 @@
 #import "MMXPubSubMessage_Private.h"
 #import "MMXPubSubService.h"
 #import "MMXMessage.h"
+#import "MMXQueryChannel.h"
+#import "MMXQueryChannelResponse.h"
+#import "MMXRemoveSubscribersResponse.h"
+#import "MMXAddSubscribersResponse.h"
+#import "MMXChannelSummaryRequest.h"
+
 @import MagnetMaxCore;
 
 @interface MMXPublishPermissionsContainer : NSObject <MMEnumAttributeContainer>
@@ -338,7 +344,7 @@
     channel.ownerUserID = [MMUser currentUser].userID;
     channel.subscribers = [[subscribers valueForKey:@"userID"] allObjects];
     MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
-    MMCall *call = [pubSubService createChannel:channel success:^(NSString *response) {
+    MMCall *call = [pubSubService createChannel:channel success:^(MMXChannelResponse *response) {
         NSMutableArray *subscribers = [channel.subscribers mutableCopy];
         [subscribers addObject:[MMUser currentUser].userID];
         channel.subscribers = subscribers;
@@ -659,22 +665,12 @@
     MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
     MMXChannel *channel = [[MMXChannel alloc] initWithDictionary:self.dictionaryValue error:nil];
     
-    NSMutableArray *subs = [NSMutableArray new];
-    for (MMUser *user in subscribers) {
-        [subs addObject:user.userID];
-    }
-    channel.subscribers = subs;
+    channel.subscribers = [subscribers valueForKey:@"userID"];
     
-    MMCall *call = [pubSubService addSubscriberToChannel:channel.name body:channel success:^(NSString *response) {
-        NSError *jsonError;
-        NSData *responseData = [response dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:responseData
-                                                                           options:NSJSONReadingMutableContainers
-                                                                             error:&jsonError];
-        NSDictionary *subscribeResponse = responseDictionary[@"subscribeResponse"];
+    MMCall *call = [pubSubService addSubscribersToChannel:channel.name body:channel success:^(MMXAddSubscribersResponse *response) {
         
         for (MMUser *user in subscribers) {
-            NSDictionary *userResponse  = subscribeResponse[user.userID];
+            NSDictionary *userResponse  = response.subscribeResponse[user.userID];
             NSInteger code = NSIntegerMax;
             
             if ([userResponse isKindOfClass:[NSDictionary class]] && userResponse) {
@@ -719,22 +715,12 @@
     MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
     MMXChannel *channel = [[MMXChannel alloc] initWithDictionary:self.dictionaryValue error:nil];
     
-    NSMutableArray *subs = [NSMutableArray new];
-    for (MMUser *user in subscribers) {
-        [subs addObject:user.userID];
-    }
-    channel.subscribers = subs;
+    channel.subscribers = [subscribers valueForKey:@"userID"];
     
-    MMCall *call = [pubSubService removeSubscriberFromChannel:channel.name body:channel success:^(NSString *response) {
-        NSError *jsonError;
-        NSData *responseData = [response dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:responseData
-                                                                           options:NSJSONReadingMutableContainers
-                                                                             error:&jsonError];
-        NSDictionary *subscribeResponse = responseDictionary[@"subscribeResponse"];
+    MMCall *call = [pubSubService removeSubscribersFromChannel:channel.name body:channel success:^(MMXRemoveSubscribersResponse *response) {
         
         for (MMUser *user in subscribers) {
-            NSDictionary *userResponse  = subscribeResponse[user.userID];
+            NSDictionary *userResponse  = response.subscribeResponse[user.userID];
             NSInteger code = NSIntegerMax;
             
             if ([userResponse isKindOfClass:[NSDictionary class]] && userResponse) {
@@ -753,6 +739,61 @@
             success(invalidUsers);
         }
     } failure: failure];
+    
+    [call executeInBackground:nil];
+}
+
++ (void)findChannelsBySubscribers:(NSArray <MMUser *> *)subscribers
+                        matchType:(MMXMatchType)matchType
+                          success:(nullable void (^)(NSArray <MMXChannel *>*channels))success
+                          failure:(nullable void (^)(NSError *error))failure {
+    if (subscribers.count == 0) {
+        NSError *error = [MMXClient errorWithTitle:@"No Subscribers" message:@"No Subscribers" code:403];
+        if (failure) {
+            failure(error);
+        }
+        
+        return;
+    }
+    
+    MMXQueryChannel *queryChannel = [[MMXQueryChannel alloc] init];
+    queryChannel.subscribers = [subscribers valueForKey:@"userID"];
+    queryChannel.matchFilter = matchType;
+    MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
+    MMCall *call = [pubSubService queryChannels:queryChannel success:^(MMXQueryChannelResponse *response) {
+        if (success) {
+            success(response.channels);
+        }
+    } failure:failure];
+    
+    [call executeInBackground:nil];
+}
+
++ (void)channelSummary:(NSSet<MMXChannel *>*)channels
+      numberOfMessages:(NSInteger)numberOfMessages
+    numberOfSubcribers:(NSInteger)numberOfSubcribers
+               success:(nullable void (^)(NSArray <MMXChannelSummaryResponse *>*channelSummaries))success
+               failure:(nullable void (^)(NSError *error))failure {
+    if (channels.count == 0) {
+        NSError *error = [MMXClient errorWithTitle:@"No channels" message:@"No channels" code:403];
+        if (failure) {
+            failure(error);
+        }
+        
+        return;
+    }
+    
+    MMXChannelSummaryRequest *channelSummary = [[MMXChannelSummaryRequest alloc] init];
+    channelSummary.numOfMessages = numberOfMessages;
+    channelSummary.numOfSubcribers = numberOfSubcribers;
+    channelSummary.channelIds = [channels valueForKey:@"name"];
+    MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
+    MMCall *call = [pubSubService getSummary:channelSummary
+                      success:^(NSArray<MMXChannelSummaryResponse *>*response) {
+                          if (success) {
+                              success(response);
+                          }
+                      } failure:failure];
     
     [call executeInBackground:nil];
 }
@@ -926,9 +967,7 @@
 }
 
 + (NSDictionary *)enumAttributeTypes {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
-                                                                                      @"publishPermissions" : MMXPublishPermissionsContainer.class,
-                                                                                      }];
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{ @"publishPermissions" : MMXPublishPermissionsContainer.class}];
     [dictionary addEntriesFromDictionary:[super enumAttributeTypes]];
     return dictionary;
 }

@@ -22,7 +22,6 @@
 #define DEFAULT_TEST_TIMEOUT 10.0
 
 SPEC_BEGIN(MMXChannelSpec)
-
 describe(@"MMXChannel", ^{
     
     NSString *senderUsername = [NSString stringWithFormat:@"sender_%f", [[NSDate date] timeIntervalSince1970]];
@@ -540,10 +539,29 @@ describe(@"MMXChannel", ^{
         });
     });
     
+    
+    NSString *addedRemoveChannelName = [@"chan_test_" stringByAppendingFormat:@"%f",[[NSDate date] timeIntervalSince1970]];
+    __block MMXChannel *addedRemoveChannel = nil;
     context(@"when adding subscribers to a channel", ^{
+        it(@"should create channel", ^{
+            __block BOOL _isSuccess = YES;
+            [MMXChannel createWithName:addedRemoveChannelName
+                               summary:addedRemoveChannelName
+                              isPublic:YES
+                    publishPermissions:MMXPublishPermissionsOwnerOnly
+                               success:^(MMXChannel *channel) {
+                                   addedRemoveChannel = channel;
+                               } failure:^(NSError * error) {
+                                   if (error.code != 409) {
+                                       _isSuccess = NO;
+                                   }
+                               }];
+            [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+        });
         
         it(@"should create users", ^{
             __block BOOL _isSuccess = YES;
+            
             MMUser *sender = [[MMUser alloc] init];
             sender.userName = @"testuser123";
             sender.password = @"testuser123";
@@ -569,8 +587,8 @@ describe(@"MMXChannel", ^{
         
         it(@"should return success", ^{
             __block BOOL _isSuccess = NO;
-            [MMXChannel subscribedChannelsWithSuccess:^(NSArray *channels) {
-                MMXChannel *myChannel = channels.firstObject;
+            [MMXChannel channelForName:addedRemoveChannelName isPublic:addedRemoveChannel.isPublic success:^(MMXChannel *channel) {
+                MMXChannel *myChannel = channel;
                 NSInteger expectedNumberOfUsers = 4;
                 [MMUser usersWithUserNames:@[@"testuser123",@"testuser1234",@"testuser12345"] success:^(NSArray<MMUser *> *users) {
                     [myChannel addSubscribers:users
@@ -602,10 +620,11 @@ describe(@"MMXChannel", ^{
     context(@"when removing subscribers from a channel", ^{
         it(@"should return success", ^{
             __block BOOL _isSuccess = NO;
-            [MMXChannel subscribedChannelsWithSuccess:^(NSArray *channels) {
-                MMXChannel *myChannel = channels.firstObject;
+            [MMXChannel channelForName:addedRemoveChannelName isPublic:addedRemoveChannel.isPublic success:^(MMXChannel *channel) {
+                MMXChannel *myChannel = channel;
                 NSInteger expectedNumberOfUsers = 3;
                 [MMUser usersWithUserNames:@[@"testuser123"] success:^(NSArray<MMUser *> *users) {
+                    
                     [myChannel removeSubscribers:users
                                          success:^(NSSet<MMUser *> *invalidUsers) {
                                              [myChannel subscribersWithLimit:100
@@ -631,6 +650,44 @@ describe(@"MMXChannel", ^{
             [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
         });
         
+    });
+    
+    context(@"when finding channes by subscribers", ^{
+        it(@"should return success for ANY Match", ^{
+            __block BOOL _isSuccess = NO;
+            
+            [MMUser usersWithUserNames:@[@"testuser12345",@"testuser1234"] success:^(NSArray<MMUser *> *users) {
+                
+                [MMXChannel findChannelsBySubscribers:users
+                                            matchType:MMXMatchTypeSUBSET_MATCH
+                                              success:^(NSArray<MMXChannel *> * channels) {
+                                                  _isSuccess = [channels.firstObject.name isEqualToString:addedRemoveChannelName];
+                                              } failure:^(NSError * error) {
+                                                  _isSuccess = NO;
+                                              }];
+            } failure:^(NSError * error) {
+                _isSuccess = NO;
+            }];
+            // Assert
+            [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+        });
+    });
+    
+    context(@"when requesting summaries", ^{
+        it(@"should return success", ^{
+            __block BOOL _isSuccess = NO;
+            
+            [MMXChannel channelSummary:[NSSet setWithObject:addedRemoveChannel]
+                      numberOfMessages:10
+                    numberOfSubcribers:10
+                               success:^(NSArray<MMXChannelSummaryResponse *> *channelSummaries) {
+                                   _isSuccess = YES;
+                               } failure:^(NSError *error) {
+                                   _isSuccess = NO;
+                               }];
+            // Assert
+            [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+        });
     });
     
     afterAll(^{

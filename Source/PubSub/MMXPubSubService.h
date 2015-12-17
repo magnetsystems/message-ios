@@ -17,12 +17,13 @@
 
 #import <Foundation/Foundation.h>
 @import MagnetMaxCore;
-
-@class MMXChannel;
+@class MMXQueryChannelResponse;
+@class MMXQueryChannel;
 @class MMXChannelSummaryRequest;
-@class MMXQueryChannelRequest;
-//@class MGSendMessageRequest;
-//@class MGSendMessageResponse;
+@class MMXChannelResponse;
+@class MMXAddSubscribersResponse;
+@class MMXRemoveSubscribersResponse;
+@class MMXChannel;
 
 @protocol MMXPubSubServiceProtocol <NSObject>
 
@@ -33,8 +34,8 @@
  @param body style:BODY
  @return A 'MMCall' object.
  */
-- (MMCall *)queryChannels:(MMXQueryChannelRequest *)body
-                  success:(void (^)(NSString *response))success
+- (MMCall *)queryChannels:(MMXQueryChannel *)body
+                  success:(void (^)(MMXQueryChannelResponse *response))success
                   failure:(void (^)(NSError *error))failure;
 ///**
 // 
@@ -43,16 +44,16 @@
 // @return A 'MMCall' object.
 // */
 //- (MMCall *)sendChannelMessage:(MMXSendMessageRequest *)body
-//                       success:(void (^)(MMXSendMessageResponse *r
-
+//                       success:(void (^)(MMXSendMessageResponse *response))success
+//                       failure:(void (^)(NSError *error))failure;
 /**
  
- GET /com.magnet.server/channel/summary
+ POST /com.magnet.server/channel/summary
  @param body style:BODY
  @return A 'MMCall' object.
  */
 - (MMCall *)getSummary:(MMXChannelSummaryRequest *)body
-               success:(void (^)(NSString *response))success
+               success:(void (^)(NSArray *response))success
                failure:(void (^)(NSError *error))failure;
 /**
  
@@ -61,10 +62,10 @@
  @param body style:BODY
  @return A 'MMCall' object.
  */
-- (MMCall *)addSubscriberToChannel:(NSString *)channelName
-                              body:(MMXChannel *)body
-                           success:(void (^)(NSString *response))success
-                           failure:(void (^)(NSError *error))failure;
+- (MMCall *)addSubscribersToChannel:(NSString *)channelName
+                               body:(MMXChannel *)body
+                            success:(void (^)(MMXAddSubscribersResponse *response))success
+                            failure:(void (^)(NSError *error))failure;
 /**
  
  POST /com.magnet.server/channel/create
@@ -72,7 +73,7 @@
  @return A 'MMCall' object.
  */
 - (MMCall *)createChannel:(MMXChannel *)body
-                  success:(void (^)(NSString *response))success
+                  success:(void (^)(MMXChannelResponse *response))success
                   failure:(void (^)(NSError *error))failure;
 /**
  
@@ -81,10 +82,11 @@
  @param body style:BODY
  @return A 'MMCall' object.
  */
-- (MMCall *)removeSubscriberFromChannel:(NSString *)channelName
-                                   body:(MMXChannel *)body
-                                success:(void (^)(NSString *response))success
-                                failure:(void (^)(NSError *error))failure;
+- (MMCall *)removeSubscribersFromChannel:(NSString *)channelName
+                                    body:(MMXChannel *)body
+                                 success:(void (^)(MMXRemoveSubscribersResponse *response))success
+                                 failure:(void (^)(NSError *error))failure;
+
 @end
 
 @interface MMXPubSubService : MMService<MMXPubSubServiceProtocol>

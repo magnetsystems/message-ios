@@ -15,19 +15,13 @@
  * permissions and limitations under the License.
  */
 
+#import <Foundation/Foundation.h>
 @import MagnetMaxCore;
-#import "MMXMatchType.h"
 
-@interface MMXQueryChannelRequest : MMModel
-
-@property (nonatomic, copy) NSString *mmxAppId;
-
-@property (nonatomic, copy) NSArray *subscribers;
+@interface MMXItemPublisher : MMModel
 
 @property (nonatomic, copy) NSString *deviceId;
 
 @property (nonatomic, copy) NSString *userId;
-
-@property (nonatomic, assign) MMXMatchType  matchFilter;
 
 @end

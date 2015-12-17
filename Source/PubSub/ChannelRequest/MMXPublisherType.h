@@ -18,12 +18,12 @@
 #import <Foundation/Foundation.h>
 @import MagnetMaxCore;
 
-@interface MMXChannelSummaryRequest : MMModel
+typedef NS_ENUM(NSUInteger, MMXPublisherType){
+  MMXPublisherTypeAnyone = 0,
+  MMXPublisherTypeOwner,
+  MMXPublisherTypeSubscribers,
+};
 
-@property (nonatomic, assign) int numOfMessages;
-
-@property (nonatomic, assign) int numOfSubcribers;
-
-@property (nonatomic, copy) NSArray *channelIds;
+@interface MMXPublisherTypeContainer : NSObject <MMEnumAttributeContainer>
 
 @end

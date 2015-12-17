@@ -16,9 +16,14 @@
  */
 
 #import "MMXPubSubService.h"
+#import "MMXQueryChannelResponse.h";
+#import "MMXQueryChannel.h";
 #import "MMXChannel.h"
-#import "MMXChannelSummaryRequest.h"
-#import "MMXQueryChannelRequest.h"
+#import "MMXChannelSummaryRequest.h";
+#import "MMXChannelSummaryResponse.h";
+#import "MMXChannelResponse.h";
+#import "MMXRemoveSubscribersResponse.h"
+#import "MMXAddSubscribersResponse.h"
 
 @implementation MMXPubSubService
 
@@ -27,7 +32,8 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSMutableDictionary *serviceMetaData = [NSMutableDictionary dictionary];
-        
+
+
         // schema for service method queryChannels:success:failure:
         MMServiceMethod *queryChannelsSuccessFailure = [[MMServiceMethod alloc] init];
         queryChannelsSuccessFailure.clazz = [self class];
@@ -42,14 +48,38 @@
         queryChannelsSuccessFailureParam0.name = @"body";
         queryChannelsSuccessFailureParam0.requestParameterType = MMServiceMethodParameterTypeBody;
         queryChannelsSuccessFailureParam0.type = MMServiceIOTypeMagnetNode;
-        queryChannelsSuccessFailureParam0.typeClass = MMXQueryChannelRequest.class;
+        queryChannelsSuccessFailureParam0.typeClass = MMXQueryChannel.class;
         queryChannelsSuccessFailureParam0.isOptional = NO;
         [queryChannelsSuccessFailureParams addObject:queryChannelsSuccessFailureParam0];
 
         queryChannelsSuccessFailure.parameters = queryChannelsSuccessFailureParams;
-        queryChannelsSuccessFailure.returnType = MMServiceIOTypeString;
+        queryChannelsSuccessFailure.returnType = MMServiceIOTypeMagnetNode;
+        queryChannelsSuccessFailure.returnTypeClass = MMXQueryChannelResponse.class;
         serviceMetaData[NSStringFromSelector(queryChannelsSuccessFailure.selector)] = queryChannelsSuccessFailure;
-        
+
+//        // schema for service method sendChannelMessage:success:failure:
+//        MMServiceMethod *sendChannelMessageSuccessFailure = [[MMServiceMethod alloc] init];
+//        sendChannelMessageSuccessFailure.clazz = [self class];
+//        sendChannelMessageSuccessFailure.selector = @selector(sendChannelMessage:success:failure:);
+//        sendChannelMessageSuccessFailure.path = @"com.magnet.server/channel/message/send";
+//        sendChannelMessageSuccessFailure.requestMethod = MMRequestMethodPOST;
+//        sendChannelMessageSuccessFailure.consumes = [NSSet setWithObjects:@"application/json", nil];
+//        sendChannelMessageSuccessFailure.produces = [NSSet setWithObjects:@"application/json", nil];
+//
+//        NSMutableArray *sendChannelMessageSuccessFailureParams = [NSMutableArray array];
+//        MMServiceMethodParameter *sendChannelMessageSuccessFailureParam0 = [[MMServiceMethodParameter alloc] init];
+//        sendChannelMessageSuccessFailureParam0.name = @"body";
+//        sendChannelMessageSuccessFailureParam0.requestParameterType = MMServiceMethodParameterTypeBody;
+//        sendChannelMessageSuccessFailureParam0.type = MMServiceIOTypeMagnetNode;
+//        sendChannelMessageSuccessFailureParam0.typeClass = MMXSendMessageRequest.class;
+//        sendChannelMessageSuccessFailureParam0.isOptional = NO;
+//        [sendChannelMessageSuccessFailureParams addObject:sendChannelMessageSuccessFailureParam0];
+//
+//        sendChannelMessageSuccessFailure.parameters = sendChannelMessageSuccessFailureParams;
+//        sendChannelMessageSuccessFailure.returnType = MMServiceIOTypeMagnetNode;
+//        sendChannelMessageSuccessFailure.returnTypeClass = MMXSendMessageResponse.class;
+//        serviceMetaData[NSStringFromSelector(sendChannelMessageSuccessFailure.selector)] = sendChannelMessageSuccessFailure;
+
         // schema for service method getSummary:success:failure:
         MMServiceMethod *getSummarySuccessFailure = [[MMServiceMethod alloc] init];
         getSummarySuccessFailure.clazz = [self class];
@@ -69,37 +99,40 @@
         [getSummarySuccessFailureParams addObject:getSummarySuccessFailureParam0];
 
         getSummarySuccessFailure.parameters = getSummarySuccessFailureParams;
-        getSummarySuccessFailure.returnType = MMServiceIOTypeString;
+        getSummarySuccessFailure.returnType = MMServiceIOTypeArray;
+        getSummarySuccessFailure.returnComponentType = MMServiceIOTypeMagnetNode;
+        getSummarySuccessFailure.returnTypeClass = MMXChannelSummaryResponse.class;
         serviceMetaData[NSStringFromSelector(getSummarySuccessFailure.selector)] = getSummarySuccessFailure;
 
-        // schema for service method addSubscriberToChannel:body:success:failure:
-        MMServiceMethod *addSubscriberToChannelBodySuccessFailure = [[MMServiceMethod alloc] init];
-        addSubscriberToChannelBodySuccessFailure.clazz = [self class];
-        addSubscriberToChannelBodySuccessFailure.selector = @selector(addSubscriberToChannel:body:success:failure:);
-        addSubscriberToChannelBodySuccessFailure.path = @"com.magnet.server/channel/{channelName}/subscribers/add";
-        addSubscriberToChannelBodySuccessFailure.requestMethod = MMRequestMethodPOST;
-        addSubscriberToChannelBodySuccessFailure.consumes = [NSSet setWithObjects:@"application/json", nil];
-        addSubscriberToChannelBodySuccessFailure.produces = [NSSet setWithObjects:@"application/json", nil];
+        // schema for service method addSubscribersToChannel:body:success:failure:
+        MMServiceMethod *addSubscribersToChannelBodySuccessFailure = [[MMServiceMethod alloc] init];
+        addSubscribersToChannelBodySuccessFailure.clazz = [self class];
+        addSubscribersToChannelBodySuccessFailure.selector = @selector(addSubscribersToChannel:body:success:failure:);
+        addSubscribersToChannelBodySuccessFailure.path = @"com.magnet.server/channel/{channelName}/subscribers/add";
+        addSubscribersToChannelBodySuccessFailure.requestMethod = MMRequestMethodPOST;
+        addSubscribersToChannelBodySuccessFailure.consumes = [NSSet setWithObjects:@"application/json", nil];
+        addSubscribersToChannelBodySuccessFailure.produces = [NSSet setWithObjects:@"application/json", nil];
 
-        NSMutableArray *addSubscriberToChannelBodySuccessFailureParams = [NSMutableArray array];
-        MMServiceMethodParameter *addSubscriberToChannelBodySuccessFailureParam0 = [[MMServiceMethodParameter alloc] init];
-        addSubscriberToChannelBodySuccessFailureParam0.name = @"channelName";
-        addSubscriberToChannelBodySuccessFailureParam0.requestParameterType = MMServiceMethodParameterTypePath;
-        addSubscriberToChannelBodySuccessFailureParam0.type = MMServiceIOTypeString;
-        addSubscriberToChannelBodySuccessFailureParam0.isOptional = NO;
-        [addSubscriberToChannelBodySuccessFailureParams addObject:addSubscriberToChannelBodySuccessFailureParam0];
+        NSMutableArray *addSubscribersToChannelBodySuccessFailureParams = [NSMutableArray array];
+        MMServiceMethodParameter *addSubscribersToChannelBodySuccessFailureParam0 = [[MMServiceMethodParameter alloc] init];
+        addSubscribersToChannelBodySuccessFailureParam0.name = @"channelName";
+        addSubscribersToChannelBodySuccessFailureParam0.requestParameterType = MMServiceMethodParameterTypePath;
+        addSubscribersToChannelBodySuccessFailureParam0.type = MMServiceIOTypeString;
+        addSubscribersToChannelBodySuccessFailureParam0.isOptional = NO;
+        [addSubscribersToChannelBodySuccessFailureParams addObject:addSubscribersToChannelBodySuccessFailureParam0];
 
-        MMServiceMethodParameter *addSubscriberToChannelBodySuccessFailureParam1 = [[MMServiceMethodParameter alloc] init];
-        addSubscriberToChannelBodySuccessFailureParam1.name = @"body";
-        addSubscriberToChannelBodySuccessFailureParam1.requestParameterType = MMServiceMethodParameterTypeBody;
-        addSubscriberToChannelBodySuccessFailureParam1.type = MMServiceIOTypeMagnetNode;
-        addSubscriberToChannelBodySuccessFailureParam1.typeClass = MMXChannel.class;
-        addSubscriberToChannelBodySuccessFailureParam1.isOptional = NO;
-        [addSubscriberToChannelBodySuccessFailureParams addObject:addSubscriberToChannelBodySuccessFailureParam1];
+        MMServiceMethodParameter *addSubscribersToChannelBodySuccessFailureParam1 = [[MMServiceMethodParameter alloc] init];
+        addSubscribersToChannelBodySuccessFailureParam1.name = @"body";
+        addSubscribersToChannelBodySuccessFailureParam1.requestParameterType = MMServiceMethodParameterTypeBody;
+        addSubscribersToChannelBodySuccessFailureParam1.type = MMServiceIOTypeMagnetNode;
+        addSubscribersToChannelBodySuccessFailureParam1.typeClass = MMXChannel.class;
+        addSubscribersToChannelBodySuccessFailureParam1.isOptional = NO;
+        [addSubscribersToChannelBodySuccessFailureParams addObject:addSubscribersToChannelBodySuccessFailureParam1];
 
-        addSubscriberToChannelBodySuccessFailure.parameters = addSubscriberToChannelBodySuccessFailureParams;
-        addSubscriberToChannelBodySuccessFailure.returnType = MMServiceIOTypeString;
-        serviceMetaData[NSStringFromSelector(addSubscriberToChannelBodySuccessFailure.selector)] = addSubscriberToChannelBodySuccessFailure;
+        addSubscribersToChannelBodySuccessFailure.parameters = addSubscribersToChannelBodySuccessFailureParams;
+        addSubscribersToChannelBodySuccessFailure.returnType = MMServiceIOTypeMagnetNode;
+        addSubscribersToChannelBodySuccessFailure.returnTypeClass = MMXAddSubscribersResponse.class;
+        serviceMetaData[NSStringFromSelector(addSubscribersToChannelBodySuccessFailure.selector)] = addSubscribersToChannelBodySuccessFailure;
 
         // schema for service method createChannel:success:failure:
         MMServiceMethod *createChannelSuccessFailure = [[MMServiceMethod alloc] init];
@@ -120,37 +153,39 @@
         [createChannelSuccessFailureParams addObject:createChannelSuccessFailureParam0];
 
         createChannelSuccessFailure.parameters = createChannelSuccessFailureParams;
-        createChannelSuccessFailure.returnType = MMServiceIOTypeString;
+        createChannelSuccessFailure.returnType = MMServiceIOTypeMagnetNode;
+        createChannelSuccessFailure.returnTypeClass = MMXChannelResponse.class;
         serviceMetaData[NSStringFromSelector(createChannelSuccessFailure.selector)] = createChannelSuccessFailure;
 
-        // schema for service method removeSubscriberFromChannel:body:success:failure:
-        MMServiceMethod *removeSubscriberFromChannelBodySuccessFailure = [[MMServiceMethod alloc] init];
-        removeSubscriberFromChannelBodySuccessFailure.clazz = [self class];
-        removeSubscriberFromChannelBodySuccessFailure.selector = @selector(removeSubscriberFromChannel:body:success:failure:);
-        removeSubscriberFromChannelBodySuccessFailure.path = @"com.magnet.server/channel/{channelName}/subscribers/remove";
-        removeSubscriberFromChannelBodySuccessFailure.requestMethod = MMRequestMethodPOST;
-        removeSubscriberFromChannelBodySuccessFailure.consumes = [NSSet setWithObjects:@"application/json", nil];
-        removeSubscriberFromChannelBodySuccessFailure.produces = [NSSet setWithObjects:@"application/json", nil];
+        // schema for service method removeSubscribersFromChannel:body:success:failure:
+        MMServiceMethod *removeSubscribersFromChannelBodySuccessFailure = [[MMServiceMethod alloc] init];
+        removeSubscribersFromChannelBodySuccessFailure.clazz = [self class];
+        removeSubscribersFromChannelBodySuccessFailure.selector = @selector(removeSubscribersFromChannel:body:success:failure:);
+        removeSubscribersFromChannelBodySuccessFailure.path = @"com.magnet.server/channel/{channelName}/subscribers/remove";
+        removeSubscribersFromChannelBodySuccessFailure.requestMethod = MMRequestMethodPOST;
+        removeSubscribersFromChannelBodySuccessFailure.consumes = [NSSet setWithObjects:@"application/json", nil];
+        removeSubscribersFromChannelBodySuccessFailure.produces = [NSSet setWithObjects:@"application/json", nil];
 
-        NSMutableArray *removeSubscriberFromChannelBodySuccessFailureParams = [NSMutableArray array];
-        MMServiceMethodParameter *removeSubscriberFromChannelBodySuccessFailureParam0 = [[MMServiceMethodParameter alloc] init];
-        removeSubscriberFromChannelBodySuccessFailureParam0.name = @"channelName";
-        removeSubscriberFromChannelBodySuccessFailureParam0.requestParameterType = MMServiceMethodParameterTypePath;
-        removeSubscriberFromChannelBodySuccessFailureParam0.type = MMServiceIOTypeString;
-        removeSubscriberFromChannelBodySuccessFailureParam0.isOptional = NO;
-        [removeSubscriberFromChannelBodySuccessFailureParams addObject:removeSubscriberFromChannelBodySuccessFailureParam0];
+        NSMutableArray *removeSubscribersFromChannelBodySuccessFailureParams = [NSMutableArray array];
+        MMServiceMethodParameter *removeSubscribersFromChannelBodySuccessFailureParam0 = [[MMServiceMethodParameter alloc] init];
+        removeSubscribersFromChannelBodySuccessFailureParam0.name = @"channelName";
+        removeSubscribersFromChannelBodySuccessFailureParam0.requestParameterType = MMServiceMethodParameterTypePath;
+        removeSubscribersFromChannelBodySuccessFailureParam0.type = MMServiceIOTypeString;
+        removeSubscribersFromChannelBodySuccessFailureParam0.isOptional = NO;
+        [removeSubscribersFromChannelBodySuccessFailureParams addObject:removeSubscribersFromChannelBodySuccessFailureParam0];
 
-        MMServiceMethodParameter *removeSubscriberFromChannelBodySuccessFailureParam1 = [[MMServiceMethodParameter alloc] init];
-        removeSubscriberFromChannelBodySuccessFailureParam1.name = @"body";
-        removeSubscriberFromChannelBodySuccessFailureParam1.requestParameterType = MMServiceMethodParameterTypeBody;
-        removeSubscriberFromChannelBodySuccessFailureParam1.type = MMServiceIOTypeMagnetNode;
-        removeSubscriberFromChannelBodySuccessFailureParam1.typeClass = MMXChannel.class;
-        removeSubscriberFromChannelBodySuccessFailureParam1.isOptional = NO;
-        [removeSubscriberFromChannelBodySuccessFailureParams addObject:removeSubscriberFromChannelBodySuccessFailureParam1];
+        MMServiceMethodParameter *removeSubscribersFromChannelBodySuccessFailureParam1 = [[MMServiceMethodParameter alloc] init];
+        removeSubscribersFromChannelBodySuccessFailureParam1.name = @"body";
+        removeSubscribersFromChannelBodySuccessFailureParam1.requestParameterType = MMServiceMethodParameterTypeBody;
+        removeSubscribersFromChannelBodySuccessFailureParam1.type = MMServiceIOTypeMagnetNode;
+        removeSubscribersFromChannelBodySuccessFailureParam1.typeClass = MMXChannel.class;
+        removeSubscribersFromChannelBodySuccessFailureParam1.isOptional = NO;
+        [removeSubscribersFromChannelBodySuccessFailureParams addObject:removeSubscribersFromChannelBodySuccessFailureParam1];
 
-        removeSubscriberFromChannelBodySuccessFailure.parameters = removeSubscriberFromChannelBodySuccessFailureParams;
-        removeSubscriberFromChannelBodySuccessFailure.returnType = MMServiceIOTypeString;
-        serviceMetaData[NSStringFromSelector(removeSubscriberFromChannelBodySuccessFailure.selector)] = removeSubscriberFromChannelBodySuccessFailure;
+        removeSubscribersFromChannelBodySuccessFailure.parameters = removeSubscribersFromChannelBodySuccessFailureParams;
+        removeSubscribersFromChannelBodySuccessFailure.returnType = MMServiceIOTypeMagnetNode;
+        removeSubscribersFromChannelBodySuccessFailure.returnTypeClass = MMXRemoveSubscribersResponse.class;
+        serviceMetaData[NSStringFromSelector(removeSubscribersFromChannelBodySuccessFailure.selector)] = removeSubscribersFromChannelBodySuccessFailure;
 
 
         __metaData = serviceMetaData;
