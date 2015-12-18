@@ -88,7 +88,7 @@
         getSummarySuccessFailure.requestMethod = MMRequestMethodPOST;
         getSummarySuccessFailure.consumes = [NSSet setWithObjects:@"application/json", nil];
         getSummarySuccessFailure.produces = [NSSet setWithObjects:@"application/json", nil];
-
+        
         NSMutableArray *getSummarySuccessFailureParams = [NSMutableArray array];
         MMServiceMethodParameter *getSummarySuccessFailureParam0 = [[MMServiceMethodParameter alloc] init];
         getSummarySuccessFailureParam0.name = @"body";
@@ -97,7 +97,7 @@
         getSummarySuccessFailureParam0.typeClass = MMXChannelSummaryRequest.class;
         getSummarySuccessFailureParam0.isOptional = NO;
         [getSummarySuccessFailureParams addObject:getSummarySuccessFailureParam0];
-
+        
         getSummarySuccessFailure.parameters = getSummarySuccessFailureParams;
         getSummarySuccessFailure.returnType = MMServiceIOTypeArray;
         getSummarySuccessFailure.returnComponentType = MMServiceIOTypeMagnetNode;

@@ -24,7 +24,7 @@
 
 @property (nonatomic, assign) int code;
 
-@property (nonatomic, copy) NSDictionary *subscribeResponse;
+@property (nonatomic, copy) NSDictionary<NSString*, MMXSubscribeResponse*> *subscribeResponse;
 
 @property (nonatomic, copy) NSString *message;
 
