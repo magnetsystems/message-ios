@@ -16,42 +16,44 @@
  */
 
 #import "MMXChannelSummaryRequest.h"
+#import "MMXChannel.h"
 
 @implementation MMXChannelSummaryRequest
 
 + (NSDictionary *)attributeMappings {
     NSDictionary *dictionary = @{
-    };
+                                 };
     NSMutableDictionary *attributeMappings = [[super attributeMappings] mutableCopy];
     [attributeMappings addEntriesFromDictionary:dictionary];
-
+    
     return attributeMappings;
 }
 
 + (NSDictionary *)listAttributeTypes {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
-    }];
+                                                                                      @"channelIds" : MMXChannel.class,
+                                                                                      }];
     [dictionary addEntriesFromDictionary:[super listAttributeTypes]];
     return dictionary;
 }
 
 + (NSDictionary *)mapAttributeTypes {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
-    }];
+                                                                                      }];
     [dictionary addEntriesFromDictionary:[super mapAttributeTypes]];
     return dictionary;
 }
 
 + (NSDictionary *)enumAttributeTypes {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
-    }];
+                                                                                      }];
     [dictionary addEntriesFromDictionary:[super enumAttributeTypes]];
     return dictionary;
 }
 
 + (NSArray *)charAttributes {
     NSMutableArray *array = [NSMutableArray arrayWithArray:@[
-    ]];
+                                                             ]];
     [array addObjectsFromArray:[super charAttributes]];
     return array;
 }

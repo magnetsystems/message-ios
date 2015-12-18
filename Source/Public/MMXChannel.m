@@ -36,6 +36,7 @@
 #import "MMXRemoveSubscribersResponse.h"
 #import "MMXAddSubscribersResponse.h"
 #import "MMXChannelSummaryRequest.h"
+#import "MMXSubscribeResponse.h"
 
 @import MagnetMaxCore;
 
@@ -670,11 +671,11 @@
     MMCall *call = [pubSubService addSubscribersToChannel:channel.name body:channel success:^(MMXAddSubscribersResponse *response) {
         
         for (MMUser *user in subscribers) {
-            NSDictionary *userResponse  = response.subscribeResponse[user.userID];
+            MMXSubscribeResponse *userResponse  = response.subscribeResponse[user.userID];
             NSInteger code = NSIntegerMax;
             
-            if ([userResponse isKindOfClass:[NSDictionary class]] && userResponse) {
-                code = [userResponse[@"code"] integerValue];
+            if (userResponse) {
+                code = userResponse.code;
             }
             
             if (code == 0) {
@@ -720,11 +721,11 @@
     MMCall *call = [pubSubService removeSubscribersFromChannel:channel.name body:channel success:^(MMXRemoveSubscribersResponse *response) {
         
         for (MMUser *user in subscribers) {
-            NSDictionary *userResponse  = response.subscribeResponse[user.userID];
+            MMXSubscribeResponse *userResponse  = response.subscribeResponse[user.userID];
             NSInteger code = NSIntegerMax;
             
-            if ([userResponse isKindOfClass:[NSDictionary class]] && userResponse) {
-                code = [userResponse[@"code"] integerValue];
+            if (userResponse) {
+                code = userResponse.code;
             }
             
             if (code == 0) {
@@ -786,14 +787,15 @@
     MMXChannelSummaryRequest *channelSummary = [[MMXChannelSummaryRequest alloc] init];
     channelSummary.numOfMessages = numberOfMessages;
     channelSummary.numOfSubcribers = numberOfSubcribers;
-    channelSummary.channelIds = [channels valueForKey:@"name"];
+    channelSummary.channelIds = channels.allObjects;
+   
     MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
     MMCall *call = [pubSubService getSummary:channelSummary
-                      success:^(NSArray<MMXChannelSummaryResponse *>*response) {
-                          if (success) {
-                              success(response);
-                          }
-                      } failure:failure];
+                                     success:^(NSArray<MMXChannelSummaryResponse *>*response) {
+                                         if (success) {
+                                             success(response);
+                                         }
+                                     } failure:failure];
     
     [call executeInBackground:nil];
 }

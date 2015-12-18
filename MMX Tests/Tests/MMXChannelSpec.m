@@ -591,13 +591,19 @@ describe(@"MMXChannel", ^{
                 MMXChannel *myChannel = channel;
                 NSInteger expectedNumberOfUsers = 4;
                 [MMUser usersWithUserNames:@[@"testuser123",@"testuser1234",@"testuser12345"] success:^(NSArray<MMUser *> *users) {
-                    [myChannel addSubscribers:users
+                    MMUser *invalidUser = [MMUser new];
+                    invalidUser.userName = @"dsaffsdd";
+                    invalidUser.userID = @"dadasdsd";
+                    NSMutableArray *usersWithInvalidUser = [NSMutableArray new];
+                    [usersWithInvalidUser addObject:invalidUser];
+                    [usersWithInvalidUser addObjectsFromArray:users];
+                    [myChannel addSubscribers:usersWithInvalidUser
                                       success:^(NSSet<MMUser *> *invalidUsers) {
                                           [myChannel subscribersWithLimit:100
                                                                    offset:0
                                                                   success:^(int totalCount, NSArray<MMUser *> *subscribers) {
-                                                                      if (totalCount == expectedNumberOfUsers) {
-                                                                          _isSuccess = YES;
+                                                                      if (invalidUsers.count == 1 && totalCount == expectedNumberOfUsers) {
+                                                                           _isSuccess = YES;
                                                                       }
                                                                   } failure:^(NSError *error) {
                                                                       _isSuccess = NO;
@@ -686,7 +692,7 @@ describe(@"MMXChannel", ^{
                                    _isSuccess = NO;
                                }];
             // Assert
-            [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+            [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(200)] beYes];
         });
     });
     
