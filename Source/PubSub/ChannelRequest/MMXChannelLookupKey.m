@@ -15,45 +15,43 @@
  * permissions and limitations under the License.
  */
 
-#import "MMXChannelSummaryRequest.h"
 #import "MMXChannelLookupKey.h"
 
-@implementation MMXChannelSummaryRequest
+@implementation MMXChannelLookupKey
 
 + (NSDictionary *)attributeMappings {
     NSDictionary *dictionary = @{
-                                 };
+    };
     NSMutableDictionary *attributeMappings = [[super attributeMappings] mutableCopy];
     [attributeMappings addEntriesFromDictionary:dictionary];
-    
+    [attributeMappings setObject:@"userId" forKey:@"ownerUserID"];
     return attributeMappings;
 }
 
 + (NSDictionary *)listAttributeTypes {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
-                                                                                      @"channelIds" : MMXChannelLookupKey.class,
-                                                                                      }];
+    }];
     [dictionary addEntriesFromDictionary:[super listAttributeTypes]];
     return dictionary;
 }
 
 + (NSDictionary *)mapAttributeTypes {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
-                                                                                      }];
+    }];
     [dictionary addEntriesFromDictionary:[super mapAttributeTypes]];
     return dictionary;
 }
 
 + (NSDictionary *)enumAttributeTypes {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
-                                                                                      }];
+    }];
     [dictionary addEntriesFromDictionary:[super enumAttributeTypes]];
     return dictionary;
 }
 
 + (NSArray *)charAttributes {
     NSMutableArray *array = [NSMutableArray arrayWithArray:@[
-                                                             ]];
+    ]];
     [array addObjectsFromArray:[super charAttributes]];
     return array;
 }
