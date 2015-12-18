@@ -300,6 +300,12 @@
             location = "group:MMXChannelSummaryResponse.m">
          </FileRef>
          <FileRef
+            location = "group:MMXUserInfo.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUserInfo.m">
+         </FileRef>
+         <FileRef
             location = "group:MMXPublishPermissionsEnum.h">
          </FileRef>
          <FileRef
@@ -356,6 +362,12 @@
             location = "group:ChannelRequest"
             name = "ChannelRequest">
             <FileRef
+               location = "group:MMXChannelLookupKey.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXChannelLookupKey.m">
+            </FileRef>
+            <FileRef
                location = "group:MMXChannelInfo.h">
             </FileRef>
             <FileRef
@@ -378,12 +390,6 @@
             </FileRef>
             <FileRef
                location = "group:MMXPubSubItemChannel.m">
-            </FileRef>
-            <FileRef
-               location = "group:MMXUserInfo.h">
-            </FileRef>
-            <FileRef
-               location = "group:MMXUserInfo.m">
             </FileRef>
             <FileRef
                location = "group:MMXSubscribeResponse.h">

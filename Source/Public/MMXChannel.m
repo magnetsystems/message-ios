@@ -37,6 +37,7 @@
 #import "MMXAddSubscribersResponse.h"
 #import "MMXChannelSummaryRequest.h"
 #import "MMXSubscribeResponse.h"
+#import "MMXChannelLookupKey.h"
 
 @import MagnetMaxCore;
 
@@ -787,8 +788,17 @@
     MMXChannelSummaryRequest *channelSummary = [[MMXChannelSummaryRequest alloc] init];
     channelSummary.numOfMessages = numberOfMessages;
     channelSummary.numOfSubcribers = numberOfSubcribers;
-    channelSummary.channelIds = channels.allObjects;
-   
+    NSMutableArray *channelRequestObjects = [NSMutableArray new];
+    
+    for (MMXChannel *channel in channels) {
+        MMXChannelLookupKey *channelRequestObject = [[MMXChannelLookupKey alloc] init];
+        channelRequestObject.ownerUserID = channel.ownerUserID;
+        channelRequestObject.privateChannel = channel.privateChannel;
+        channelRequestObject.channelName = channel.name;
+        [channelRequestObjects addObject:channelRequestObject];
+    }
+    channelSummary.channelIds = channelRequestObjects;
+    
     MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
     MMCall *call = [pubSubService getSummary:channelSummary
                                      success:^(NSArray<MMXChannelSummaryResponse *>*response) {
