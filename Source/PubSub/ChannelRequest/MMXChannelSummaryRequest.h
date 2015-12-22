@@ -20,9 +20,9 @@
 
 @interface MMXChannelSummaryRequest : MMModel
 
-@property (nonatomic, assign) int numOfMessages;
+@property (nonatomic, assign) NSInteger numOfMessages;
 
-@property (nonatomic, assign) int numOfSubcribers;
+@property (nonatomic, assign) NSInteger numOfSubcribers;
 
 @property (nonatomic, copy) NSArray *channelIds;
 
