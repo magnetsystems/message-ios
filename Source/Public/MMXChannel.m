@@ -688,7 +688,7 @@
         self.subscribers = currentUsers;
         
         if (success) {
-            success(invalidUsers);
+            success([NSSet setWithArray:invalidUsers]);
         }
     } failure: failure];
     
@@ -738,7 +738,7 @@
         self.subscribers = currentUsers;
         
         if (success) {
-            success(invalidUsers);
+            success([NSSet setWithArray:invalidUsers]);
         }
     } failure: failure];
     
@@ -822,8 +822,6 @@
     NSError * error = [MMXClient errorWithTitle:@"Forbidden" message:@"You are not logged in and there is no current user." code:403];
     return error;
 }
-
-
 
 #pragma mark - Conversion Helpers
 
