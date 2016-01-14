@@ -19,7 +19,7 @@
 
 @implementation MMXNotificationConstants
 
-NSString * const MMXUserDidLogOutNotification = @"com.magnet.user.authentication.challenge.receive";
+NSString * const MMXUserDidLogOutNotification = @"com.magnet.networking.hattoken.invalidate";
 NSString * const MMXUserDidLogInNotification = @"com.magnet.networking.hattoken.receive";
 NSString * const MMXDidReceiveMessageNotification = @"com.magnet.mmx.message.receive";
 NSString * const MMXMessageKey = @"com.magnet.message.key";
