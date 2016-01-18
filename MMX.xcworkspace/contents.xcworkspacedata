@@ -294,6 +294,18 @@
             location = "group:MMXChannel.m">
          </FileRef>
          <FileRef
+            location = "group:MMXChannelSummaryResponse.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXChannelSummaryResponse.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUserInfo.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXUserInfo.m">
+         </FileRef>
+         <FileRef
             location = "group:MMXPublishPermissionsEnum.h">
          </FileRef>
          <FileRef
@@ -346,11 +358,99 @@
       <Group
          location = "group:PubSub"
          name = "PubSub">
+         <Group
+            location = "group:ChannelRequest"
+            name = "ChannelRequest">
+            <FileRef
+               location = "group:MMXChannelLookupKey.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXChannelLookupKey.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXChannelInfo.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXChannelInfo.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXItemPublisher.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXItemPublisher.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXPubSubPayload.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXPubSubPayload.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXPubSubItemChannel.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXPubSubItemChannel.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSubscribeResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSubscribeResponse.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXAddSubscribersResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXAddSubscribersResponse.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXChannelResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXChannelResponse.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXQueryChannelResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXQueryChannelResponse.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXRemoveSubscribersResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXRemoveSubscribersResponse.m">
+            </FileRef>
+            <FileRef
+               location = "group:/Users/lorenzo.stanton/message-ios/Source/PubSub/ChannelRequest/MMXChannelSummaryRequest.h">
+            </FileRef>
+            <FileRef
+               location = "group:/Users/lorenzo.stanton/message-ios/Source/PubSub/ChannelRequest/MMXChannelSummaryRequest.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXPublisherType.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXPublisherType.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXMatchType.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXMatchType.m">
+            </FileRef>
+            <FileRef
+               location = "group:/Users/lorenzo.stanton/message-ios/Source/PubSub/ChannelRequest/MMXQueryChannel.h">
+            </FileRef>
+            <FileRef
+               location = "group:/Users/lorenzo.stanton/message-ios/Source/PubSub/ChannelRequest/MMXQueryChannel.m">
+            </FileRef>
+         </Group>
          <FileRef
             location = "group:MMXPubSubService.h">
          </FileRef>
          <FileRef
-            location = "group:MMXPubSubService.m">
+            location = "group:/Users/lorenzo.stanton/message-ios/Source/PubSub/MMXPubSubService.m">
          </FileRef>
          <FileRef
             location = "group:MMXGeoLocationMessage.h">

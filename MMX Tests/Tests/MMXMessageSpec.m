@@ -94,19 +94,13 @@ SPEC_BEGIN(MMXMessageSpec)
                 
                 __block BOOL _isSuccess = NO;
                 
-                [MMUser usersWithUserNames:@[@"QuickstartUser2"] success:^(NSArray *users) {
-                    if (users.count) {
-                        MMXPushMessage  *pmsg = [MMXPushMessage pushMessageWithRecipient:users.firstObject body:@"Test Push"];
+                        MMXPushMessage  *pmsg = [MMXPushMessage pushMessageWithRecipient:[MMUser currentUser] body:@"Test Push"];
                         
                         [pmsg sendPushMessage:^{
                             _isSuccess = YES;
                         } failure:^(NSError * error) {
                             
                         }];
-                    }
-                } failure:^(NSError * error) {
-                    [[MMLogger sharedLogger] error:@"Failed to get users for Invite Response\n%@",error];
-                }];
                 
                 [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
             });

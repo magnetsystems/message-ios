@@ -1,0 +1,1 @@
+Header files in this folder are used for Appledoc generation only.
