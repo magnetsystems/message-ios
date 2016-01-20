@@ -667,7 +667,8 @@ describe(@"MMXChannel", ^{
                 [MMXChannel findChannelsBySubscribers:users
                                             matchType:MMXMatchTypeSUBSET_MATCH
                                               success:^(NSArray<MMXChannel *> * channels) {
-                                                  _isSuccess = [channels.firstObject.name isEqualToString:addedRemoveChannelName];
+                                                  _isSuccess = [channels.firstObject.name isEqualToString:addedRemoveChannelName] &&
+                                                  [channels.firstObject isKindOfClass:[MMXChannel class]];
                                               } failure:^(NSError * error) {
                                                   _isSuccess = NO;
                                               }];

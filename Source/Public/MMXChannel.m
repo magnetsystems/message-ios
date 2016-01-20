@@ -764,7 +764,7 @@
     MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
     MMCall *call = [pubSubService queryChannels:queryChannel success:^(MMXQueryChannelResponse *response) {
         if (success) {
-            success(response.channels);
+            success(response.toMMXChannels);
         }
     } failure:failure];
     
