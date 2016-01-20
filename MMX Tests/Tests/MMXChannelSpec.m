@@ -587,7 +587,7 @@ describe(@"MMXChannel", ^{
         
         it(@"should return success", ^{
             __block BOOL _isSuccess = NO;
-            [MMXChannel channelForName:addedRemoveChannelName isPublic:addedRemoveChannel.isPublic success:^(MMXChannel *channel) {
+            [MMXChannel channelForName:addedRemoveChannelName isPublic:YES success:^(MMXChannel *channel) {
                 MMXChannel *myChannel = channel;
                 NSInteger expectedNumberOfUsers = 4;
                 [MMUser usersWithUserNames:@[@"testuser123",@"testuser1234",@"testuser12345"] success:^(NSArray<MMUser *> *users) {
@@ -626,7 +626,7 @@ describe(@"MMXChannel", ^{
     context(@"when removing subscribers from a channel", ^{
         it(@"should return success", ^{
             __block BOOL _isSuccess = NO;
-            [MMXChannel channelForName:addedRemoveChannelName isPublic:addedRemoveChannel.isPublic success:^(MMXChannel *channel) {
+            [MMXChannel channelForName:addedRemoveChannelName isPublic:YES success:^(MMXChannel *channel) {
                 MMXChannel *myChannel = channel;
                 NSInteger expectedNumberOfUsers = 3;
                 [MMUser usersWithUserNames:@[@"testuser123"] success:^(NSArray<MMUser *> *users) {
