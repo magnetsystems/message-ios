@@ -30,7 +30,6 @@
 
 @property (nonatomic, strong) MMXItemPublisher *publisher;
 
-
 - (MMXMessage *)toMMXMessage;
 
 @end
