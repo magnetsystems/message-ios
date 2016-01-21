@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.dependency     'MMXXMPPFramework', '3.6.13'
   s.dependency     'MDMCoreData', '1.5.0'
-  s.dependency     'MagnetMaxCore', '~> 2.3'
+  s.dependency     'MagnetMaxCore', '~> 2.3.1'
   s.dependency     'CocoaLumberjack', '~> 2.2'
   s.dependency     'CocoaAsyncSocket', '7.4.1'
 
@@ -28,5 +28,5 @@ Pod::Spec.new do |s|
   s.subspec 'Source' do |private_subspec|
   private_subspec.source_files = 'Source/**/*.{h,m,swift}'
   end
-  
+
 end
