@@ -294,19 +294,10 @@
             location = "group:MMXChannel.m">
          </FileRef>
          <FileRef
-            location = "group:MMXChannelSummaryResponse.h">
+            location = "group:MMXChannelDetailResponse.h">
          </FileRef>
          <FileRef
-            location = "group:MMXChannelSummaryResponse.m">
-         </FileRef>
-         <FileRef
-            location = "group:MMXUserInfo.h">
-         </FileRef>
-         <FileRef
-            location = "group:MMXUserInfo.m">
-         </FileRef>
-         <FileRef
-            location = "group:MMXPublishPermissionsEnum.h">
+            location = "group:MMXChannelDetailResponse.m">
          </FileRef>
          <FileRef
             location = "group:MMXInvite.h">
@@ -340,6 +331,9 @@
          </FileRef>
          <FileRef
             location = "group:MMXNotificationConstants.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPublishPermissionsEnum.h">
          </FileRef>
          <FileRef
             location = "group:MMXRemoteNotification.h">
