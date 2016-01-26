@@ -7,26 +7,18 @@ Pod::Spec.new do |s|
   s.homepage           =  'https://www.magnet.com/developer/magnet-message/'
   s.author             =  { 'Magnet Systems, Inc.' => 'support@magnet.com' }
   s.source             =  { :git => 'https://github.com/magnetsystems/message-ios.git', :branch => "develop" }
-  
   s.platform = :ios, '8.0'
   s.requires_arc = true
+
+  s.source_files = 'Source/**/*.{h,m}'
   s.resources    = 'Source/CoreData/MMX.xcdatamodeld'
+
   s.frameworks     =  'Foundation', 'UIKit'
-
   s.xcconfig       =  { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2', 'OTHER_LDFLAGS' => '-ObjC', 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES','ENABLE_BITCODE' => 'NO'}
-
   s.dependency     'MMXXMPPFramework', '3.6.13'
   s.dependency     'MDMCoreData', '1.5.0'
   s.dependency     'MagnetMaxCore', '~> 2.3.1'
   s.dependency     'CocoaLumberjack', '~> 2.2'
   s.dependency     'CocoaAsyncSocket', '7.4.1'
-
-  s.subspec 'Public' do |public_subspec|
-  public_subspec.source_files = 'Source/public/**/*.h','Source/PushMessage/**/*.{h,swift}'
-  end
-
-  s.subspec 'Source' do |private_subspec|
-  private_subspec.source_files = 'Source/**/*.{h,m,swift}'
-  end
 
 end
