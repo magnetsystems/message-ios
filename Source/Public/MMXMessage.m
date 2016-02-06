@@ -30,10 +30,13 @@
 #import "MMXInternalAddress.h"
 #import "MMXConstants.h"
 #import "MMUser+Addressable.h"
+#import  "MMXNotificationConstants.h"
 
 @import MagnetMaxCore;
 
 @implementation MMXMessage
+
+static int kATTACHMENTCONTEXT;
 
 + (instancetype)messageToRecipients:(NSSet <MMUser *>*)recipients
 					 messageContent:(NSDictionary <NSString *,NSString *>*)messageContent {
@@ -93,6 +96,27 @@
 	return msg;
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
+                        change:(NSDictionary *)change context:(void *)context
+{
+    if (context == &kATTACHMENTCONTEXT) {
+        if ([keyPath isEqualToString:@"uploadProgress"]) {
+            [[self attachmentProgress] removeObserver:self forKeyPath:@"uploadProgress" context:&kATTACHMENTCONTEXT];
+            [[self attachmentProgress].uploadProgress addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew context:&kATTACHMENTCONTEXT];
+            self.attachmentUploadProgress = 0;
+            [[NSNotificationCenter defaultCenter] postNotificationName:MMXAttachmentUploadDidChangeValueNotification object:self];
+        } else {
+            self.attachmentUploadProgress = [self attachmentProgress].uploadProgress;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:MMXAttachmentUploadDidChangeValueNotification object:self];
+            });
+        }
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object
+                               change:change context:context];
+    }
+}
+
 - (NSString *)sendWithSuccess:(void (^)(NSSet <NSString *>*invalidUsers))success
                       failure:(void (^)(NSError *))failure {
     if (![MMXMessageUtils isValidMetaData:self.messageContent]) {
@@ -132,7 +156,12 @@
                                        @"channel_is_public": self.channel.isPublic ? @"true" : @"false",
                                        @"message_id": messageID,
                                        };
+            
+            self.attachmentProgress = [[MMAttachmentProgress alloc] init];
+            [[self attachmentProgress] addObserver:self forKeyPath:@"uploadProgress" options:NSKeyValueObservingOptionNew context:&kATTACHMENTCONTEXT];
+            
             [MMAttachmentService upload:self.mutableAttachments metaData:metaData success:^{
+                 [[self attachmentProgress].uploadProgress removeObserver:self forKeyPath:@"fractionCompleted" context:&kATTACHMENTCONTEXT];
                 NSMutableDictionary *messageContent = self.messageContent.mutableCopy;
                 NSMutableArray *attachmentsToSend = [NSMutableArray arrayWithCapacity:self.mutableAttachments.count];
                 for (MMAttachment *attachment in self.mutableAttachments) {
@@ -155,6 +184,7 @@
                 }];
                 
             } failure:^(NSError * _Nonnull error) {
+                 [[self attachmentProgress].uploadProgress removeObserver:self forKeyPath:@"fractionCompleted" context:&kATTACHMENTCONTEXT];
                 if (failure) {
                     failure(error);
                 }
@@ -201,6 +231,10 @@
                                            @"recipients": [[[self.recipients valueForKey:@"userID"] allObjects] componentsJoinedByString:@","],
                                            @"message_id": messageID,
                                            };
+                
+                self.attachmentProgress = [[MMAttachmentProgress alloc] init];
+                [[self attachmentProgress] addObserver:self forKeyPath:@"uploadProgress" options:NSKeyValueObservingOptionNew context:&kATTACHMENTCONTEXT];
+                
                 [MMAttachmentService upload:self.mutableAttachments metaData:metaData success:^{
                     NSMutableDictionary *messageContent = self.messageContent.mutableCopy;
                     NSMutableArray *attachmentsToSend = [NSMutableArray arrayWithCapacity:self.mutableAttachments.count];
@@ -229,6 +263,7 @@
                         }
                     }];
                 } failure:^(NSError * _Nonnull error) {
+                     [[self attachmentProgress].uploadProgress removeObserver:self forKeyPath:@"fractionCompleted" context:&kATTACHMENTCONTEXT];
                     if (failure) {
                         failure(error);
                     }
