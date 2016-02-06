@@ -10,7 +10,7 @@ def import_pods
   use_frameworks!
   pod 'Kiwi', '~> 2.3'
   pod 'MMX', :path => '../'
-  pod 'MagnetMax', '~> 2.4'
+  pod 'MagnetMax', '~> 2.4.1'
 end
 
 target :ios do
