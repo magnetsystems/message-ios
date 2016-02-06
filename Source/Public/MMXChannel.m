@@ -856,6 +856,7 @@
             channel.isSubscribed = sub.isSubscribed;
         }
         [channelArray addObject:channel];
+        i++;
     }
     return channelArray;
 }
