@@ -160,8 +160,11 @@ static int kATTACHMENTCONTEXT;
             self.attachmentProgress = [[MMAttachmentProgress alloc] init];
             [[self attachmentProgress] addObserver:self forKeyPath:@"uploadProgress" options:NSKeyValueObservingOptionNew context:&kATTACHMENTCONTEXT];
             
-            [MMAttachmentService upload:self.mutableAttachments metaData:metaData success:^{
-                 [[self attachmentProgress].uploadProgress removeObserver:self forKeyPath:@"fractionCompleted" context:&kATTACHMENTCONTEXT];
+            [MMAttachmentService upload:self.mutableAttachments metaData:metaData  progress:self.attachmentProgress success:^{
+                @try {
+                    [[self attachmentProgress].uploadProgress removeObserver:self forKeyPath:@"fractionCompleted" context:&kATTACHMENTCONTEXT];
+                }
+                @catch (NSException *exception) {}
                 NSMutableDictionary *messageContent = self.messageContent.mutableCopy;
                 NSMutableArray *attachmentsToSend = [NSMutableArray arrayWithCapacity:self.mutableAttachments.count];
                 for (MMAttachment *attachment in self.mutableAttachments) {
@@ -184,7 +187,10 @@ static int kATTACHMENTCONTEXT;
                 }];
                 
             } failure:^(NSError * _Nonnull error) {
-                 [[self attachmentProgress].uploadProgress removeObserver:self forKeyPath:@"fractionCompleted" context:&kATTACHMENTCONTEXT];
+                @try {
+                    [[self attachmentProgress].uploadProgress removeObserver:self forKeyPath:@"fractionCompleted" context:&kATTACHMENTCONTEXT];
+                }
+                @catch (NSException *exception) {}
                 if (failure) {
                     failure(error);
                 }
@@ -235,7 +241,11 @@ static int kATTACHMENTCONTEXT;
                 self.attachmentProgress = [[MMAttachmentProgress alloc] init];
                 [[self attachmentProgress] addObserver:self forKeyPath:@"uploadProgress" options:NSKeyValueObservingOptionNew context:&kATTACHMENTCONTEXT];
                 
-                [MMAttachmentService upload:self.mutableAttachments metaData:metaData success:^{
+                [MMAttachmentService upload:self.mutableAttachments metaData:metaData progress:self.attachmentProgress success:^{
+                    @try {
+                        [[self attachmentProgress].uploadProgress removeObserver:self forKeyPath:@"fractionCompleted" context:&kATTACHMENTCONTEXT];
+                    }
+                    @catch (NSException *exception) {}
                     NSMutableDictionary *messageContent = self.messageContent.mutableCopy;
                     NSMutableArray *attachmentsToSend = [NSMutableArray arrayWithCapacity:self.mutableAttachments.count];
                     for (MMAttachment *attachment in self.mutableAttachments) {
@@ -263,7 +273,10 @@ static int kATTACHMENTCONTEXT;
                         }
                     }];
                 } failure:^(NSError * _Nonnull error) {
-                     [[self attachmentProgress].uploadProgress removeObserver:self forKeyPath:@"fractionCompleted" context:&kATTACHMENTCONTEXT];
+                    @try {
+                        [[self attachmentProgress].uploadProgress removeObserver:self forKeyPath:@"fractionCompleted" context:&kATTACHMENTCONTEXT];
+                    }
+                    @catch (NSException *exception) {}
                     if (failure) {
                         failure(error);
                     }
