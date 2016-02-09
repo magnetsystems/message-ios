@@ -270,17 +270,17 @@
     return [MMAttachmentService attachmentURL:[self iconID] userId:self.ownerUserID];
 }
 
-- (void)setIcon:(NSURL *)file
+- (void)setIconWithURL:(NSURL *)url
         success:(nullable void (^)(NSURL *iconUrl))success
         failure:(nullable void (^)(NSError *error))failure {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSData *data = [NSData dataWithContentsOfURL:file];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSData *data = [NSData dataWithContentsOfURL:url];
         
-        [self setIconData:data success:success failure:failure];
+        [self setIconWithData:data success:success failure:failure];
     });
 }
 
-- (void)setIconData:(NSData *)data
+- (void)setIconWithData:(NSData *)data
             success:(nullable void (^)(NSURL *iconUrl))success
             failure:(nullable void (^)(NSError *error))failure {
     if (data.length <= 0) {
