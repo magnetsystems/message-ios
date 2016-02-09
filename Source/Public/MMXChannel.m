@@ -257,11 +257,13 @@
     }];
 }
 
-- (NSURL *)icon {
+- (NSURL *)iconURL {
     return nil;
 }
 
-- (void)setIcon:(NSURL *)file success : (void (^)())success failure :( void (^)(NSError *)) failure {
+- (void)setIcon:(NSURL *)file
+        success:(nullable void (^)())success
+        failure:(nullable void (^)(NSError *error))failure {
     
 }
 
