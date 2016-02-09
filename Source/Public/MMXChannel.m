@@ -258,10 +258,21 @@
 }
 
 - (NSURL *)iconURL {
-    return nil;
+    NSMutableString *iconPath = self.name;
+    if (!self.isPublic) {
+        [iconPath appendFormat:@"_%@",self.ownerUserID];
+    }
+    
+    return [MMAttachmentService attachmentURL:self.name userId:self.ownerUserID];
 }
 
 - (void)setIcon:(NSURL *)file
+        success:(nullable void (^)())success
+        failure:(nullable void (^)(NSError *error))failure {
+    
+}
+
+- (void)setIconData:(NSData *)data
         success:(nullable void (^)())success
         failure:(nullable void (^)(NSError *error))failure {
     
