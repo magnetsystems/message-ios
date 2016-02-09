@@ -257,7 +257,7 @@
     }];
 }
 
-- (NSURL *)icon {
+- (NSURL *)iconURL {
     return nil;
 }
 
