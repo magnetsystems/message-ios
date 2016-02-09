@@ -257,25 +257,42 @@
     }];
 }
 
-- (NSURL *)iconURL {
-    NSMutableString *iconPath = self.name;
+- (NSString *)iconID {
+    NSMutableString *iconID = self.name;
     if (!self.isPublic) {
-        [iconPath appendFormat:@"_%@",self.ownerUserID];
+        [iconID appendFormat:@"_%@",self.ownerUserID];
     }
-    
-    return [MMAttachmentService attachmentURL:self.name userId:self.ownerUserID];
+    return iconID;
+}
+
+- (NSURL *)iconURL {
+    return [MMAttachmentService attachmentURL:[self iconID] userId:self.ownerUserID];
 }
 
 - (void)setIcon:(NSURL *)file
-        success:(nullable void (^)())success
+        success:(nullable void (^)(NSURL *iconUrl))success
         failure:(nullable void (^)(NSError *error))failure {
+    NSData *data = [NSData dataWithContentsOfFile:file];
     
+    if (data.length <= 0) {
+        NSError *error = [NSError errorWithDomain:@"NO_DATA" code:MMXErrorSeverityMajor userInfo:nil];
+        failure(error);
+        return;
+    }
+    
+    [self setIconData:data success:success failure:failure];
 }
 
 - (void)setIconData:(NSData *)data
-        success:(nullable void (^)())success
-        failure:(nullable void (^)(NSError *error))failure {
-    
+            success:(nullable void (^)(NSURL *iconUrl))success
+            failure:(nullable void (^)(NSError *error))failure {
+    MMAttachment *attachment = [[MMAttachment alloc] initWithData:data mimeType:@"image/png"];
+    NSDictionary *metadata = @{@"metadata_file_id" : [self iconID]};
+    [MMAttachmentService upload:attachment metaData:metadata success:^{
+        if (success) {
+            success(self.iconURL);
+        }
+    } failure:failure];
 }
 
 - (void)tagsWithSuccess:(void (^)(NSSet <NSString *>*))success
