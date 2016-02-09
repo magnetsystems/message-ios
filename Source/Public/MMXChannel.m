@@ -16,6 +16,7 @@
  */
 
 #import "MMXChannel_Private.h"
+#import "MMXConstants.h"
 #import "MMXMessage_Private.h"
 #import "MMXTopic_Private.h"
 #import "MMXTopicSummary.h"
@@ -275,12 +276,6 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         NSData *data = [NSData dataWithContentsOfURL:file];
         
-        if (data.length <= 0) {
-            NSError *error = [NSError errorWithDomain:@"NO_DATA" code:MMXErrorSeverityMajor userInfo:nil];
-            failure(error);
-            return;
-        }
-        
         [self setIconData:data success:success failure:failure];
     });
 }
@@ -288,6 +283,13 @@
 - (void)setIconData:(NSData *)data
             success:(nullable void (^)(NSURL *iconUrl))success
             failure:(nullable void (^)(NSError *error))failure {
+    if (data.length <= 0) {
+        NSError *error = [MMXClient errorWithTitle:@"Data Empty" message:@"NSData cannot be nil" code:500];
+        failure(error);
+        
+        return;
+    }
+    
     MMAttachment *attachment = [[MMAttachment alloc] initWithData:data mimeType:@"image/png"];
     NSDictionary *metadata = @{@"metadata_file_id" : [self iconID]};
     [MMAttachmentService upload:@[attachment] metaData:metadata success:^{
