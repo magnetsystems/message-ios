@@ -257,6 +257,14 @@
     }];
 }
 
+- (NSURL *)icon {
+    return nil;
+}
+
+- (void)setIcon:(NSURL *)file success : (void (^)())success failure :( void (^)(NSError *)) failure {
+    
+}
+
 - (void)tagsWithSuccess:(void (^)(NSSet <NSString *>*))success
                 failure:(void (^)(NSError *))failure {
     if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
