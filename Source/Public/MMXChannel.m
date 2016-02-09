@@ -272,15 +272,17 @@
 - (void)setIcon:(NSURL *)file
         success:(nullable void (^)(NSURL *iconUrl))success
         failure:(nullable void (^)(NSError *error))failure {
-    NSData *data = [NSData dataWithContentsOfFile:file];
-    
-    if (data.length <= 0) {
-        NSError *error = [NSError errorWithDomain:@"NO_DATA" code:MMXErrorSeverityMajor userInfo:nil];
-        failure(error);
-        return;
-    }
-    
-    [self setIconData:data success:success failure:failure];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSData *data = [NSData dataWithContentsOfURL:file];
+        
+        if (data.length <= 0) {
+            NSError *error = [NSError errorWithDomain:@"NO_DATA" code:MMXErrorSeverityMajor userInfo:nil];
+            failure(error);
+            return;
+        }
+        
+        [self setIconData:data success:success failure:failure];
+    });
 }
 
 - (void)setIconData:(NSData *)data
@@ -288,7 +290,7 @@
             failure:(nullable void (^)(NSError *error))failure {
     MMAttachment *attachment = [[MMAttachment alloc] initWithData:data mimeType:@"image/png"];
     NSDictionary *metadata = @{@"metadata_file_id" : [self iconID]};
-    [MMAttachmentService upload:attachment metaData:metadata success:^{
+    [MMAttachmentService upload:@[attachment] metaData:metadata success:^{
         if (success) {
             success(self.iconURL);
         }
