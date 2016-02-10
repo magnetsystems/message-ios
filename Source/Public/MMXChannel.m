@@ -259,7 +259,7 @@
 }
 
 - (NSString *)iconID {
-    NSMutableString *iconID = self.name;
+    NSMutableString *iconID = self.name.mutableCopy;
     if (!self.isPublic) {
         [iconID appendFormat:@"_%@",self.ownerUserID];
     }
@@ -277,7 +277,7 @@
     return nil;
 }
 
-- (void)setIconWithURL:(NSURL *)url
+- (void)setIconWithURL:(nullable NSURL *)url
                success:(nullable void (^)(NSURL *iconUrl))success
                failure:(nullable void (^)(NSError *error))failure {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
@@ -287,7 +287,7 @@
     });
 }
 
-- (void)setIconWithData:(NSData *)data
+- (void)setIconWithData:(nullable NSData *)data
                 success:(nullable void (^)(NSURL *iconUrl))success
                 failure:(nullable void (^)(NSError *error))failure {
     if (data.length <= 0) {

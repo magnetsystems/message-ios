@@ -362,11 +362,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSURL *)iconURL;
 
-- (void)setIconWithURL:(NSURL *)url
+- (void)setIconWithURL:(nullable NSURL *)url
         success:(nullable void (^)(NSURL *iconUrl))success
         failure:(nullable void (^)(NSError *error))failure;
 
-- (void)setIconWithData:(NSData *)data
+- (void)setIconWithData:(nullable NSData *)data
             success:(nullable void (^)(NSURL *iconUrl))success
             failure:(nullable void (^)(NSError *error))failure;
 
