@@ -267,12 +267,19 @@
 }
 
 - (NSURL *)iconURL {
-    return [MMAttachmentService attachmentURL:[self iconID] userId:self.ownerUserID];
+    NSString *accessToken = MMCoreConfiguration.serviceAdapter.HATToken;
+    if (accessToken) {
+        return [MMAttachmentService attachmentURL:[self iconID]
+                                           userId:self.ownerUserID
+                                       parameters:@{@"access_token" : accessToken}];
+    }
+    
+    return nil;
 }
 
 - (void)setIconWithURL:(NSURL *)url
-        success:(nullable void (^)(NSURL *iconUrl))success
-        failure:(nullable void (^)(NSError *error))failure {
+               success:(nullable void (^)(NSURL *iconUrl))success
+               failure:(nullable void (^)(NSError *error))failure {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         NSData *data = [NSData dataWithContentsOfURL:url];
         
@@ -281,8 +288,8 @@
 }
 
 - (void)setIconWithData:(NSData *)data
-            success:(nullable void (^)(NSURL *iconUrl))success
-            failure:(nullable void (^)(NSError *error))failure {
+                success:(nullable void (^)(NSURL *iconUrl))success
+                failure:(nullable void (^)(NSError *error))failure {
     if (data.length <= 0) {
         NSError *error = [MMXClient errorWithTitle:@"Data Empty" message:@"NSData cannot be nil" code:500];
         failure(error);
@@ -291,7 +298,7 @@
     }
     
     MMAttachment *attachment = [[MMAttachment alloc] initWithData:data mimeType:@"image/png"];
-    NSDictionary *metadata = @{@"metadata_file_id" : [self iconID]};
+    NSDictionary *metadata = @{@"file_id" : [self iconID]};
     [MMAttachmentService upload:@[attachment] metaData:metadata success:^{
         if (success) {
             success(self.iconURL);
