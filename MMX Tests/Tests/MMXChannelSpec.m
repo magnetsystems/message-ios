@@ -587,7 +587,7 @@ describe(@"MMXChannel", ^{
         
         it(@"should return success", ^{
             __block BOOL _isSuccess = NO;
-            [MMXChannel channelForName:addedRemoveChannelName isPublic:addedRemoveChannel.isPublic success:^(MMXChannel *channel) {
+            [MMXChannel channelForName:addedRemoveChannelName isPublic:YES success:^(MMXChannel *channel) {
                 MMXChannel *myChannel = channel;
                 NSInteger expectedNumberOfUsers = 4;
                 [MMUser usersWithUserNames:@[@"testuser123",@"testuser1234",@"testuser12345"] success:^(NSArray<MMUser *> *users) {
@@ -603,7 +603,7 @@ describe(@"MMXChannel", ^{
                                                                    offset:0
                                                                   success:^(int totalCount, NSArray<MMUser *> *subscribers) {
                                                                       if (invalidUsers.count == 1 && totalCount == expectedNumberOfUsers) {
-                                                                           _isSuccess = YES;
+                                                                          _isSuccess = YES;
                                                                       }
                                                                   } failure:^(NSError *error) {
                                                                       _isSuccess = NO;
@@ -626,7 +626,7 @@ describe(@"MMXChannel", ^{
     context(@"when removing subscribers from a channel", ^{
         it(@"should return success", ^{
             __block BOOL _isSuccess = NO;
-            [MMXChannel channelForName:addedRemoveChannelName isPublic:addedRemoveChannel.isPublic success:^(MMXChannel *channel) {
+            [MMXChannel channelForName:addedRemoveChannelName isPublic:YES success:^(MMXChannel *channel) {
                 MMXChannel *myChannel = channel;
                 NSInteger expectedNumberOfUsers = 3;
                 [MMUser usersWithUserNames:@[@"testuser123"] success:^(NSArray<MMUser *> *users) {
@@ -667,7 +667,8 @@ describe(@"MMXChannel", ^{
                 [MMXChannel findChannelsBySubscribers:users
                                             matchType:MMXMatchTypeSUBSET_MATCH
                                               success:^(NSArray<MMXChannel *> * channels) {
-                                                  _isSuccess = [channels.firstObject.name isEqualToString:addedRemoveChannelName];
+                                                  _isSuccess = [channels.firstObject.name isEqualToString:addedRemoveChannelName] &&
+                                                  [channels.firstObject isKindOfClass:[MMXChannel class]];
                                               } failure:^(NSError * error) {
                                                   _isSuccess = NO;
                                               }];
@@ -681,13 +682,22 @@ describe(@"MMXChannel", ^{
     
     context(@"when requesting summaries", ^{
         it(@"should return success", ^{
+            
             __block BOOL _isSuccess = NO;
             
-            [MMXChannel channelSummary:[NSSet setWithObject:addedRemoveChannel]
+            [addedRemoveChannel publish:@{@"hello" : @"hello"} success:^(MMXMessage * _Nonnull message) {
+                _isSuccess = YES;
+            } failure:^(NSError * _Nonnull error) {
+                _isSuccess = NO;
+            }];
+            
+            [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(200)] beYes];
+            
+            [MMXChannel channelDetails:@[addedRemoveChannel]
                       numberOfMessages:10
                     numberOfSubcribers:10
-                               success:^(NSArray<MMXChannelSummaryResponse *> *channelSummaries) {
-                                   _isSuccess = YES;
+                               success:^(NSArray <MMXChannelDetailResponse *> *detailsForChannels) {
+                                   _isSuccess = YES && detailsForChannels.firstObject.messages.count > 0;
                                } failure:^(NSError *error) {
                                    _isSuccess = NO;
                                }];

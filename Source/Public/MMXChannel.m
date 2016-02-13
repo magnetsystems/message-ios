@@ -16,6 +16,7 @@
  */
 
 #import "MMXChannel_Private.h"
+#import "MMXConstants.h"
 #import "MMXMessage_Private.h"
 #import "MMXTopic_Private.h"
 #import "MMXTopicSummary.h"
@@ -255,6 +256,54 @@
             failure(error);
         }
     }];
+}
+
+- (NSString *)iconID {
+    NSMutableString *iconID = self.name.mutableCopy;
+    if (!self.isPublic) {
+        [iconID appendFormat:@"_%@",self.ownerUserID];
+    }
+    return iconID;
+}
+
+- (NSURL *)iconURL {
+    NSString *accessToken = MMCoreConfiguration.serviceAdapter.HATToken;
+    if (accessToken) {
+        return [MMAttachmentService attachmentURL:[self iconID]
+                                           userId:self.ownerUserID
+                                       parameters:@{@"access_token" : accessToken}];
+    }
+    
+    return nil;
+}
+
+- (void)setIconWithURL:(nullable NSURL *)url
+               success:(nullable void (^)(NSURL *iconUrl))success
+               failure:(nullable void (^)(NSError *error))failure {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSData *data = [NSData dataWithContentsOfURL:url];
+        
+        [self setIconWithData:data success:success failure:failure];
+    });
+}
+
+- (void)setIconWithData:(nullable NSData *)data
+                success:(nullable void (^)(NSURL *iconUrl))success
+                failure:(nullable void (^)(NSError *error))failure {
+    if (data.length <= 0) {
+        NSError *error = [MMXClient errorWithTitle:@"Data Empty" message:@"NSData cannot be nil" code:500];
+        failure(error);
+        
+        return;
+    }
+    
+    MMAttachment *attachment = [[MMAttachment alloc] initWithData:data mimeType:@"image/png"];
+    NSDictionary *metadata = @{@"file_id" : [self iconID]};
+    [MMAttachmentService upload:@[attachment] metaData:metadata success:^{
+        if (success) {
+            success(self.iconURL);
+        }
+    } failure:failure];
 }
 
 - (void)tagsWithSuccess:(void (^)(NSSet <NSString *>*))success
@@ -764,17 +813,17 @@
     MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
     MMCall *call = [pubSubService queryChannels:queryChannel success:^(MMXQueryChannelResponse *response) {
         if (success) {
-            success(response.channels);
+            success(response.toMMXChannels);
         }
     } failure:failure];
     
     [call executeInBackground:nil];
 }
 
-+ (void)channelSummary:(NSSet<MMXChannel *>*)channels
++ (void)channelDetails:(NSArray<MMXChannel *>*)channels
       numberOfMessages:(NSInteger)numberOfMessages
     numberOfSubcribers:(NSInteger)numberOfSubcribers
-               success:(nullable void (^)(NSArray <MMXChannelSummaryResponse *>*channelSummaries))success
+               success:(nullable void (^)(NSArray <MMXChannelDetailResponse *>*detailsForChannels))success
                failure:(nullable void (^)(NSError *error))failure {
     if (channels.count == 0) {
         NSError *error = [MMXClient errorWithTitle:@"No channels" message:@"No channels" code:403];
@@ -789,8 +838,10 @@
     channelSummary.numOfMessages = numberOfMessages;
     channelSummary.numOfSubcribers = numberOfSubcribers;
     NSMutableArray *channelRequestObjects = [NSMutableArray new];
+    NSMutableDictionary *channelMap = [NSMutableDictionary new];
     
     for (MMXChannel *channel in channels) {
+        [channelMap setObject:channel forKey:channel.name];
         MMXChannelLookupKey *channelRequestObject = [[MMXChannelLookupKey alloc] init];
         channelRequestObject.ownerUserID = channel.ownerUserID;
         channelRequestObject.privateChannel = channel.privateChannel;
@@ -801,7 +852,10 @@
     
     MMXPubSubService *pubSubService = [[MMXPubSubService alloc] init];
     MMCall *call = [pubSubService getSummary:channelSummary
-                                     success:^(NSArray<MMXChannelSummaryResponse *>*response) {
+                                     success:^(NSArray<MMXChannelDetailResponse *>*response) {
+                                         for (MMXChannelDetailResponse *details in response) {
+                                             details.channel = [channelMap objectForKey:details.channelName];
+                                         }
                                          if (success) {
                                              success(response);
                                          }
@@ -835,19 +889,19 @@
 
 + (NSArray *)channelsFromTopics:(NSArray *)topics summaries:(NSArray *)summaries subscriptions:(NSArray *)subscriptions {
     NSMutableDictionary *channelDict = [NSMutableDictionary dictionaryWithCapacity:topics.count];
+    NSUInteger i = 0;
     for (MMXTopic *topic in topics) {
         MMXChannel *channel = [MMXChannel channelWithName:topic.topicName summary:topic.topicDescription isPublic:!topic.inUserNameSpace publishPermissions:topic.publishPermissions];
         channel.ownerUserID = topic.topicCreator.username;
         channel.isPublic = !topic.inUserNameSpace;
         channel.creationDate = topic.creationDate;
-        [channelDict setObject:channel forKey:[MMXChannel channelKeyFromTopic:topic]];
-    }
-    for (MMXTopicSummary *sum in summaries) {
-        MMXChannel *channel = channelDict[[MMXChannel channelKeyFromTopic:sum.topic]];
-        if (channel) {
-            channel.numberOfMessages = sum.numItemsPublished;
-            channel.lastTimeActive = sum.lastTimePublishedTo;
+        if (i <= ([summaries count] - 1)) {
+            MMXTopicSummary *summary = summaries[i];
+            channel.numberOfMessages = summary.numItemsPublished;
+            channel.lastTimeActive = summary.lastTimePublishedTo;
         }
+        [channelDict setObject:channel forKey:[MMXChannel channelKeyFromTopic:topic]];
+        i++;
     }
     for (MMXTopicSubscription *sub in subscriptions) {
         MMXChannel *channel = channelDict[[MMXChannel channelKeyFromTopic:sub.topic]];
@@ -863,7 +917,7 @@
         }
         
     }
-    return channelArray.copy;
+    return channelArray;
 }
 
 + (NSString *)channelKeyFromTopic:(MMXTopic *)topic {
