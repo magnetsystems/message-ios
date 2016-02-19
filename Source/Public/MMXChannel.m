@@ -151,9 +151,9 @@
             }
         } else if (failure) {
             if (failure) {
-                failure([MMXClient errorWithTitle:@"Unknown Error"
-                                          message:@"An unknown error occurred."
-                                             code:500]);
+                failure([MMXClient errorWithTitle:@"Not Found"
+                                          message:@"The requested channel was not found."
+                                             code:404]);
             }
         }
     } failure:failure];
