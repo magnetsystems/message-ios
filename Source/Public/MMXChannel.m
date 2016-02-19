@@ -164,6 +164,17 @@
                       offset:(int)offset
                      success:(void (^)(int, NSArray <MMXChannel *>*))success
                      failure:(void (^)(NSError *))failure {
+    [self channelsStartingWith:name isPublic:YES limit:limit offset:offset success:success failure:failure];
+    
+}
+
++ (void)channelsStartingWith:(NSString *)name
+                    isPublic:(BOOL)isPublic
+                       limit:(int)limit
+                      offset:(int)offset
+                     success:(nullable void (^)(int totalCount, NSArray <MMXChannel *>*channels))success
+                     failure:(nullable void (^)(NSError *error))failure {
+    
     if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
         if (failure) {
             failure([MagnetDelegate notLoggedInError]);
@@ -179,6 +190,10 @@
         return;
     }
     
+    if (!isPublic) {
+        name = [NSString stringWithFormat:@"%@#%@", [MMUser currentUser].userID, name];
+    }
+    
     NSDictionary *queryDict = @{@"operator" : @"AND",
                                 @"limit" : @(limit),
                                 @"offset" : @(offset),
@@ -187,7 +202,6 @@
                                         @"match": @"PREFIX",
                                         @"value": name}};
     [MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
-    
 }
 
 + (void)findByTags:(NSSet <NSString *>*)tags
