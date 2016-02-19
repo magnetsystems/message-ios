@@ -894,19 +894,19 @@
 
 + (NSArray *)channelsFromTopics:(NSArray *)topics summaries:(NSArray *)summaries subscriptions:(NSArray *)subscriptions {
     NSMutableDictionary *channelDict = [NSMutableDictionary dictionaryWithCapacity:topics.count];
-    NSUInteger i = 0;
     for (MMXTopic *topic in topics) {
         MMXChannel *channel = [MMXChannel channelWithName:topic.topicName summary:topic.topicDescription isPublic:!topic.inUserNameSpace publishPermissions:topic.publishPermissions];
         channel.ownerUserID = topic.topicCreator.username;
         channel.isPublic = !topic.inUserNameSpace;
         channel.creationDate = topic.creationDate;
-        if (i <= ([summaries count] - 1)) {
-            MMXTopicSummary *summary = summaries[i];
-            channel.numberOfMessages = summary.numItemsPublished;
-            channel.lastTimeActive = summary.lastTimePublishedTo;
-        }
         [channelDict setObject:channel forKey:[MMXChannel channelKeyFromTopic:topic]];
-        i++;
+    }
+    for (MMXTopicSummary *sum in summaries) {
+        MMXChannel *channel = channelDict[[MMXChannel channelKeyFromTopic:sum.topic]];
+        if (channel) {
+            channel.numberOfMessages = sum.numItemsPublished;
+            channel.lastTimeActive = sum.lastTimePublishedTo;
+        }
     }
     for (MMXTopicSubscription *sub in subscriptions) {
         MMXChannel *channel = channelDict[[MMXChannel channelKeyFromTopic:sub.topic]];
@@ -922,7 +922,7 @@
         }
         
     }
-    return channelArray;
+    return channelArray.copy;
 }
 
 + (NSString *)channelKeyFromTopic:(MMXTopic *)topic {
