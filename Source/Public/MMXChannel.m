@@ -190,14 +190,11 @@
         return;
     }
     
-    if (!isPublic) {
-        name = [NSString stringWithFormat:@"%@#%@", [MMUser currentUser].userID, name];
-    }
-    
     NSDictionary *queryDict = @{@"operator" : @"AND",
                                 @"limit" : @(limit),
                                 @"offset" : @(offset),
                                 @"tags" : [NSNull null],
+                                @"type":isPublic ? @"global" : @"personal",
                                 @"topicName": @{
                                         @"match": @"PREFIX",
                                         @"value": name}};
