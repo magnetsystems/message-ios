@@ -12,9 +12,9 @@ Pod::Spec.new do |s|
   s.platform = :ios, '8.0'
   s.requires_arc = true
 
+  s.public_header_files = 'Source/Public/*.h'
   s.source_files = 'Source/**/*.{h,m,swift}'
   s.resources    = 'Source/CoreData/MMX.xcdatamodeld'
-
   s.frameworks     =  'Foundation', 'UIKit'
   s.xcconfig       =  { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2', 'OTHER_LDFLAGS' => '-ObjC', 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES','ENABLE_BITCODE' => 'NO'}
   s.dependency     'MMXXMPPFramework', '3.6.13'

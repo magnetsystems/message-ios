@@ -7,6 +7,9 @@
       <FileRef
          location = "group:MMXInternal_Private.h">
       </FileRef>
+      <FileRef
+         location = "group:private.modulemap">
+      </FileRef>
       <Group
          location = "group:Abstraction"
          name = "Abstraction">
@@ -318,6 +321,12 @@
             location = "group:MMXLogger.m">
          </FileRef>
          <FileRef
+            location = "group:MMXMatchType.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXMatchType.m">
+         </FileRef>
+         <FileRef
             location = "group:MMXMessage.h">
          </FileRef>
          <FileRef
@@ -426,12 +435,6 @@
             </FileRef>
             <FileRef
                location = "group:MMXPublisherType.m">
-            </FileRef>
-            <FileRef
-               location = "group:MMXMatchType.h">
-            </FileRef>
-            <FileRef
-               location = "group:MMXMatchType.m">
             </FileRef>
             <FileRef
                location = "group:/Users/lorenzo.stanton/message-ios/Source/PubSub/ChannelRequest/MMXQueryChannel.h">
