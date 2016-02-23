@@ -341,7 +341,7 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
         
         NSError *error;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.metaData
-                                                           options:NSJSONWritingPrettyPrinted
+                                                           options:kNilOptions
                                                              error:&error];
         NSString *json = [[NSString alloc] initWithData:jsonData
                                                encoding:NSUTF8StringEncoding];
@@ -376,7 +376,7 @@ static  NSString *const MESSAGE_ATTRIBUE_STAMP = @"stamp";
 	
 	NSError *error;
 	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:mmxMetaDict
-													   options:NSJSONWritingPrettyPrinted
+													   options:kNilOptions
 														 error:&error];
 	NSString *json = [[NSString alloc] initWithData:jsonData
 										   encoding:NSUTF8StringEncoding];
