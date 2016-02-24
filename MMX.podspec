@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name               =  'MMX'
-  s.version            =  '2.5.0'
+  s.version            =  '2.5.1'
   s.license            =  { :type => 'Apache 2.0' }
   s.summary            =  'iOS framework for developing apps using the Magnet Message platform.'
   s.description        =  'Magnet Message is a powerful, open source mobile messaging framework enabling real-time user engagement for your mobile apps. Send relevant and targeted communications to customers or employees. Enhance your mobile app with actionable notifications, alerts, in-app events, two-way interactions and more. Get started and get coding in minutes!'
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.xcconfig       =  { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2', 'OTHER_LDFLAGS' => '-ObjC', 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES','ENABLE_BITCODE' => 'NO'}
   s.dependency     'MMXXMPPFramework', '3.6.13'
   s.dependency     'MDMCoreData', '1.5.0'
-  s.dependency     'MagnetMaxCore', '~> 2.5'
+  s.dependency     'MagnetMaxCore', '~> 2.5.1'
   s.dependency     'CocoaLumberjack', '~> 2.2'
   s.dependency     'CocoaAsyncSocket', '7.4.1'
 
