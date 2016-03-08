@@ -4,6 +4,16 @@
    <Group
       location = "group:Source"
       name = "Source">
+      <Group
+         location = "group:Privacy"
+         name = "Privacy">
+         <FileRef
+            location = "group:MMXPrivacyManager.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPrivacyManager.m">
+         </FileRef>
+      </Group>
       <FileRef
          location = "group:MMXInternal_Private.h">
       </FileRef>
@@ -340,6 +350,12 @@
          </FileRef>
          <FileRef
             location = "group:MMXRemoteNotification.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMUser+Privacy.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMUser+Privacy.m">
          </FileRef>
       </Group>
       <Group
