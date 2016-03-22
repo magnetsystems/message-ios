@@ -410,7 +410,7 @@ static int kATTACHMENTCONTEXT;
 #pragma mark - Equality
 
 - (BOOL)isEqual:(MMXMessage *)object {
-    return [self hash] == [object hash];
+    return [self.messageID isEqualToString:object.messageID];
 }
 
 - (NSUInteger)hash {
