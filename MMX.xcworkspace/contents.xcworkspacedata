@@ -4,6 +4,16 @@
    <Group
       location = "group:Source"
       name = "Source">
+      <Group
+         location = "group:Privacy"
+         name = "Privacy">
+         <FileRef
+            location = "group:MMXPrivacyManager.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPrivacyManager.m">
+         </FileRef>
+      </Group>
       <FileRef
          location = "group:MMXInternal_Private.h">
       </FileRef>
@@ -108,43 +118,7 @@
          location = "group:CoreData"
          name = "CoreData">
          <FileRef
-            location = "group:_MMXOutboxEntry.h">
-         </FileRef>
-         <FileRef
-            location = "group:_MMXOutboxEntry.m">
-         </FileRef>
-         <FileRef
             location = "group:MMX.xcdatamodeld">
-         </FileRef>
-         <FileRef
-            location = "group:MMXDataModel.h">
-         </FileRef>
-         <FileRef
-            location = "group:MMXDataModel.m">
-         </FileRef>
-         <FileRef
-            location = "group:MMXKeyedArchiver.h">
-         </FileRef>
-         <FileRef
-            location = "group:MMXKeyedArchiver.m">
-         </FileRef>
-         <FileRef
-            location = "group:MMXKeyedUnarchiver.h">
-         </FileRef>
-         <FileRef
-            location = "group:MMXKeyedUnarchiver.m">
-         </FileRef>
-         <FileRef
-            location = "group:MMXOutboxEntry.h">
-         </FileRef>
-         <FileRef
-            location = "group:MMXOutboxEntry.m">
-         </FileRef>
-         <FileRef
-            location = "group:MMXOutboxTransformer.h">
-         </FileRef>
-         <FileRef
-            location = "group:MMXOutboxTransformer.m">
          </FileRef>
       </Group>
       <Group
@@ -340,6 +314,12 @@
          </FileRef>
          <FileRef
             location = "group:MMXRemoteNotification.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMUser+Privacy.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMUser+Privacy.m">
          </FileRef>
       </Group>
       <Group

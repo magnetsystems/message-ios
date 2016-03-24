@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0E333FA71BC44046006B56BF /* iOS_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FA61BC44046006B56BF /* iOS_Tests.m */; };
-		0E333FBE1BC44060006B56BF /* MMXDataModelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FAE1BC44060006B56BF /* MMXDataModelSpec.m */; };
-		0E333FBF1BC44060006B56BF /* MMXKeyedArchiverSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FAF1BC44060006B56BF /* MMXKeyedArchiverSpec.m */; };
-		0E333FC01BC44060006B56BF /* MMXKeyedUnarchiverSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FB01BC44060006B56BF /* MMXKeyedUnarchiverSpec.m */; };
 		0E333FC11BC44060006B56BF /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E333FB11BC44060006B56BF /* Info.plist */; };
 		0E333FC21BC44060006B56BF /* MathSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FB21BC44060006B56BF /* MathSpec.m */; };
 		0E333FC41BC44060006B56BF /* MMXChannelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E333FB41BC44060006B56BF /* MMXChannelSpec.m */; };
@@ -27,9 +24,6 @@
 		0E333FA41BC44046006B56BF /* iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E333FA61BC44046006B56BF /* iOS_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iOS_Tests.m; sourceTree = "<group>"; };
 		0E333FA81BC44046006B56BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0E333FAE1BC44060006B56BF /* MMXDataModelSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXDataModelSpec.m; sourceTree = "<group>"; };
-		0E333FAF1BC44060006B56BF /* MMXKeyedArchiverSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXKeyedArchiverSpec.m; sourceTree = "<group>"; };
-		0E333FB01BC44060006B56BF /* MMXKeyedUnarchiverSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXKeyedUnarchiverSpec.m; sourceTree = "<group>"; };
 		0E333FB11BC44060006B56BF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0E333FB21BC44060006B56BF /* MathSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MathSpec.m; sourceTree = "<group>"; };
 		0E333FB41BC44060006B56BF /* MMXChannelSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMXChannelSpec.m; sourceTree = "<group>"; };
@@ -122,9 +116,6 @@
 		0E333FAD1BC44060006B56BF /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				0E333FAE1BC44060006B56BF /* MMXDataModelSpec.m */,
-				0E333FAF1BC44060006B56BF /* MMXKeyedArchiverSpec.m */,
-				0E333FB01BC44060006B56BF /* MMXKeyedUnarchiverSpec.m */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -278,10 +269,7 @@
 				0E333FA71BC44046006B56BF /* iOS_Tests.m in Sources */,
 				8D290DE61C1B7D18007115E5 /* MMXServerOfflineSpec.m in Sources */,
 				0E333FC51BC44060006B56BF /* MMXClientDelegateSpy.m in Sources */,
-				0E333FC01BC44060006B56BF /* MMXKeyedUnarchiverSpec.m in Sources */,
 				0E333FCA1BC44060006B56BF /* MMXRemoteNotificationSpec.m in Sources */,
-				0E333FBF1BC44060006B56BF /* MMXKeyedArchiverSpec.m in Sources */,
-				0E333FBE1BC44060006B56BF /* MMXDataModelSpec.m in Sources */,
 				0E333FC81BC44060006B56BF /* MMXMessageSpec.m in Sources */,
 				0E333FC41BC44060006B56BF /* MMXChannelSpec.m in Sources */,
 				0E333FC21BC44060006B56BF /* MathSpec.m in Sources */,
