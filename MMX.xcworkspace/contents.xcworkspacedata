@@ -68,6 +68,12 @@
          <FileRef
             location = "group:MMXMessage_Private.h">
          </FileRef>
+         <FileRef
+            location = "group:/Users/lorenzo.stanton/message-ios/Source/Abstraction/MMXWhitelistOperation.h">
+         </FileRef>
+         <FileRef
+            location = "group:/Users/lorenzo.stanton/message-ios/Source/Abstraction/MMXWhitelistOperation.m">
+         </FileRef>
       </Group>
       <Group
          location = "group:Categories"
@@ -476,6 +482,12 @@
          </FileRef>
          <FileRef
             location = "group:MMXTopicListResponse.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXWhitelistManager.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXWhitelistManager.m">
          </FileRef>
          <Group
             location = "group:TopicQuery"
