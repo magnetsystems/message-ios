@@ -15,7 +15,7 @@
  * permissions and limitations under the License.
  */
 
-#import "MMAsynchronousOperation.h"
+@import MagnetMaxCore;
 
 @class MMXClient,MMXChannel,MMUser;
 
