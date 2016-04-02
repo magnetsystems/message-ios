@@ -15,10 +15,9 @@
  * permissions and limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
-#import "MMXClient.h"
-#import "MMXChannel.h"
-#import "MMUser.h"
+#import "MMAsynchronousOperation.h"
+
+@class MMXClient,MMXChannel,MMUser;
 
 @interface MMXWhitelistOperation : MMAsynchronousOperation
 NS_ASSUME_NONNULL_BEGIN

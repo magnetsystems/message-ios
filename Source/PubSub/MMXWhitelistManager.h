@@ -15,9 +15,7 @@
  * permissions and limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
-#import "MMUser.h"
-#import "MMXChannel.h"
+@class MMUser,MMXChannel;
 
 @interface MMXWhitelistManager : NSOperationQueue
 NS_ASSUME_NONNULL_BEGIN

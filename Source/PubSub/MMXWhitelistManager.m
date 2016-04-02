@@ -18,6 +18,8 @@
 #import "MMXWhitelistManager.h"
 #import "MMXClient.h"
 #import "MMXWhitelistOperation.h"
+#import "MMUser.h"
+#import "MMXChannel.h"
 
 @implementation MMXWhitelistManager
 

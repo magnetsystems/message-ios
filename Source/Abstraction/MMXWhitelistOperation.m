@@ -23,7 +23,9 @@
 #import "XMPPJID+MMX.h"
 #import "MMXIQResponse.h"
 #import "MMXConstants.h"
-
+#import "MMXClient.h"
+#import "MMXChannel.h"
+#import "MMUser.h"
 
 @interface MMXWhitelistOperation ()
 
