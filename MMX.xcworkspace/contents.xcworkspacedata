@@ -5,6 +5,22 @@
       location = "group:Source"
       name = "Source">
       <Group
+         location = "group:Poll"
+         name = "Poll">
+         <FileRef
+            location = "group:MMXPollOption.swift">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPoll.swift">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPollIdentifier.swift">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPayload.swift">
+         </FileRef>
+      </Group>
+      <Group
          location = "group:Privacy"
          name = "Privacy">
          <FileRef
