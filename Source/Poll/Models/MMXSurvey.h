@@ -21,7 +21,6 @@
 
 @interface MMXSurvey : MMModel
 
-
 @property (nonatomic, copy) NSString *surveyId;
 
 @property (nonatomic, strong) MMXSurveyDefinition *surveyDefinition;

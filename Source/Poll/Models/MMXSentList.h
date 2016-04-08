@@ -19,7 +19,6 @@
 
 @interface MMXSentList : MMModel
 
-
 @property (nonatomic, copy) NSString *recipientUserId;
 
 @property (nonatomic, copy) NSString *messageId;

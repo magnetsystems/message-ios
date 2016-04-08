@@ -23,7 +23,7 @@
 @interface MMXSurveyResults : MMModel
 
 
-@property (nonatomic, copy) NSArray *suMMXary;
+@property (nonatomic, copy) NSArray *summary;
 
 @property (nonatomic, strong) MMXSurvey *survey;
 

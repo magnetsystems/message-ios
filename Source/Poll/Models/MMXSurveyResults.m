@@ -32,7 +32,7 @@
 
 + (NSDictionary *)listAttributeTypes {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:@{
-        @"suMMXary" : MMXSurveyChoiceResult.class,
+        @"summary" : MMXSurveyChoiceResult.class,
     }];
     [dictionary addEntriesFromDictionary:[super listAttributeTypes]];
     return dictionary;

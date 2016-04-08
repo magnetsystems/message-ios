@@ -19,7 +19,6 @@
 
 @interface MMXSendMessageRequest : MMModel
 
-
 @property (nonatomic, copy) NSDictionary *content;
 
 @property (nonatomic, copy) NSString *MMXxAppId;

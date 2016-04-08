@@ -102,10 +102,6 @@
             </FileRef>
          </Group>
          <Group
-            location = "group:Public"
-            name = "Public">
-         </Group>
-         <Group
             location = "group:Services"
             name = "Services">
             <FileRef

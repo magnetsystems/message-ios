@@ -15,8 +15,7 @@
  * permissions and limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
-#import "MMEnumAttributeContainer.h"
+@import MagnetMaxCore;
 
 typedef NS_ENUM(NSUInteger, MMXSurveyType){
   MMXSurveyTypePOLL = 0,

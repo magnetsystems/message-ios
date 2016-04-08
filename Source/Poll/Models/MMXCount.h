@@ -19,7 +19,6 @@
 
 @interface MMXCount : MMModel
 
-
 @property (nonatomic, assign) int requested;
 
 @property (nonatomic, assign) int sent;

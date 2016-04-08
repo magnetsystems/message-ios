@@ -22,7 +22,6 @@
 
 @interface MMXSendMessageResponse : MMModel
 
-
 @property (nonatomic, copy) NSArray *unsentList;
 
 @property (nonatomic, strong) MMXCount *count;
