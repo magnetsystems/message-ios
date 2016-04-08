@@ -19,6 +19,130 @@
          <FileRef
             location = "group:MMXPayload.swift">
          </FileRef>
+         <Group
+            location = "group:Models"
+            name = "Models">
+            <FileRef
+               location = "group:MMXAnswerType.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXAnswerType.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXCount.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXCount.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSendMessageRequest.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSendMessageRequest.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSendMessageResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSendMessageResponse.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSentList.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSentList.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurvey.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurvey.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyAnswer.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyAnswer.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyChoiceResult.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyChoiceResult.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyDefinition.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyDefinition.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyOption.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyOption.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyQuestion.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyQuestion.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyResponse.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyResults.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyResults.m">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:Public"
+            name = "Public">
+         </Group>
+         <Group
+            location = "group:Services"
+            name = "Services">
+            <FileRef
+               location = "group:MMXServerSettingsService.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXServerSettingsService.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyService.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyService.m">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:Types"
+            name = "Types">
+            <FileRef
+               location = "group:MMXSurveyParticipantModel.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyParticipantModel.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyQuestionType.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyQuestionType.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyType.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyType.m">
+            </FileRef>
+         </Group>
       </Group>
       <Group
          location = "group:Privacy"
