@@ -20,7 +20,9 @@
 
 @interface MMXMessage ()
 
-@property(nonatomic, strong) MMAttachmentProgress *attachmentProgress;
+NS_ASSUME_NONNULL_BEGIN
+
+@property(nonatomic, strong, nullable) MMAttachmentProgress *attachmentProgress;
 
 @property (nonatomic, readwrite) MMXMessageType messageType;
 
@@ -47,4 +49,5 @@
 + (instancetype)messageFromPubSubMessage:(MMXPubSubMessage *)pubSubMessage
 								  sender:(MMUser *)sender;
 
+NS_ASSUME_NONNULL_END
 @end
