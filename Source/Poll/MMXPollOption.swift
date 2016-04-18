@@ -17,30 +17,29 @@
 
 import MagnetMaxCore
 
-@objc public class MMXPollOption: MMModel, MMXPayload {
-    
-    static public var contentType: String {
-        return "MMXPollOption"
-    }
+@objc public class MMXPollOption: MMModel {
     
     public private(set) var pollID: String = ""
     
-    public private(set) var text: String = ""
+    public private(set) var value: String = ""
     
-    public private(set) var count: Int?
+    public var count: Int64 = 0
     
-    // TODO: Should we expose this?
+//    // TODO: Should we expose this?
+//    
+//    public private(set) var voters: [MMUser]?
+//    
+    public private(set) var optionID: String = ""
     
-    public private(set) var voters: [MMUser]?
+    public override init!() {
+        super.init()
+    }
     
-    private private(set) var optionID: String = ""
-    
-    public init(pollID: String, optionID: String, text: String, count: Int?, voters: [MMUser]?) {
+    public init(pollID: String, optionID: String, value: String, count: Int64?) {
         self.pollID = pollID
         self.optionID = optionID
-        self.text = text
-        self.count = count
-        self.voters = voters
+        self.value = value
+        self.count = count ?? 0
         super.init()
     }
     

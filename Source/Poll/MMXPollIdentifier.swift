@@ -25,6 +25,10 @@ import MagnetMaxCore
         return "MMXPollIdentifier"
     }
     
+    public override init!() {
+        super.init()
+    }
+    
     public init(_ pollID: String) {
         self.pollID = pollID
         super.init()

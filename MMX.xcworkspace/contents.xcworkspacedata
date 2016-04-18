@@ -8,6 +8,9 @@
          location = "group:Poll"
          name = "Poll">
          <FileRef
+            location = "group:MMXPollResult.swift">
+         </FileRef>
+         <FileRef
             location = "group:MMXPollOption.swift">
          </FileRef>
          <FileRef
@@ -16,41 +19,14 @@
          <FileRef
             location = "group:MMXPollIdentifier.swift">
          </FileRef>
-         <FileRef
-            location = "group:MMXPayload.swift">
-         </FileRef>
          <Group
             location = "group:Models"
             name = "Models">
             <FileRef
-               location = "group:MMXAnswerType.h">
+               location = "group:MMXSurveyAnswerRequest.h">
             </FileRef>
             <FileRef
-               location = "group:MMXAnswerType.m">
-            </FileRef>
-            <FileRef
-               location = "group:MMXCount.h">
-            </FileRef>
-            <FileRef
-               location = "group:MMXCount.m">
-            </FileRef>
-            <FileRef
-               location = "group:MMXSendMessageRequest.h">
-            </FileRef>
-            <FileRef
-               location = "group:MMXSendMessageRequest.m">
-            </FileRef>
-            <FileRef
-               location = "group:MMXSendMessageResponse.h">
-            </FileRef>
-            <FileRef
-               location = "group:MMXSendMessageResponse.m">
-            </FileRef>
-            <FileRef
-               location = "group:MMXSentList.h">
-            </FileRef>
-            <FileRef
-               location = "group:MMXSentList.m">
+               location = "group:MMXSurveyAnswerRequest.m">
             </FileRef>
             <FileRef
                location = "group:MMXSurvey.h">
@@ -104,12 +80,6 @@
          <Group
             location = "group:Services"
             name = "Services">
-            <FileRef
-               location = "group:MMXServerSettingsService.h">
-            </FileRef>
-            <FileRef
-               location = "group:MMXServerSettingsService.m">
-            </FileRef>
             <FileRef
                location = "group:MMXSurveyService.h">
             </FileRef>
@@ -397,6 +367,12 @@
       <Group
          location = "group:Public"
          name = "Public">
+         <FileRef
+            location = "group:MMXPayload.swift">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPayloadRegister.swift">
+         </FileRef>
          <FileRef
             location = "group:MMX.h">
          </FileRef>
