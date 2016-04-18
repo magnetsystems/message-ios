@@ -25,8 +25,12 @@ func + <K, V> (left: Dictionary<K, V>, right: Dictionary<K, V>) -> Dictionary<K,
 
 @objc public class MMXPollAnswer: MMModel, MMXPayload {
     
+    //MARK: Public Variables
+    
     public static var contentType: String { return "MMXPollAnswer"}
     public var result = [MMXPollOption]()
+    
+    //MARK: Overrides
     
     public override class func listAttributeTypes() -> [NSObject : AnyObject]! {
         return super.listAttributeTypes() ?? [:] + ["result" as NSString : MMXPollOption.self]

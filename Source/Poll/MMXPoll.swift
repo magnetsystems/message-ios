@@ -18,8 +18,8 @@
 import MagnetMaxCore
 
 enum MMXPollErrorType : ErrorType {
-    case NameEmpty
     case IdEmpty
+    case NameEmpty
     case OptionsEmpty
     case QuestionEmpty
 }
@@ -28,9 +28,17 @@ enum MMXPollErrorType : ErrorType {
     
     //MARK: Public Properties
     
+    public private(set) var allowsMultipleChoice = false
+    
+    public private(set) var channel : MMXChannel?
+    
     public let endDate: NSDate?
     
+    public var extras : [String:String]?
+    
     public let hideResultsFromOthers: Bool
+    
+    public private(set) var isPublished = false
     
     public private(set) var myVotes: [MMXPollOption]?
     
@@ -38,19 +46,11 @@ enum MMXPollErrorType : ErrorType {
     
     public let options: [MMXPollOption]
     
+    public private(set) var ownerId : String?
+    
     public private(set) var pollID: String?
     
     public let question: String
-    
-    public var extras : [String:String]?
-    
-    public private(set) var ownerId : String?
-    
-    public private(set) var channel : MMXChannel?
-    
-    public private(set) var isPublished = false
-    
-    public private(set) var allowsMultipleChoice = false
     
     //MARK: Private Properties
     
@@ -68,6 +68,8 @@ enum MMXPollErrorType : ErrorType {
         self.init(name : name, question: question, mmxPollOptions: opts, hideResultsFromOthers: hideResultsFromOthers, endDate: endDate, extras: extras, allowsMultipleChoice: allowsMultipleChoice)
     }
     
+    //MARK: Creation
+    
     public static func createPoll(name : String, question: String, options: [String], hideResultsFromOthers: Bool, endDate: NSDate? = nil, extras : [String:String]? = nil, allowsMultipleChoice : Bool = false) -> MMXPoll {
         return MMXPoll(name: name, question: question, options: options, hideResultsFromOthers: hideResultsFromOthers, endDate: endDate, extras: extras, allowsMultipleChoice: allowsMultipleChoice)
     }
@@ -84,7 +86,7 @@ enum MMXPollErrorType : ErrorType {
         return MMXPoll(name: name, question: question, options: options, hideResultsFromOthers: hideResultsFromOthers)
     }
     
-    //MARK : Private Init
+    //MARK: Private Init
     
     private init(name : String, question: String, mmxPollOptions options: [MMXPollOption], hideResultsFromOthers: Bool, endDate: NSDate?, extras: [String:String]?, allowsMultipleChoice: Bool) {
         self.question = question
@@ -145,8 +147,8 @@ enum MMXPollErrorType : ErrorType {
         return self.pollID != nil ? MMXPollIdentifier(self.pollID!) : nil
     }
     
-    //MARK Public Static Methods
-    
+    //MARK: Public Static Methods
+    //MARK: Publish
     public func publish(channel channel: MMXChannel,success: ((MMXPoll) -> Void)?, failure: ((error: NSError) -> Void)?) {
         let msg = MMXMessage(toChannel: channel, messageContent: [:])
         publish(message: msg, success: success, failure: failure)
@@ -174,6 +176,8 @@ enum MMXPollErrorType : ErrorType {
                 failure?(error: error)
         })
     }
+    
+    //MARK: Poll retrieval
     
     static public func pollFromMMXPayload(payload : MMXPayload, success: ((MMXPoll) -> Void), failure: ((error: NSError) -> Void)?) {
         if let pollIdentifier = payload as? MMXPollIdentifier {
@@ -258,6 +262,8 @@ enum MMXPollErrorType : ErrorType {
             option.displayOder = Int32(index)
             index += 1
             option.value = $0.value
+            option.metaData = $0.extras
+            
             return option
         })
         
@@ -300,6 +306,7 @@ enum MMXPollErrorType : ErrorType {
         for option in options {
             let count : Int64? = choiceMap[option.optionId] != nil ? choiceMap[option.optionId]!.count : nil
             let pollOption = MMXPollOption(pollID: survey.surveyId, optionID: option.optionId, value: option.value, count: count)
+            pollOption.extras = option.metaData
             if results.myAnswers.map({$0.selectedOptionId}).contains(option.optionId) {
                 myAnswers.append(pollOption)
             }
@@ -322,6 +329,10 @@ enum MMXPollErrorType : ErrorType {
 
 extension MMXPoll {
     
+    override public var hash: Int {
+        return pollID?.hashValue ?? 0
+    }
+    
     override public func isEqual(object: AnyObject?) -> Bool {
         if let rhs = object as? MMXPoll {
             return pollID == rhs.pollID
@@ -329,9 +340,5 @@ extension MMXPoll {
         
         return false
         
-    }
-    
-    override public var hash: Int {
-        return pollID?.hashValue ?? 0
     }
 }

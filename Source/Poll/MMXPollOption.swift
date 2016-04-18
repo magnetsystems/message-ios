@@ -19,17 +19,19 @@ import MagnetMaxCore
 
 @objc public class MMXPollOption: MMModel {
     
+    //Public Variables
+    
+    public var count: Int64 = 0
+    
+    public var extras : [String:String] = [:]
+    
+    public private(set) var optionID: String = ""
+    
     public private(set) var pollID: String = ""
     
     public private(set) var value: String = ""
     
-    public var count: Int64 = 0
-    
-//    // TODO: Should we expose this?
-//    
-//    public private(set) var voters: [MMUser]?
-//    
-    public private(set) var optionID: String = ""
+    //MARK: init
     
     public override init!() {
         super.init()
