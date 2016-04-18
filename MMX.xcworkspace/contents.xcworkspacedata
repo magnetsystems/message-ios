@@ -8,7 +8,7 @@
          location = "group:Poll"
          name = "Poll">
          <FileRef
-            location = "group:MMXPollResult.swift">
+            location = "group:/Users/lorenzo.stanton/message-ios/Source/Poll/MMXPollAnswer.swift">
          </FileRef>
          <FileRef
             location = "group:MMXPollOption.swift">

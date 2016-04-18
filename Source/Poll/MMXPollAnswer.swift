@@ -23,9 +23,9 @@ func + <K, V> (left: Dictionary<K, V>, right: Dictionary<K, V>) -> Dictionary<K,
     return l
 }
 
-@objc public class MMXPollResult: MMModel, MMXPayload {
+@objc public class MMXPollAnswer: MMModel, MMXPayload {
     
-    public static var contentType: String { return "MMXPollResult"}
+    public static var contentType: String { return "MMXPollAnswer"}
     public var result = [MMXPollOption]()
     
     public override class func listAttributeTypes() -> [NSObject : AnyObject]! {

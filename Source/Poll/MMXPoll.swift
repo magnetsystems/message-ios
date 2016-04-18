@@ -127,7 +127,7 @@ enum MMXPollErrorType : ErrorType {
         surveyAnswerRequest.answers = answers
         let call = MMXSurveyService().submitSurveyAnswers(self.pollID, body: surveyAnswerRequest, success: {
             let msg = MMXMessage(toChannel: channel, messageContent: [:])
-            let result = MMXPollResult()
+            let result = MMXPollAnswer()
             result.result = options
             msg.payload = result;
             msg.sendWithSuccess({ users in
