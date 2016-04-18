@@ -42,6 +42,8 @@
 
 @property(nonatomic, readwrite) NSArray<MMAttachment *> *attachments;
 
+@property (nonatomic, nullable) NSString *contentType;
+
 + (instancetype)messageFromPubSubMessage:(MMXPubSubMessage *)pubSubMessage
 								  sender:(MMUser *)sender;
 

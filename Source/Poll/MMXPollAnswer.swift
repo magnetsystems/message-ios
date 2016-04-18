@@ -15,13 +15,25 @@
  * permissions and limitations under the License.
  */
 
-@import MagnetMaxCore;
+import MagnetMaxCore
 
-@interface MMXAnswerType : MMModel
+func + <K, V> (left: Dictionary<K, V>, right: Dictionary<K, V>) -> Dictionary<K, V>  {
+    var l = left
+    for (k, v) in right { l.updateValue(v, forKey: k) }
+    return l
+}
 
-
-@property (nonatomic, copy) NSString *answerTypeId;
-
-@property (nonatomic, copy) NSString *answerTypeDescription;
-
-@end
+@objc public class MMXPollAnswer: MMModel, MMXPayload {
+    
+    //MARK: Public Variables
+    
+    public static var contentType: String { return "MMXPollAnswer"}
+    public var result = [MMXPollOption]()
+    
+    //MARK: Overrides
+    
+    public override class func listAttributeTypes() -> [NSObject : AnyObject]! {
+        return super.listAttributeTypes() ?? [:] + ["result" as NSString : MMXPollOption.self]
+    }
+    
+}

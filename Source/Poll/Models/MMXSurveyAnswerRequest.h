@@ -15,12 +15,17 @@
  * permissions and limitations under the License.
  */
 
-@objc public protocol MMXPayload: class {
-    
-//    init?(string description: String)
-    
-    static var contentType: String { get }
-    
-//    func payloadDescription() -> String
-    
-}
+@import MagnetMaxCore;
+
+@class MMXSurveyAnswer;
+
+@interface MMXSurveyAnswerRequest : MMModel
+
+
+@property (nonatomic, strong) NSDate *completedOn;
+
+@property (nonatomic, copy) NSArray *answers;
+
+@property (nonatomic, strong) NSDate *startedOn;
+
+@end
