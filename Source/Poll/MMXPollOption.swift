@@ -29,7 +29,7 @@ import MagnetMaxCore
     
     public private(set) var pollID: String = ""
     
-    public private(set) var value: String = ""
+    public private(set) var text: String = ""
     
     //MARK: init
     
@@ -37,10 +37,10 @@ import MagnetMaxCore
         super.init()
     }
     
-    public init(pollID: String, optionID: String, value: String, count: Int64?) {
+    public init(pollID: String, optionID: String, text: String, count: Int64?) {
         self.pollID = pollID
         self.optionID = optionID
-        self.value = value
+        self.text = text
         self.count = count ?? 0
         super.init()
     }

@@ -62,7 +62,7 @@ enum MMXPollErrorType : ErrorType {
         
         var opts = [MMXPollOption]()
         for option in options {
-            let mmxOption = MMXPollOption(pollID: "", optionID: "", value: option, count: 0)
+            let mmxOption = MMXPollOption(pollID: "", optionID: "", text: option, count: 0)
             opts.append(mmxOption)
         }
         self.init(name : name, question: question, mmxPollOptions: opts, hideResultsFromOthers: hideResultsFromOthers, endDate: endDate, extras: extras, allowsMultipleChoice: allowsMultipleChoice)
@@ -120,7 +120,7 @@ enum MMXPollErrorType : ErrorType {
         for option in options {
             let answer = MMXSurveyAnswer()
             answer.selectedOptionId = option.optionID
-            answer.text = option.value
+            answer.text = option.text
             answer.questionId = self.underlyingSurvey?.surveyDefinition.questions.first?.questionId
             answers.append(answer)
         }
@@ -261,7 +261,7 @@ enum MMXPollErrorType : ErrorType {
             let option = MMXSurveyOption()
             option.displayOder = Int32(index)
             index += 1
-            option.value = $0.value
+            option.value = $0.text
             option.metaData = $0.extras
             
             return option
@@ -305,7 +305,7 @@ enum MMXPollErrorType : ErrorType {
         var myAnswers : [MMXPollOption] = []
         for option in options {
             let count : Int64? = choiceMap[option.optionId] != nil ? choiceMap[option.optionId]!.count : nil
-            let pollOption = MMXPollOption(pollID: survey.surveyId, optionID: option.optionId, value: option.value, count: count)
+            let pollOption = MMXPollOption(pollID: survey.surveyId, optionID: option.optionId, text: option.value, count: count)
             pollOption.extras = option.metaData
             if results.myAnswers.map({$0.selectedOptionId}).contains(option.optionId) {
                 myAnswers.append(pollOption)
