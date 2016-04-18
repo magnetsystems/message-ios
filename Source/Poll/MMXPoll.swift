@@ -101,7 +101,11 @@ enum MMXPollErrorType : ErrorType {
     
     //MARK: Public Methods
     
-    public func choose(options: [MMXPollOption], success: (Void -> Void)?, failure: ((error: NSError) -> Void)?) {
+    public func choose(option: MMXPollOption, success: (Void -> Void)?, failure: ((error: NSError) -> Void)?) {
+        choose(options: [option], success: success, failure: failure)
+    }
+    
+    public func choose(options option: [MMXPollOption], success: (Void -> Void)?, failure: ((error: NSError) -> Void)?) {
         
         guard let channel = self.channel else {
             assert(false, "Poll not related to a channel, please submit poll first.")
@@ -130,7 +134,7 @@ enum MMXPollErrorType : ErrorType {
         let call = MMXSurveyService().submitSurveyAnswers(self.pollID, body: surveyAnswerRequest, success: {
             let msg = MMXMessage(toChannel: channel, messageContent: [:])
             let result = MMXPollAnswer()
-            result.result = options
+            result.result = option
             msg.payload = result;
             msg.sendWithSuccess({ users in
                 success?()
