@@ -85,7 +85,7 @@ static int kATTACHMENTCONTEXT;
     if (pubSubMessage.messageContent) {
         NSData *data = [pubSubMessage.messageContent dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *payloadContent = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
-        Class contentClass = [MMXPayloadRegister classForContentType:payloadContent[@"contentType"]];
+        Class contentClass = [MMXPayloadRegister classForContentType:payloadContent[@"mType"]];
         if (payloadContent && contentClass) {
             payload = [MTLJSONAdapter modelOfClass:contentClass fromJSONDictionary:payloadContent error:nil];
         }
@@ -151,8 +151,8 @@ static int kATTACHMENTCONTEXT;
         NSString *payload;
         if (self.payload) {
             NSError *error;
-            NSDictionary *payloadDictionary = [MTLJSONAdapter JSONDictionaryFromModel:self.payload error:&error];
-            
+            NSMutableDictionary *payloadDictionary = [MTLJSONAdapter JSONDictionaryFromModel:self.payload error:&error].mutableCopy;
+            payloadDictionary[@"mType"] = self.contentType;
             if (error) {
                 NSError * error = [MMXClient errorWithTitle:@"Not Valid" message:@"Failed to parse MMModel." code:401];
                 if (failure) {
