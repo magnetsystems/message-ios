@@ -197,6 +197,10 @@ enum MMXPollErrorType : ErrorType {
         let call = service.getSurvey(pollID, success: {[weak service] survey in
             let call = service?.getResults(survey.surveyId, success: { surveyResults in
                 let isPublic = !survey.surveyDefinition.notificationChannelId.containsString("#")
+                var channelName = survey.surveyDefinition.notificationChannelId
+                if !isPublic {
+                    channelName = survey.surveyDefinition.notificationChannelId.componentsSeparatedByString("#").last
+                }
                 MMXChannel.channelForName(survey.surveyDefinition.notificationChannelId, isPublic: isPublic, success: { channel in
                     do {
                         let poll = try self.pollFromSurveyResults(surveyResults, channel: channel)
