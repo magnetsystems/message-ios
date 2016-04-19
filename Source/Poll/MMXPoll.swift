@@ -153,12 +153,12 @@ enum MMXPollErrorType : ErrorType {
     
     //MARK: Public Static Methods
     //MARK: Publish
-    public func publish(channel channel: MMXChannel,success: ((MMXPoll) -> Void)?, failure: ((error: NSError) -> Void)?) {
+    public func publish(channel channel: MMXChannel,success: ((MMXMessage) -> Void)?, failure: ((error: NSError) -> Void)?) {
         let msg = MMXMessage(toChannel: channel, messageContent: [:])
         publish(message: msg, success: success, failure: failure)
     }
     
-    private func publish(message message: MMXMessage, success: ((MMXPoll) -> Void)?, failure: ((error: NSError) -> Void)?) {
+    private func publish(message message: MMXMessage, success: ((MMXMessage) -> Void)?, failure: ((error: NSError) -> Void)?) {
         guard let channel = message.channel as MMXChannel? else {
             assert(false, "Channel must be set on message for poll")
             return
@@ -168,9 +168,9 @@ enum MMXPollErrorType : ErrorType {
             message.payload = self.mmxPayload();
             message.sendWithSuccess({ users in
                 self.isPublished = true
-                ({ [weak self] in
-                    if let weakSelf = self {
-                        success?(weakSelf)
+                ({ [weak message] in
+                    if let weakMessage = message {
+                        success?(weakMessage)
                     }
                     })()
                 }, failure: { error in
