@@ -82,17 +82,14 @@ static int kATTACHMENTCONTEXT;
     }
     
     MMModel<MMXPayload>*payload;
-    NSString *contentType = metaData[@"_MMXContentType"];
-    Class contentClass = [MMXPayloadRegister classForContentType:contentType];
     if (pubSubMessage.messageContent) {
         NSData *data = [pubSubMessage.messageContent dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *payloadContent = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
-        if (payloadContent && contentType && contentClass) {
+        Class contentClass = [MMXPayloadRegister classForContentType:payloadContent[@"contentType"]];
+        if (payloadContent && contentClass) {
             payload = [MTLJSONAdapter modelOfClass:contentClass fromJSONDictionary:payloadContent error:nil];
         }
     }
-    
-    [metaData removeObjectForKey:@"_MMXContentType"];
     
     pubSubMessage.metaData = metaData;
     
@@ -108,7 +105,6 @@ static int kATTACHMENTCONTEXT;
     msg.messageContent = pubSubMessage.metaData;
     msg.timestamp = pubSubMessage.timestamp;
     msg.messageType = MMXMessageTypeChannel;
-    msg.contentType = contentType;
     msg.payload = payload;
     return msg;
 }
@@ -178,7 +174,6 @@ static int kATTACHMENTCONTEXT;
             
             payload = [[NSString alloc] initWithBytes:[jsonData bytes] length:[jsonData length] encoding:NSUTF8StringEncoding];
             NSMutableDictionary *dict = self.messageContent.mutableCopy;
-            dict[@"_MMXContentType"] = (NSString *)[self.payload.class contentType];
             self.messageContent = dict.copy;
         }
         

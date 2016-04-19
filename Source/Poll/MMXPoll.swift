@@ -305,6 +305,8 @@ enum MMXPollErrorType : ErrorType {
     static private func pollFromMMXPayload(payload : MMXPayload?, channel: MMXChannel, success: ((MMXPoll) -> Void), failure: ((error: NSError) -> Void)?) {
         if let pollIdentifier = payload as? MMXPollIdentifier {
             self.pollWithID(pollIdentifier.pollID, channel: channel, success: success, failure: failure)
+        } else if let pollID = (payload as? MMXPollAnswer)?.result.first?.pollID {
+            self.pollWithID(pollID, channel: channel, success: success, failure: failure)
         } else {
             let error = MMXClient.errorWithTitle("Poll", message: "Incompatible Object Type", code: 500)
             failure?(error : error)
