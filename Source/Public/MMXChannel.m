@@ -317,6 +317,17 @@
     } failure:failure];
 }
 
+- (void)muteUntil:(nullable NSDate *)date
+          success:(nullable void (^)())success
+          failure:(nullable void (^)(NSError *error))failure {
+    
+}
+
+- (void)unMuteWithSuccess:(nullable void (^)())success
+                  failure:(nullable void (^)(NSError *error))failure {
+    
+}
+
 - (void)tagsWithSuccess:(void (^)(NSSet <NSString *>*))success
                 failure:(void (^)(NSError *))failure {
     if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
