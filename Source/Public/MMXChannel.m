@@ -402,31 +402,7 @@
                success:(void (^)(MMXChannel *channel))success
                failure:(void (^)(NSError *))failure {
     
-    if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-        if (failure) {
-            failure([MagnetDelegate notLoggedInError]);
-        }
-        
-        return;
-    }
-    MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions];
-    channel.ownerUserID = [MMUser currentUser].userID;
-    MMXTopic *topic = [channel asTopic];
-    [[MMXClient sharedClient].pubsubManager createTopic:topic success:^(BOOL successful) {
-        [MMXChannel channelForName:channel.name isPublic:isPublic success:^(MMXChannel *channel) {
-            if (success) {
-                success(channel);
-            }
-        } failure:^(NSError *error) {
-            if (failure) {
-                failure(error);
-            }
-        }];
-    } failure:^(NSError *error) {
-        if (failure) {
-            failure(error);
-        }
-    }];
+    [self createWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions subscribers:nil pushConfigName:nil success:success failure:failure];
 }
 
 + (void)createWithName:(NSString *)name
@@ -437,9 +413,31 @@
                success:(nullable void (^)(MMXChannel *channel))success
                failure:(nullable void (^)(NSError *error))failure {
     
+    [self createWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions subscribers:subscribers pushConfigName:nil success:success failure:failure];
+    
+}
+
++ (void)createWithName:(NSString *)name
+               summary:(nullable NSString *)summary
+              isPublic:(BOOL)isPublic
+    publishPermissions:(MMXPublishPermissions)publishPermissions
+           subscribers:(NSSet <MMUser *>*)subscribers
+        pushConfigName:(nullable NSString *)pushConfigName
+               success:(nullable void (^)(MMXChannel *channel))success
+               failure:(nullable void (^)(NSError *error))failure {
+    
+    if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+        if (failure) {
+            failure([MagnetDelegate notLoggedInError]);
+        }
+        
+        return;
+    }
+    
     MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions];
     channel.ownerUserID = [MMUser currentUser].userID;
     channel.subscribers = [[subscribers valueForKey:@"userID"] allObjects];
+    channel.pushConfigName = pushConfigName;
     MMCall *call = [channel.pubSubService createChannel:channel success:^(MMXChannelResponse *response) {
         NSMutableArray *subscribers = [channel.subscribers mutableCopy];
         [subscribers addObject:[MMUser currentUser].userID];
