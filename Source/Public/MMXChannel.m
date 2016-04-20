@@ -160,6 +160,39 @@
     } failure:failure];
 }
 
++ (void)channelForID:(NSString *)channelID  success:(nullable void (^)(MMXChannel *channel))success failure:(nullable void (^)(NSError *error))failure {
+    NSArray *components = [channelID componentsSeparatedByString:@"#"];
+    if (components.count <= 1) {
+        [self channelForName:channelID isPublic:YES success:success failure:failure];
+        return;
+    }
+    NSString *userID = components.firstObject;
+    NSString *name = components.lastObject;
+    
+    NSDictionary *topic = @{@"userId" : userID, @"topicName" : name};
+    
+    [[MMXClient sharedClient].pubsubManager topicsFromTopicDictionaries:@[topic] success:^(NSArray *topics) {
+        [[MMXClient sharedClient].pubsubManager summaryOfTopics:topics since:nil until:nil success:^(NSArray *summaries) {
+            [[MMXClient sharedClient].pubsubManager listSubscriptionsWithSuccess:^(NSArray *subscriptions) {
+                NSArray *channelArray = [MMXChannel channelsFromTopics:topics summaries:summaries subscriptions:subscriptions];
+                if (success) {
+                    success(channelArray.firstObject);
+                }
+            } failure:^(NSError *error) {
+                if (failure) {
+                    failure(error);
+                }
+            }];
+        } failure:^(NSError *error) {
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        
+    }];
+}
+
 + (void)channelsStartingWith:(NSString *)name
                        limit:(int)limit
                       offset:(int)offset

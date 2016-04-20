@@ -28,7 +28,35 @@ func + <K, V> (left: Dictionary<K, V>, right: Dictionary<K, V>) -> Dictionary<K,
     //MARK: Public Variables
     
     public static var contentType: String { return "object/MMXPollAnswer"}
-    public var result = [MMXPollOption]()
+    //Poll Attributes
+    public var pollID: String = ""
+    public var name: String = ""
+    public var question : String = ""
+    //Poll Options
+    public var deselectedOptions: [MMXPollOption]?
+    public var selectedOptions = [MMXPollOption]()
+    
+    public override init!() {
+        super.init()
+    }
+    
+    public init(_ poll: MMXPoll, selectedOptions:[MMXPollOption], deselectedOptions:[MMXPollOption]?) {
+        self.pollID = poll.pollID!
+        self.name = poll.name
+        self.question = poll.question
+        self.selectedOptions = selectedOptions
+        self.deselectedOptions = deselectedOptions
+        
+        super.init()
+    }
+    
+    required public init(dictionary dictionaryValue: [NSObject : AnyObject]!) throws {
+        try super.init(dictionary: dictionaryValue)
+    }
+    
+    required public init!(coder: NSCoder!) {
+        super.init(coder: coder)
+    }
     
     //MARK: Overrides
     
