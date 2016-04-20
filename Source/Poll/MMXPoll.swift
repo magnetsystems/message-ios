@@ -32,11 +32,25 @@ extension Array where Element : Hashable {
         }
         var excluded = [Element]()
         for val in A {
-            if hash[val.hashValue] == nil {
-                excluded.append(val)
+            if let hashVal = hash[val.hashValue] {
+                excluded.append(hashVal)
             }
         }
         return excluded
+    }
+    
+    func union(A:Array<Element>) -> Array<Element> {
+        var hash = [Int : Element]()
+        for val in self {
+            hash[val.hashValue] = val
+        }
+        var union = [Element]()
+        for val in A {
+            if let hashVal = hash[val.hashValue] {
+                union.append(hashVal)
+            }
+        }
+        return union
     }
 }
 
@@ -136,7 +150,7 @@ extension Array where Element : Hashable {
         }
         
         var answers = [MMXSurveyAnswer]()
-        var deselectedOptions = myVotes?.exclude(option)
+        var previousSelection = myVotes
         
         for opt in option {
             let answer = MMXSurveyAnswer()
@@ -150,8 +164,9 @@ extension Array where Element : Hashable {
         surveyAnswerRequest.answers = answers
         let call = MMXSurveyService().submitSurveyAnswers(self.pollID, body: surveyAnswerRequest, success: {
             let msg = MMXMessage(toChannel: channel, messageContent: [:])
-            let result = MMXPollAnswer(self, selectedOptions: option, deselectedOptions: deselectedOptions)
+            let result = MMXPollAnswer(self, selectedOptions: option, previousSelection: previousSelection)
             msg.payload = result
+            self.myVotes = option
             if self.areResultsPublic {
                 success?(nil)
             } else {
@@ -174,23 +189,14 @@ extension Array where Element : Hashable {
     }
     
     public func refreshResults(answer answer: MMXPollAnswer) {
-        var optionHash = [Int:MMXPollOption]()
-        for option in self.options {
-            optionHash[option.hashValue] = option
-        }
-        
-        if let deselectedOptions = answer.deselectedOptions {
-            for option in deselectedOptions {
-                if let pollOption = optionHash[option.hashValue] {
-                    pollOption.count -= 1
-                }
+        if let previous = answer.previousSelection {
+            for option in self.options.union(previous) {
+                option.count -= 1
             }
         }
         
-        for option in answer.selectedOptions {
-            if let pollOption = optionHash[option.hashValue] {
-                pollOption.count += 1
-            }
+        for option in self.options.union(answer.currentSelection) {
+            option.count += 1
         }
     }
     

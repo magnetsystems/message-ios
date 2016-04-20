@@ -33,19 +33,19 @@ func + <K, V> (left: Dictionary<K, V>, right: Dictionary<K, V>) -> Dictionary<K,
     public var name: String = ""
     public var question : String = ""
     //Poll Options
-    public var deselectedOptions: [MMXPollOption]?
-    public var selectedOptions = [MMXPollOption]()
+    public var previousSelection: [MMXPollOption]?
+    public var currentSelection = [MMXPollOption]()
     
     public override init!() {
         super.init()
     }
     
-    public init(_ poll: MMXPoll, selectedOptions:[MMXPollOption], deselectedOptions:[MMXPollOption]?) {
+    public init(_ poll: MMXPoll, selectedOptions:[MMXPollOption], previousSelection:[MMXPollOption]?) {
         self.pollID = poll.pollID!
         self.name = poll.name
         self.question = poll.question
-        self.selectedOptions = selectedOptions
-        self.deselectedOptions = deselectedOptions
+        self.currentSelection = selectedOptions
+        self.previousSelection = previousSelection
         
         super.init()
     }
