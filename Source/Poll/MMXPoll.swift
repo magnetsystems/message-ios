@@ -113,7 +113,7 @@ enum MMXPollErrorType : ErrorType {
             return
         }
         
-        guard options.count <= 1 || (options.count > 1 && self.multipleChoiceEnabled) else {
+        guard option.count <= 1 || (option.count > 1 && self.multipleChoiceEnabled) else {
             assert(false, "Only one option is allowed")
             
             return
