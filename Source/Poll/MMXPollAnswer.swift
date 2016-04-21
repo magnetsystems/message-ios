@@ -61,7 +61,7 @@ func + <K, V> (left: Dictionary<K, V>, right: Dictionary<K, V>) -> Dictionary<K,
     //MARK: Overrides
     
     public override class func listAttributeTypes() -> [NSObject : AnyObject]! {
-        return super.listAttributeTypes() ?? [:] + ["result" as NSString : MMXPollOption.self]
+        return super.listAttributeTypes() ?? [:] + ["currentSelection" as NSString: MMXPollOption.self, "currentSelection" as NSString: MMXPollOption.self]
     }
     
 }
