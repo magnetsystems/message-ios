@@ -187,6 +187,7 @@ static int kATTACHMENTCONTEXT;
         MMXPubSubMessage *msg = [MMXPubSubMessage pubSubMessageToTopic:[self.channel asTopic] content:payload metaData:self.messageContent];
         msg.messageID = messageID;
         self.messageID = messageID;
+        msg.pushConfigName = self.pushConfigName;
         if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
             if (failure) {
                 failure([MMXMessage notNotLoggedInAndNoUserError]);
