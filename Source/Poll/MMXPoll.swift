@@ -206,7 +206,13 @@ extension Array where Element : Hashable {
             return
         }
         MMXPoll.pollWithID(pollID, success: { (poll) in
-            self.options = poll.options
+            var hashMap = [Int: MMXPollOption]()
+            for option in poll.options {
+                hashMap[option.hashValue] = option
+            }
+            for option in self.options {
+                option.count = hashMap[option.hashValue]?.count ?? 0
+            }
             let comp = {[weak self] in
                 completion(poll: self)
             }
