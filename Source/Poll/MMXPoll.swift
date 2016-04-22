@@ -163,7 +163,7 @@ extension Array where Element : Hashable {
         let surveyAnswerRequest = MMXSurveyAnswerRequest()
         surveyAnswerRequest.answers = answers
         let call = MMXSurveyService().submitSurveyAnswers(self.pollID, body: surveyAnswerRequest, success: {
-            let msg = MMXMessage(toChannel: channel, messageContent: [:])
+            let msg = MMXMessage(toChannel: channel, messageContent: [kQuestionKey: self.question], pushConfigName: kDefaultPollAnswerPushConfigNameKey)
             let result = MMXPollAnswer(self, selectedOptions: option, previousSelection: previousSelection)
             msg.payload = result
             self.myVotes = option
@@ -228,7 +228,7 @@ extension Array where Element : Hashable {
     //MARK: Public Static Methods
     //MARK: Publish
     public func publish(channel channel: MMXChannel,success: ((MMXMessage) -> Void)?, failure: ((error: NSError) -> Void)?) {
-        let msg = MMXMessage(toChannel: channel, messageContent: [:])
+        let msg = MMXMessage(toChannel: channel, messageContent: [kQuestionKey: question], pushConfigName: kDefaultPollPushConfigNameKey)
         publish(message: msg, success: success, failure: failure)
     }
     
