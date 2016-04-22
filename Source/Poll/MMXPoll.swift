@@ -198,6 +198,9 @@ extension Array where Element : Hashable {
         for option in self.options.union(answer.currentSelection) {
             option.count += 1
         }
+        if answer.userID == MMUser.currentUser()?.userID {
+            self.myVotes = answer.currentSelection
+        }
     }
     
     public func refreshResults(completion completion:((poll : MMXPoll?) -> Void)) {
