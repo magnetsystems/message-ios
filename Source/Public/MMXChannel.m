@@ -989,6 +989,7 @@
         channel.isPublic = !topic.inUserNameSpace;
         channel.creationDate = topic.creationDate;
         channel.isMuted = topic.isMuted;
+        channel.mutedUntil = topic.mutedUntil;
         [channelDict setObject:channel forKey:[MMXChannel channelKeyFromTopic:topic]];
     }
     for (MMXTopicSummary *sum in summaries) {
