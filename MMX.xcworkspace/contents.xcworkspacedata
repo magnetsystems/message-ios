@@ -5,6 +5,130 @@
       location = "group:Source"
       name = "Source">
       <Group
+         location = "group:Mute"
+         name = "Mute">
+         <Group
+            location = "group:Models"
+            name = "Models">
+            <FileRef
+               location = "group:MMXMuteChannelPushRequest.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXMuteChannelPushRequest.m">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:Services"
+            name = "Services">
+         </Group>
+      </Group>
+      <Group
+         location = "group:Poll"
+         name = "Poll">
+         <FileRef
+            location = "group:MMXPollAnswer.swift">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPollOption.swift">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPoll.swift">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPollIdentifier.swift">
+         </FileRef>
+         <Group
+            location = "group:Models"
+            name = "Models">
+            <FileRef
+               location = "group:MMXSurveyAnswerRequest.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyAnswerRequest.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurvey.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurvey.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyAnswer.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyAnswer.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyChoiceResult.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyChoiceResult.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyDefinition.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyDefinition.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyOption.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyOption.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyQuestion.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyQuestion.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyResponse.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyResponse.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyResults.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyResults.m">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:Services"
+            name = "Services">
+            <FileRef
+               location = "group:MMXSurveyService.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyService.m">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:Types"
+            name = "Types">
+            <FileRef
+               location = "group:MMXSurveyParticipantModel.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyParticipantModel.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyQuestionType.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyQuestionType.m">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyType.h">
+            </FileRef>
+            <FileRef
+               location = "group:MMXSurveyType.m">
+            </FileRef>
+         </Group>
+      </Group>
+      <Group
          location = "group:Privacy"
          name = "Privacy">
          <FileRef
@@ -67,6 +191,12 @@
          </FileRef>
          <FileRef
             location = "group:MMXMessage_Private.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXWhitelistOperation.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXWhitelistOperation.m">
          </FileRef>
       </Group>
       <Group
@@ -256,6 +386,12 @@
          location = "group:Public"
          name = "Public">
          <FileRef
+            location = "group:MMXPayload.swift">
+         </FileRef>
+         <FileRef
+            location = "group:MMXPayloadRegister.swift">
+         </FileRef>
+         <FileRef
             location = "group:MMX.h">
          </FileRef>
          <FileRef
@@ -396,10 +532,10 @@
                location = "group:MMXRemoveSubscribersResponse.m">
             </FileRef>
             <FileRef
-               location = "group:/Users/lorenzo.stanton/message-ios/Source/PubSub/ChannelRequest/MMXChannelSummaryRequest.h">
+               location = "group:MMXChannelSummaryRequest.h">
             </FileRef>
             <FileRef
-               location = "group:/Users/lorenzo.stanton/message-ios/Source/PubSub/ChannelRequest/MMXChannelSummaryRequest.m">
+               location = "group:MMXChannelSummaryRequest.m">
             </FileRef>
             <FileRef
                location = "group:MMXPublisherType.h">
@@ -414,17 +550,17 @@
                location = "group:MMXMatchType.m">
             </FileRef>
             <FileRef
-               location = "group:/Users/lorenzo.stanton/message-ios/Source/PubSub/ChannelRequest/MMXQueryChannel.h">
+               location = "group:MMXQueryChannel.h">
             </FileRef>
             <FileRef
-               location = "group:/Users/lorenzo.stanton/message-ios/Source/PubSub/ChannelRequest/MMXQueryChannel.m">
+               location = "group:MMXQueryChannel.m">
             </FileRef>
          </Group>
          <FileRef
             location = "group:MMXPubSubService.h">
          </FileRef>
          <FileRef
-            location = "group:/Users/lorenzo.stanton/message-ios/Source/PubSub/MMXPubSubService.m">
+            location = "group:MMXPubSubService.m">
          </FileRef>
          <FileRef
             location = "group:MMXGeoLocationMessage.h">
@@ -476,6 +612,12 @@
          </FileRef>
          <FileRef
             location = "group:MMXTopicListResponse.m">
+         </FileRef>
+         <FileRef
+            location = "group:MMXWhitelistManager.h">
+         </FileRef>
+         <FileRef
+            location = "group:MMXWhitelistManager.m">
          </FileRef>
          <Group
             location = "group:TopicQuery"

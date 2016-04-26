@@ -15,9 +15,36 @@
  * permissions and limitations under the License.
  */
 
+
 #import <Kiwi/Kiwi.h>
 @import MagnetMax;
 @import MMX;
+
+typedef void(^Completion)(MMXChannel* channel);
+
+@interface Tester : NSObject
++ (void)makeMMXChannel:(NSString*)name isPublic : (bool)isPublic completion : (Completion )completion;
+@end
+
+@implementation Tester
+
++ (void)makeMMXChannel:(NSString*) name isPublic : (bool)isPublic completion : (Completion )completion {
+    [MMXChannel createWithName:name summary:name isPublic:isPublic publishPermissions:MMXPublishPermissionsAnyone success:^(MMXChannel * _Nonnull channel) {
+        completion(channel);
+    } failure:^(NSError * _Nonnull error) {
+        if (error.code == 409) {
+            [MMXChannel channelForName:name isPublic:isPublic success:^(MMXChannel * _Nonnull channel) {
+                completion(channel);
+            } failure:^(NSError * _Nonnull error) {
+                NSLog(@"%@",error);
+            }];
+        }
+    }];
+}
+
+
+@end
+
 
 #define DEFAULT_TEST_TIMEOUT 10.0
 
@@ -187,6 +214,26 @@ describe(@"MMXChannel", ^{
         });
     });
     
+    context(@"when creating a private channel", ^{
+        it(@"should succeed if channel is created or exists.", ^{
+            
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-retain-cycles"
+            
+            NSString *channelName = @"test_topic_private";
+            NSString *channelSummary = @"test_topic_private";
+            
+            __block BOOL _isSuccess = NO;
+            [MMXChannel createWithName:channelName summary:channelSummary isPublic:NO publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
+                _isSuccess = YES;
+            } failure:^(NSError *error) {
+                _isSuccess = error.code == 409;
+            }];
+            
+            [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+        });
+    });
+    
     context(@"when setting tags on a channel", ^{
         
 #pragma clang diagnostic push
@@ -274,7 +321,41 @@ describe(@"MMXChannel", ^{
             //This test requires prepopulated data(a channel named "test_topic") to be on the server when the test is run
             [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
         });
+        
+        it(@"should succeed is channel is private", ^{
+            __block BOOL _isSuccess = NO;
+            [MMXChannel channelForName:@"test_topic_private" isPublic:NO success:^(MMXChannel *channel) {
+                [channel inviteUser:[MMUser currentUser] comments:@"No commment" success:^(MMXInvite *invite) {
+                    [[invite shouldNot] beNil];
+                    [[theValue([channel isEqual:invite.channel]) should] beYes];
+                    [[theValue([[MMUser currentUser] isEqual:invite.sender]) should] beYes];
+                    [[theValue([invite.comments isEqualToString:@""]) should] beNo];
+                    _isSuccess = YES;
+                } failure:^(NSError *error) {
+                    _isSuccess = NO;
+                }];
+            } failure:^(NSError *error) {
+                _isSuccess = NO;
+            }];
+            
+            __block MMXInvite *receivedInvite;
+            
+            [[MMXDidReceiveChannelInviteNotification shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] bePostedEvaluatingBlock:^(NSNotification *notification){
+                receivedInvite = notification.userInfo[MMXInviteKey];
+            }];
+            
+            [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+            [[expectFutureValue(receivedInvite.timestamp) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNonNil];
+            [[expectFutureValue(receivedInvite.comments) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:@"No commment"];
+            [[expectFutureValue(receivedInvite.sender.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
+            [[expectFutureValue(receivedInvite.channel) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNonNil];
+            [[expectFutureValue(receivedInvite.channel.name) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:@"test_topic_private"];
+            
+            //This test requires prepopulated data(a channel named "test_topic") to be on the server when the test is run
+            [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+        });
     });
+    
     
     context(@"when publishing to a channel", ^{
         
@@ -310,7 +391,9 @@ describe(@"MMXChannel", ^{
             [[expectFutureValue(theValue(receivedMessage.messageType)) should] equal:theValue(MMXMessageTypeChannel)];
             [[expectFutureValue(receivedMessage.sender.userName) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:senderUsername];
             [[expectFutureValue(receivedMessage.channel) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beNonNil];
-            [[expectFutureValue(receivedMessage.channel.name) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:channelName.lowercaseString];
+            
+            
+            [[expectFutureValue(receivedMessage.channel.name.lowercaseString) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] equal:channelName.lowercaseString];
             
             
             [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
@@ -715,9 +798,11 @@ describe(@"MMXChannel", ^{
             _isSuccess = NO;
         }];
         
-        [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
+        [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(100)] beYes];
     });
     
 });
 
+
 SPEC_END
+
