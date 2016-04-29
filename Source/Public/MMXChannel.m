@@ -1114,6 +1114,12 @@
     return !self.isPublic;
 }
 
++ (NSDictionary *)encodingBehaviorsByPropertyKey {
+    return [super.encodingBehaviorsByPropertyKey mtl_dictionaryByAddingEntriesFromDictionary:@{
+                                                                                               @"pubSubService": @(MTLModelEncodingBehaviorExcluded)
+                                                                                               }];
+}
+
 + (NSDictionary *)attributeMappings {
     NSDictionary *dictionary = @{
                                  @"name": @"channelName",
