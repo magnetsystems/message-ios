@@ -269,7 +269,7 @@ extension Array where Element : Hashable {
         }
     }
     
-    static private func pollWithID(pollID: String, success: ((MMXPoll) -> Void), failure: ((error: NSError) -> Void)?) {
+    static public func pollWithID(pollID: String, success: ((MMXPoll) -> Void), failure: ((error: NSError) -> Void)?) {
         let service = MMXSurveyService()
         let call = service.getSurvey(pollID, success: {[weak service] survey in
             let call = service?.getResults(survey.surveyId, success: { surveyResults in
