@@ -1,24 +1,26 @@
-public enum MMXCachePolicy {
-    case None
-    case Some
+
+
+@objc public enum MMXCachePolicy: Int {
+    case Test
+    case Value
 }
 
-protocol MMXCacheable: class {
+@objc protocol MMXCacheable: class {
     var cachePolicy: MMXCachePolicy{get}
-    func executeInBackground(cachePolicy: MMXCachePolicy)
+    func executeInBackground(cachePolicy cachePolicy: MMXCachePolicy)
     func executeInBackground(cachePolicy: MMXCachePolicy, dependencies:[MMXCall])
     func asCall() -> MMXCall
 }
 
-public class MMXCacheCall: MMXCall, MMXCacheable {
+@objc public class MMXCacheCall: MMXCall, MMXCacheable {
     
     //MARK: Public variables
     
-    public private(set) var cachePolicy: MMXCachePolicy = .None
+    public private(set) var cachePolicy: MMXCachePolicy = .Test
     
     //MARK: Public Methods
     
-    public final func executeInBackground(cachePolicy: MMXCachePolicy) {
+    public final func executeInBackground(cachePolicy cachePolicy: MMXCachePolicy) {
         self.cachePolicy = cachePolicy
         self.executeInBackground()
     }

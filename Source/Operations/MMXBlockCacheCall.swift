@@ -2,11 +2,11 @@ public class MMXBlockCacheCall: MMXBlockCall, MMXCacheable {
     
     //MARK: Public variables
     
-    public private(set) var cachePolicy: MMXCachePolicy = .None
+    public private(set) var cachePolicy: MMXCachePolicy = .Test
     
     //MARK: Public Methods
     
-    public final func executeInBackground(cachePolicy: MMXCachePolicy) {
+    public final func executeInBackground(cachePolicy cachePolicy: MMXCachePolicy) {
         self.cachePolicy = cachePolicy
         self.executeInBackground()
     }

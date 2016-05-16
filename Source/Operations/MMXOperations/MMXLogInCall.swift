@@ -4,13 +4,13 @@ public class MMXLogInCall: MMXCall {
     
     private var user: MMUser?
     
-    //MARK: init
+    //MARK: Init
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    //Mark: notifications
+    //MARK: Notifications
     
     func registerForNotifications() {
         //MMXUserDidLogInNotification
@@ -21,7 +21,7 @@ public class MMXLogInCall: MMXCall {
         finishSuccessfully()
     }
     
-    //Mark: execution
+    //MARK: Execution
     
     public override func execute() {
         if MMUser.currentUser() != nil {

@@ -3,13 +3,13 @@ public class MMXPersistentConnectionCall: MMXCall {
     
     private var connected:Bool?
     
-    //MARK: init
+    //MARK: Init
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    //Mark: notifications
+    //MARK: Notifications
     
     func registerForNotifications() {
         //MMXUserDidLogInNotification
@@ -26,7 +26,7 @@ public class MMXPersistentConnectionCall: MMXCall {
         }
     }
     
-    //Mark: execution
+    //MARK: Execution
     
     public override func execute() {
         if MMXClient.sharedClient().connectionStatus == .Connected {
