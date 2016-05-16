@@ -15,10 +15,10 @@
  * permissions and limitations under the License.
  */
 
-#import "MMXAsyncOperation.h"
+@import MagnetMaxCore;
 @class MMUser;
 
-@interface MMXLogInOperation : MMXAsyncOperation
+@interface MMXLogInOperation : MMAsynchronousOperation
 
 @property (nonatomic, strong) NSURLCredential *creds;
 

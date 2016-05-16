@@ -21,6 +21,7 @@
 @import MagnetMaxCore;
 @class MMUser;
 @class MMXChannel;
+@class MMXCall;
 
 @protocol MMXPayload;
 
@@ -116,7 +117,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return The messageID for the message sent
  */
-- (nullable NSString *)sendWithSuccess:(nullable void (^)(NSSet <NSString *>*invalidUsers))success
+- (nullable MMXCall *)sendWithSuccess:(nullable void (^)(NSSet <NSString *>*invalidUsers))success
                                failure:(nullable void (^)(NSError *error))failure;
 
 /**

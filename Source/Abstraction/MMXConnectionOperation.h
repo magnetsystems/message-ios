@@ -15,9 +15,9 @@
  * permissions and limitations under the License.
  */
 
-#import "MMXAsyncOperation.h"
+@import MagnetMaxCore;
 
-@interface MMXConnectionOperation : MMXAsyncOperation
+@interface MMXConnectionOperation : MMAsynchronousOperation
 
 @property (nonatomic, copy) void (^connectSuccessBlock)(void);
 

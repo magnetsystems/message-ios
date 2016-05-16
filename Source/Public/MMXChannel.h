@@ -25,6 +25,7 @@
 @class MMUser;
 @class MMXMessage;
 @class MMXInvite;
+@class MMXCall;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface MMXChannel : MMModel
@@ -115,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success  Block with the number of channels that match the query and a NSArray of MMXChannels that match the criteria.
  *  @param failure  Block with an NSError with details about the call failure.
  */
-+ (void)allPrivateChannelsWithLimit:(int)limit
++ (MMXCall *)allPrivateChannelsWithLimit:(int)limit
                              offset:(int)offset
                             success:(nullable void (^)(int totalCount, NSArray <MMXChannel *>*channels))success
                             failure:(nullable void (^)(NSError *error))failure;
@@ -128,7 +129,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success		Block with the channel with the name specified if it exists.
  *  @param failure		Block with an NSError with details about the call failure.
  */
-+ (void)channelForName:(NSString *)channelName
++ (MMXCall *)channelForName:(NSString *)channelName
               isPublic:(BOOL)isPublic
                success:(nullable void (^)(MMXChannel *channel))success
                failure:(nullable void (^)(NSError *error))failure;
@@ -176,7 +177,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success  Block with the number of channels that match the query and a NSArray of MMXChannels that match the criteria.
  *  @param failure  Block with a NSError with details about the call failure.
  */
-+ (void)findByTags:(NSSet <NSString *>*)tags
++ (MMXCall *)findByTags:(NSSet <NSString *>*)tags
              limit:(int)limit
             offset:(int)offset
            success:(nullable void (^)(int totalCount, NSArray <MMXChannel *>*channels))success
@@ -330,7 +331,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success  Block with the published message
  *  @param failure  Block with an NSError with details about the call failure.
  */
-- (void)publishMessage:(MMXMessage *)message
+- (MMXCall *)publishMessage:(MMXMessage *)message
                success:(nullable void (^)())success
                failure:(nullable void (^)(NSError *error))failure;
 

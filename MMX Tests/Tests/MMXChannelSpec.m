@@ -199,7 +199,7 @@ describe(@"MMXChannel", ^{
         
         it(@"should only return one valid channel", ^{
             __block BOOL _isSuccess = NO;
-            [MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
+            MMXCall *call = [MMXChannel channelForName:@"test_topic" isPublic:YES success:^(MMXChannel *channel) {
                 [[theValue([MMXUtils objectIsValidString:channel.name]) should] beYes];
                 [[theValue([MMXUtils objectIsValidString:channel.summary]) should] beYes];
                 [[theValue([MMXUtils objectIsValidString:channel.ownerUserID]) should] beNonNil];
@@ -209,7 +209,7 @@ describe(@"MMXChannel", ^{
             } failure:^(NSError *error) {
                 _isSuccess = NO;
             }];
-            
+            [call executeInBackground];
             [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
         });
     });
@@ -267,7 +267,7 @@ describe(@"MMXChannel", ^{
         
         it(@"should only return one valid channel for the test tag", ^{
             __block BOOL _isSuccess = NO;
-            [MMXChannel findByTags:[NSSet setWithObject:@"test_topic_tag"] limit:100 offset:0 success:^(int totalCount, NSArray *channels) {
+            MMXCall *call =  [MMXChannel findByTags:[NSSet setWithObject:@"test_topic_tag"] limit:100 offset:0 success:^(int totalCount, NSArray *channels) {
                 MMXChannel *returnedChannel = channels.count ? channels[0] : nil;
                 [[returnedChannel.creationDate shouldNot] beNil];
                 [[theValue(totalCount) should] equal:theValue(1)];
@@ -281,7 +281,7 @@ describe(@"MMXChannel", ^{
             } failure:^(NSError *error) {
                 _isSuccess = NO;
             }];
-            
+            [call executeInBackground];
             //This test requires prepopulated data(a channel tagged with "test_topic_tag") to be on the server when the test is run
             [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];
         });
@@ -483,11 +483,12 @@ describe(@"MMXChannel", ^{
             
             [MMXChannel createWithName:channelName summary:channelSummary isPublic:NO publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
                 [MMXChannel createWithName:channelName2 summary:channelSummary2 isPublic:NO publishPermissions:MMXPublishPermissionsSubscribers success:^(MMXChannel *channel) {
-                    [MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
+                    MMXCall *call =  [MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels) {
                         _fetchedChannels = channels;
                         _totalCount = totalCount;
                     } failure:^(NSError * error) {
                     }];
+                    [call executeInBackground];
                 } failure:^(NSError * error) {
                 }];
             } failure:^(NSError * error) {
@@ -501,18 +502,20 @@ describe(@"MMXChannel", ^{
         it(@"should have the same channel for offset 0 channel 1 as offset 1 channel 0", ^{
             __block BOOL _isSuccess = NO;
             
-            [MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels1) {
+            MMXCall *call =  [MMXChannel allPrivateChannelsWithLimit:100 offset:0 success:^(int totalCount, NSArray *channels1) {
                 MMXChannel *channelAtOffset0Position1 = channels1[1];
-                [MMXChannel allPrivateChannelsWithLimit:100 offset:1 success:^(int totalCount, NSArray *channels2) {
+                MMXCall *call =  [MMXChannel allPrivateChannelsWithLimit:100 offset:1 success:^(int totalCount, NSArray *channels2) {
                     MMXChannel *channelAtOffset1Position0 = channels2[0];
                     [[theValue([channelAtOffset0Position1 isEqual:channelAtOffset1Position0]) should] beYes];
                     _isSuccess = YES;
                 } failure:^(NSError * error) {
                     _isSuccess = NO;
                 }];
+                [call executeInBackground];
             } failure:^(NSError * error) {
                 _isSuccess = NO;
             }];
+            [call executeInBackground];
             
             // Assert
             [[expectFutureValue(theValue(_isSuccess)) shouldEventuallyBeforeTimingOutAfter(DEFAULT_TEST_TIMEOUT)] beYes];

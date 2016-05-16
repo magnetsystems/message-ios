@@ -40,6 +40,8 @@
 #import "MMXChannelLookupKey.h"
 #import "MMXWhitelistManager.h"
 #import "MMXMuteChannelPushRequest.h"
+#import <MMX/MMX-Swift.h>
+
 
 @import MagnetMaxCore;
 
@@ -95,69 +97,96 @@
     [MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
 }
 
-+ (void)allPrivateChannelsWithLimit:(int)limit
-                             offset:(int)offset
-                            success:(void (^)(int totalCount, NSArray <MMXChannel *>*channels))success
-                            failure:(void (^)(NSError *))failure {
-    if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-        if (failure) {
-            failure([MagnetDelegate notLoggedInError]);
++ (MMXCall *)allPrivateChannelsWithLimit:(int)limit
+                                  offset:(int)offset
+                                 success:(void (^)(int totalCount, NSArray <MMXChannel *>*channels))success
+                                 failure:(void (^)(NSError *))failure {
+    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[] block:^(MMXBlockCall *call) {
+        if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
+            if (failure) {
+                failure([MagnetDelegate notLoggedInError]);
+            }
+            return;
         }
-        return;
-    }
-    
-    NSDictionary *queryDict = @{@"operator" : @"AND",
-                                @"limit" : @(limit),
-                                @"offset" : @(offset),
-                                @"type":@"personal",
-                                @"tags" : [NSNull null],
-                                @"topicName": @{
-                                        @"match": @"PREFIX",
-                                        @"value": @""}};
-    [MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
+        NSDictionary *queryDict = @{@"operator" : @"AND",
+                                    @"limit" : @(limit),
+                                    @"offset" : @(offset),
+                                    @"type":@"personal",
+                                    @"tags" : [NSNull null],
+                                    @"topicName": @{
+                                            @"match": @"PREFIX",
+                                            @"value": @""}};
+        [MMXChannel findChannelsWithDictionary:queryDict success:^(int count, NSArray *channels) {
+            success(count, channels);
+            [call finish];
+        } failure:^(NSError * error) {
+            failure(error);
+            [call finish];
+        }];
+    }];
+    return operation;
 }
 
 
-+ (void)channelForName:(NSString *)channelName
-              isPublic:(BOOL)isPublic
-               success:(void (^)(MMXChannel *))success
-               failure:(void (^)(NSError *))failure {
-    if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-        if (failure) {
-            failure([MagnetDelegate notLoggedInError]);
-        }
-        return;
-    }
-    if (channelName == nil || [channelName isEqualToString:@""]) {
-        if (failure) {
-            failure([MMXClient errorWithTitle:@"Invalid Search Parameter"
-                                      message:@"You must pass at least one valid character to this method."
-                                         code:500]);
-        }
-        return;
-    }
-    
-    NSDictionary *queryDict = @{@"operator" : @"AND",
-                                @"limit" : @(-1),
-                                @"tags" : [NSNull null],
-                                @"type":isPublic ? @"global" : @"personal",
-                                @"topicName": @{
-                                        @"match": @"EXACT",
-                                        @"value": channelName}};
-    [MMXChannel findChannelsWithDictionary:queryDict success:^(int count, NSArray *channelArray) {
-        if (count == 1 && channelArray.count) {
-            if (success) {
-                MMXChannel *channel = channelArray.firstObject;
-                success(channel);
-            }
-        } else if (failure) {
++ (MMXCall *)channelForName:(NSString *)channelName
+                   isPublic:(BOOL)isPublic
+                    success:(void (^)(MMXChannel *))success
+                    failure:(void (^)(NSError *))failure {
+    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[] block:^(MMXBlockCall *call) {
+        if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
             if (failure) {
-                failure([MMXClient errorWithTitle:@"Not Found"
-                                          message:@"The requested channel was not found."
-                                             code:404]);
+                failure([MagnetDelegate notLoggedInError]);
             }
+            [call setCompletionWithErrorObject:[MagnetDelegate notLoggedInError] successObject:nil];
+            return;
         }
-    } failure:failure];
+        if (channelName == nil || [channelName isEqualToString:@""]) {
+            if (failure) {
+                failure([MMXClient errorWithTitle:@"Invalid Search Parameter"
+                                          message:@"You must pass at least one valid character to this method."
+                                             code:500]);
+            }
+            [call setCompletionWithErrorObject:[MMXClient errorWithTitle:@"Invalid Search Parameter"
+                                                                 message:@"You must pass at least one valid character to this method."
+                                                                    code:500]
+                                 successObject:nil];
+            return;
+        }
+        NSDictionary *queryDict = @{@"operator" : @"AND",
+                                    @"limit" : @(-1),
+                                    @"tags" : [NSNull null],
+                                    @"type":isPublic ? @"global" : @"personal",
+                                    @"topicName": @{
+                                            @"match": @"EXACT",
+                                            @"value": channelName}};
+        [MMXChannel findChannelsWithDictionary:queryDict success:^(int count, NSArray *channelArray) {
+            if (count == 1 && channelArray.count) {
+                if (success) {
+                    MMXChannel *channel = channelArray.firstObject;
+                    success(channel);
+                    [call setCompletionWithErrorObject:nil successObject:channel];
+                }
+                [call finish];
+            } else if (failure) {
+                if (failure) {
+                    failure([MMXClient errorWithTitle:@"Not Found"
+                                              message:@"The requested channel was not found."
+                                                 code:404]);
+                }
+                [call setCompletionWithErrorObject:[MMXClient errorWithTitle:@"Not Found"
+                                                                     message:@"The requested channel was not found."
+                                                                        code:404]
+                                     successObject:nil];
+                [call finish];
+            }
+            [call finish];
+        } failure:^(NSError *error){
+            failure(error);
+            [call setCompletionWithErrorObject:error successObject:nil];
+            [call finish];
+        }];
+    }];
+    return  operation;
 }
 
 + (void)channelForID:(NSString *)channelID  success:(nullable void (^)(MMXChannel *channel))success failure:(nullable void (^)(NSError *error))failure {
@@ -235,44 +264,52 @@
     [MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
 }
 
-+ (void)findByTags:(NSSet <NSString *>*)tags
-             limit:(int)limit
-            offset:(int)offset
-           success:(void (^)(int, NSArray <MMXChannel *>*))success
-           failure:(void (^)(NSError *))failure {
-    
-    if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-        if (failure) {
-            failure([MagnetDelegate notLoggedInError]);
-        }
-        return;
-    }
-    
-    if (tags.count < 1) {
-        if (failure) {
-            NSError * error = [MMXClient errorWithTitle:@"Tags Empty" message:@"You must specify at least one tag." code:400];
-            failure(error);
-        }
-        return;
-    }
-    
-    for (id tag in tags) {
-        if (![tag isKindOfClass:[NSString class]]) {
++ (MMXCall *)findByTags:(NSSet <NSString *>*)tags
+                  limit:(int)limit
+                 offset:(int)offset
+                success:(void (^)(int, NSArray <MMXChannel *>*))success
+                failure:(void (^)(NSError *))failure {
+    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[] block:^(MMXBlockCall *call) {
+        if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
             if (failure) {
-                NSError * error = [MMXClient errorWithTitle:@"Invalid Tags" message:@"Tags can only be strings." code:400];
+                failure([MagnetDelegate notLoggedInError]);
+            }
+            
+            return;
+        }
+        
+        if (tags.count < 1) {
+            if (failure) {
+                NSError * error = [MMXClient errorWithTitle:@"Tags Empty" message:@"You must specify at least one tag." code:400];
                 failure(error);
             }
             return;
         }
-    }
+        
+        for (id tag in tags) {
+            if (![tag isKindOfClass:[NSString class]]) {
+                if (failure) {
+                    NSError * error = [MMXClient errorWithTitle:@"Invalid Tags" message:@"Tags can only be strings." code:400];
+                    failure(error);
+                }
+                return;
+            }
+        }
+        NSDictionary *queryDict = @{@"operator" : @"AND",
+                                    @"limit" : @(limit),
+                                    @"offset" : @(offset),
+                                    @"tags": @{@"match": @"EXACT",
+                                               @"values": [tags allObjects]}};
+        [MMXChannel findChannelsWithDictionary:queryDict success:^(int count, NSArray *channels) {
+            success(count, channels);
+            [call finish];
+        } failure:^(NSError *error) {
+            failure(error);
+            [call finish];
+        }];
+    }];
     
-    NSDictionary *queryDict = @{@"operator" : @"AND",
-                                @"limit" : @(limit),
-                                @"offset" : @(offset),
-                                @"tags": @{@"match": @"EXACT",
-                                           @"values": [tags allObjects]}};
-    
-    [MMXChannel findChannelsWithDictionary:queryDict success:success failure:failure];
+    return operation;
 }
 
 + (void)findChannelsWithDictionary:(NSDictionary *)queryDict
@@ -645,14 +682,14 @@
     }];
 }
 
-- (void)publishMessage:(MMXMessage *)message
-               success:(nullable void (^)())success
-               failure:(nullable void (^)(NSError *error))failure {
+- (MMXCall *)publishMessage:(MMXMessage *)message
+                    success:(nullable void (^)())success
+                    failure:(nullable void (^)(NSError *error))failure {
     
     // Ignore the recipients
     message.recipients = [NSSet set];
     message.channel = self;
-    [message sendWithSuccess:^(NSSet<NSString *> * _Nonnull __unused invalidUsers) {
+    MMXCall *call = [message sendWithSuccess:^(NSSet<NSString *> * _Nonnull __unused invalidUsers) {
         if (success) {
             success();
         }
@@ -661,6 +698,7 @@
             failure(error);
         }
     }];
+    return  call;
 }
 
 - (void)messagesBetweenStartDate:(NSDate *)startDate

@@ -157,12 +157,6 @@
             location = "group:MMUser+Addressable.m">
          </FileRef>
          <FileRef
-            location = "group:MMXAsyncOperation.h">
-         </FileRef>
-         <FileRef
-            location = "group:MMXAsyncOperation.m">
-         </FileRef>
-         <FileRef
             location = "group:MMXChannel_Private.h">
          </FileRef>
          <FileRef
@@ -755,6 +749,22 @@
          </FileRef>
          <FileRef
             location = "group:MMXUtils.m">
+         </FileRef>
+      </Group>
+      <Group
+         location = "container:"
+         name = "Operations">
+         <FileRef
+            location = "group:Source/Operations/MMXCall.swift">
+         </FileRef>
+         <FileRef
+            location = "group:Source/Operations/MMXBlockCall.swift">
+         </FileRef>
+         <FileRef
+            location = "group:Source/Operations/MMXCacheCall.swift">
+         </FileRef>
+         <FileRef
+            location = "group:Source/Operations/MMXBlockCacheCall.swift">
          </FileRef>
       </Group>
    </Group>
