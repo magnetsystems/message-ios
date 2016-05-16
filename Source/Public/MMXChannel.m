@@ -106,6 +106,7 @@
             if (failure) {
                 failure([MagnetDelegate notLoggedInError]);
             }
+            [call finish];
             return;
         }
         NSDictionary *queryDict = @{@"operator" : @"AND",
@@ -138,6 +139,7 @@
                 failure([MagnetDelegate notLoggedInError]);
             }
             [call setCompletionWithErrorObject:[MagnetDelegate notLoggedInError] successObject:nil];
+            [call finish];
             return;
         }
         if (channelName == nil || [channelName isEqualToString:@""]) {
@@ -150,6 +152,7 @@
                                                                  message:@"You must pass at least one valid character to this method."
                                                                     code:500]
                                  successObject:nil];
+            [call finish];
             return;
         }
         NSDictionary *queryDict = @{@"operator" : @"AND",
@@ -274,7 +277,7 @@
             if (failure) {
                 failure([MagnetDelegate notLoggedInError]);
             }
-            
+            [call finish];
             return;
         }
         
@@ -283,6 +286,7 @@
                 NSError * error = [MMXClient errorWithTitle:@"Tags Empty" message:@"You must specify at least one tag." code:400];
                 failure(error);
             }
+            [call finish];
             return;
         }
         
@@ -292,6 +296,7 @@
                     NSError * error = [MMXClient errorWithTitle:@"Invalid Tags" message:@"Tags can only be strings." code:400];
                     failure(error);
                 }
+                [call finish];
                 return;
             }
         }

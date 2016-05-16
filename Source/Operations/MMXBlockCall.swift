@@ -47,7 +47,6 @@ public class MMXBlockCall: MMXCall, MMXCallHandler {
             { [weak self] in
                 if let weakSelf = self where !operation.cancelled {
                     weakSelf.block(call: weakSelf)
-                    weakSelf.finish()
                 } else {
                     operation.finish()
                 }
