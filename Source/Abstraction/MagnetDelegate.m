@@ -158,6 +158,9 @@ NSString  * const MMXMessageFailureBlockKey = @"MMXMessageFailureBlockKey";
 #pragma mark - MMXClientDelegate Callbacks
 
 - (void)client:(MMXClient *)client didReceiveConnectionStatusChange:(MMXConnectionStatus)connectionStatus error:(NSError *)error {
+    //post notification when connection status has changed
+    [[NSNotificationCenter defaultCenter] postNotificationName:MMXConnectionStatusChangedNotification object:self userInfo:@{MMXConnectionStatusKey: @(connectionStatus)}];
+    
     switch (connectionStatus) {
         case MMXConnectionStatusAuthenticated: {
             if (self.maxInitSuccessBlock) {

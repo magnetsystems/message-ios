@@ -101,14 +101,9 @@
                                   offset:(int)offset
                                  success:(void (^)(int totalCount, NSArray <MMXChannel *>*channels))success
                                  failure:(void (^)(NSError *))failure {
-    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[] block:^(MMXBlockCall *call) {
-        if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-            if (failure) {
-                failure([MagnetDelegate notLoggedInError]);
-            }
-            [call finish];
-            return;
-        }
+    MMXCall *loginCall = [[MMXLogInCall alloc] init];
+    MMXCall *connectionCall = [[MMXPersistentConnectionCall alloc] init];
+    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[loginCall, connectionCall] block:^(MMXBlockCall *call) {
         NSDictionary *queryDict = @{@"operator" : @"AND",
                                     @"limit" : @(limit),
                                     @"offset" : @(offset),
@@ -133,15 +128,9 @@
                    isPublic:(BOOL)isPublic
                     success:(void (^)(MMXChannel *))success
                     failure:(void (^)(NSError *))failure {
-    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[] block:^(MMXBlockCall *call) {
-        if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-            if (failure) {
-                failure([MagnetDelegate notLoggedInError]);
-            }
-            [call setCompletionWithErrorObject:[MagnetDelegate notLoggedInError] successObject:nil];
-            [call finish];
-            return;
-        }
+    MMXCall *loginCall = [[MMXLogInCall alloc] init];
+    MMXCall *connectionCall = [[MMXPersistentConnectionCall alloc] init];
+    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[loginCall, connectionCall] block:^(MMXBlockCall *call) {
         if (channelName == nil || [channelName isEqualToString:@""]) {
             if (failure) {
                 failure([MMXClient errorWithTitle:@"Invalid Search Parameter"
@@ -272,14 +261,9 @@
                  offset:(int)offset
                 success:(void (^)(int, NSArray <MMXChannel *>*))success
                 failure:(void (^)(NSError *))failure {
-    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[] block:^(MMXBlockCall *call) {
-        if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-            if (failure) {
-                failure([MagnetDelegate notLoggedInError]);
-            }
-            [call finish];
-            return;
-        }
+    MMXCall *loginCall = [[MMXLogInCall alloc] init];
+    MMXCall *connectionCall = [[MMXPersistentConnectionCall alloc] init];
+    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[loginCall, connectionCall] block:^(MMXBlockCall *call) {
         
         if (tags.count < 1) {
             if (failure) {

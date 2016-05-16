@@ -139,7 +139,9 @@ static int kATTACHMENTCONTEXT;
 
 - (MMXCall *)sendWithSuccess:(void (^)(NSSet <NSString *>*invalidUsers))success
                      failure:(void (^)(NSError *))failure {
-    MMXCall *mmxCall = [[MMXBlockCall alloc] initWithDependencies:@[] block:^(MMXBlockCall * call) {
+    MMXCall *loginCall = [[MMXLogInCall alloc] init];
+    MMXCall *connectionCall = [[MMXPersistentConnectionCall alloc] init];
+    MMXCall *mmxCall = [[MMXBlockCall alloc] initWithDependencies:@[loginCall, connectionCall] block:^(MMXBlockCall * call) {
         if (![MMXMessageUtils isValidMetaData:self.messageContent]) {
             NSError * error = [MMXClient errorWithTitle:@"Not Valid" message:@"All values must be strings." code:401];
             if (failure) {
@@ -148,14 +150,6 @@ static int kATTACHMENTCONTEXT;
             [call finish];
             return;
         }
-        if ([MMUser currentUser] == nil) {
-            NSError * error = [MMXClient errorWithTitle:@"Not Logged In" message:@"You must be logged in to send a message." code:401];
-            if (failure) {
-                failure(error);
-            }
-            [call finish];
-        }
-        
         NSString *mType = nil;
         if (self.channel) {
             NSString *messageID = [[MMXClient sharedClient] generateMessageID];

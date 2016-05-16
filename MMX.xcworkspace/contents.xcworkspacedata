@@ -754,6 +754,16 @@
       <Group
          location = "container:"
          name = "Operations">
+         <Group
+            location = "container:"
+            name = "MMXOperations">
+            <FileRef
+               location = "group:Source/Operations/MMXOperations/MMXLogInCall.swift">
+            </FileRef>
+            <FileRef
+               location = "group:/Users/lorenzo.stanton/message-ios/Source/Operations/MMXOperations/MMXPersistentConnectionCall.swift">
+            </FileRef>
+         </Group>
          <FileRef
             location = "group:Source/Operations/MMXCall.swift">
          </FileRef>

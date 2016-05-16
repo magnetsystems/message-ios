@@ -11,6 +11,11 @@ public class MMXBlockCacheCall: MMXBlockCall, MMXCacheable {
         self.executeInBackground()
     }
     
+    public func executeInBackground(cachePolicy: MMXCachePolicy, dependencies:[MMXCall]) {
+        self.cachePolicy = cachePolicy
+        self.executeInBackground(dependencies)
+    }
+    
     func asCall() -> MMXCall {
         return self
     }

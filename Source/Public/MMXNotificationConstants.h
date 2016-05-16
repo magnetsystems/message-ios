@@ -63,6 +63,16 @@ extern NSString * const MMXRecipientKey;
 extern NSString * const MMXMessageIDKey;
 
 /**
+	Notification when user has logged in.
+ */
+extern NSString * const MMXConnectionStatusChangedNotification;
+
+/**
+	Key for MMXConnection status values in MMXClient.
+ */
+extern NSString * const MMXConnectionStatusKey;
+
+/**
 	Notification when receiving a MMXInvite.
  */
 extern NSString * const MMXDidReceiveChannelInviteNotification;

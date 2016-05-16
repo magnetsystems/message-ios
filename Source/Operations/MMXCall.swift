@@ -5,6 +5,10 @@ import MagnetMaxCore
 }
 
 @objc public protocol MMXCallOperation {
+    var cancelled: Bool{get}
+    var executing: Bool{get}
+    var finished: Bool{get}
+    
     func cancel()
     func execute()
     func finish()
@@ -13,7 +17,7 @@ import MagnetMaxCore
     func successObject() -> AnyObject?
 }
 
-public class MMXCall: NSObject, MMAsynchronousOperationDelegate, MMXCallOperation  {
+@objc public class MMXCall: NSObject, MMAsynchronousOperationDelegate, MMXCallOperation  {
     
     //MARK: Public variables
     
@@ -24,25 +28,42 @@ public class MMXCall: NSObject, MMAsynchronousOperationDelegate, MMXCallOperatio
         return NSOperationQueue()
     }()
     
+    public lazy var cancelled: Bool = {
+        return self.underlyingOperation.cancelled
+    }()
+    public lazy var executing: Bool = {
+        return self.underlyingOperation.executing
+    }()
+    public lazy var finished: Bool = {
+        return self.underlyingOperation.finished
+    }()
+    
     //MARK: Private variables
     
     //completion blocks to be run after operation
     private var completionBlocks:[(call: MMXCall) -> Void] = []
-    private var underlyingOperation:MMAsynchronousOperation = MMAsynchronousOperation()
+    private var dependencies = [MMXCall]()
+    public var underlyingOperation:MMAsynchronousOperation = MMAsynchronousOperation()
     
     //MARK: Init
     
+    override init() {
+        super.init()
+        if let handler = self as? MMXCallHandler {
+            underlyingOperation = handler.operationForMMXCall()
+        }
+        underlyingOperation.delegate = self
+    }
+    
     public init(dependencies: [MMXCall]) {
         super.init()
-        
-        let m = MMXMessage()
         
         if let handler = self as? MMXCallHandler {
             underlyingOperation = handler.operationForMMXCall()
         }
         underlyingOperation.delegate = self
         for call in dependencies {
-            addCallAsDependency(call)
+            self.dependencies.append(call)
         }
     }
     
@@ -55,7 +76,7 @@ public class MMXCall: NSObject, MMAsynchronousOperationDelegate, MMXCallOperatio
         underlyingOperation.delegate = self
         self.queue = queue
         for call in dependencies {
-            addCallAsDependency(call)
+            self.dependencies.append(call)
         }
     }
     
@@ -112,12 +133,25 @@ public class MMXCall: NSObject, MMAsynchronousOperationDelegate, MMXCallOperatio
         objc_sync_exit(self)
     }
     
+    public func executeInBackground(dependencies:[MMXCall]) {
+        objc_sync_enter(self)
+        self.dependencies.appendContentsOf(dependencies)
+        objc_sync_exit(self)
+        executeInBackground()
+    }
+    
     public func executeInBackground() {
         objc_sync_enter(self)
         guard !isOnQueue else {
             objc_sync_exit(self)
             return
         }
+        //add depenencies to queue
+        for call in dependencies {
+            addCallAsDependency(call)
+            call.executeInBackground()
+        }
+        
         for block in completionBlocks {
             addCompletionBlockDependency(block)
         }
@@ -159,12 +193,10 @@ public class MMXCall: NSObject, MMAsynchronousOperationDelegate, MMXCallOperatio
     }
     
     private func addCallAsDependency(call: MMXCall) {
-        objc_sync_enter(call)
-        if !call.isOnQueue {
-            call.isOnQueue = true
-            queue.addOperation(call.underlyingOperation)
+        //if cancelled or finished ignore dependency
+        guard !call.cancelled && !call.finished else {
+            return
         }
         underlyingOperation.addDependency(call.underlyingOperation)
-        objc_sync_exit(call)
     }
 }

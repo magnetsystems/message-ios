@@ -6,6 +6,7 @@ public enum MMXCachePolicy {
 protocol MMXCacheable: class {
     var cachePolicy: MMXCachePolicy{get}
     func executeInBackground(cachePolicy: MMXCachePolicy)
+    func executeInBackground(cachePolicy: MMXCachePolicy, dependencies:[MMXCall])
     func asCall() -> MMXCall
 }
 
@@ -20,6 +21,11 @@ public class MMXCacheCall: MMXCall, MMXCacheable {
     public final func executeInBackground(cachePolicy: MMXCachePolicy) {
         self.cachePolicy = cachePolicy
         self.executeInBackground()
+    }
+    
+    public func executeInBackground(cachePolicy: MMXCachePolicy, dependencies:[MMXCall]) {
+        self.cachePolicy = cachePolicy
+        self.executeInBackground(dependencies)
     }
     
     func asCall() -> MMXCall {
