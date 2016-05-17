@@ -18,6 +18,7 @@ public class MMXLogInCall: MMXCall {
     }
     
     func userDidLogIn(notification: NSNotification) {
+        print("Logged in!")
         finishSuccessfully()
     }
     
@@ -27,6 +28,7 @@ public class MMXLogInCall: MMXCall {
         if MMUser.currentUser() != nil {
             finishSuccessfully()
         } else {
+            print("Not logged in, will wait...")
             registerForNotifications()
         }
     }

@@ -21,7 +21,8 @@ public class MMXPersistentConnectionCall: MMXCall {
     
     func connectionStatusChanged(notification: NSNotification) {
         let userInfo = notification.userInfo
-        if let status = userInfo?[MMXConnectionStatusKey] as? Int where MMXConnectionStatus.init(rawValue: status)  == .Connected {
+        if let status = userInfo?[MMXConnectionStatusKey] as? Int where MMXConnectionStatus.init(rawValue: status)  == .Authenticated {
+            print("Authenticated connection!")
             finishSuccessfully()
         }
     }
@@ -29,10 +30,11 @@ public class MMXPersistentConnectionCall: MMXCall {
     //MARK: Execution
     
     public override func execute() {
-        if MMXClient.sharedClient().connectionStatus == .Connected {
+        if MMXClient.sharedClient().connectionStatus == .Authenticated {
             finishSuccessfully()
         } else {
             connected = false
+            print("No authenticated TCP connection, will wait...")
             registerForNotifications()
         }
     }
