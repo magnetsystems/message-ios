@@ -25,7 +25,7 @@ public class MMXBlockCall: MMXCall, MMXCallHandler {
     //MARK: Completion Handling
     
     //Completion
-    public func setCompletion(errorObject error: NSError, successObject success: AnyObject?) {
+    public func setCompletion(errorObject error: NSError?, successObject success: AnyObject?) {
         self.error = error
         self.success = success
     }

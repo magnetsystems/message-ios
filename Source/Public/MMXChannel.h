@@ -214,7 +214,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success				Block called if operation is successful.
  *  @param failure				Block with an NSError with details about the call failure.
  */
-+ (void)createWithName:(NSString *)name
++ (MMXCall *)createWithName:(NSString *)name
                summary:(nullable NSString *)summary
               isPublic:(BOOL)isPublic
     publishPermissions:(MMXPublishPermissions)publishPermissions
@@ -232,7 +232,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success				Block called if operation is successful.
  *  @param failure				Block with an NSError with details about the call failure.
  */
-+ (void)createWithName:(NSString *)name
++ (MMXCall *)createWithName:(NSString *)name
                summary:(nullable NSString *)summary
               isPublic:(BOOL)isPublic
     publishPermissions:(MMXPublishPermissions)publishPermissions
@@ -252,7 +252,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success				Block called if operation is successful.
  *  @param failure				Block with an NSError with details about the call failure.
  */
-+ (void)createWithName:(NSString *)name
++ (MMXCall *)createWithName:(NSString *)name
                summary:(nullable NSString *)summary
               isPublic:(BOOL)isPublic
     publishPermissions:(MMXPublishPermissions)publishPermissions
@@ -277,7 +277,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success - Block called if operation is successful.
  *  @param failure - Block with an NSError with details about the call failure.
  */
-- (void)subscribeWithSuccess:(nullable void (^)(void))success
+- (MMXCall *)subscribeWithSuccess:(nullable void (^)(void))success
                      failure:(nullable void (^)(NSError *error))failure;
 
 /**
@@ -286,7 +286,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success - Block called if operation is successful.
  *  @param failure - Block with an NSError with details about the call failure.
  */
-- (void)unSubscribeWithSuccess:(nullable void (^)(void))success
+- (MMXCall *)unSubscribeWithSuccess:(nullable void (^)(void))success
                        failure:(nullable void (^)(NSError *error))failure;
 
 

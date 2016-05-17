@@ -1,22 +1,43 @@
 public class MMXPersistentConnectionCall: MMXCall {
     //MARK: Private variables
     
-    private var connected:Bool?
+    lazy public private(set) var connectionStatus:MMXConnectionStatus = MMXClient.sharedClient().connectionStatus
+    private var context = UInt8()
+    
+    
+    static func connectionStatusKey() -> String {
+        return "connectionStatus"
+    }
     
     //MARK: Init
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        do {
+            try MMXClient.sharedClient().removeObserver(self, forKeyPath: MMXPersistentConnectionCall.connectionStatusKey())
+        } catch  { }
     }
     
     //MARK: Notifications
     
-    func registerForNotifications() {
-        //MMXUserDidLogInNotification
-        NSNotificationCenter.defaultCenter().addObserver(self,
-                                                         selector: #selector(MMXPersistentConnectionCall.connectionStatusChanged(_:)),
-                                                         name: MMXConnectionStatusChangedNotification,
-                                                         object: nil)
+    func register() {
+        connectionStatus = MMXClient.sharedClient().connectionStatus
+        MMXClient.sharedClient().addObserver(self, forKeyPath: MMXPersistentConnectionCall.connectionStatusKey(), options: .New, context: &context)
+    }
+    
+    public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        if context == &self.context && keyPath == MMXPersistentConnectionCall.connectionStatusKey() {
+            if let raw = change?[NSKeyValueChangeNewKey] as? Int {
+                if let status = MMXConnectionStatus(rawValue: raw) {
+                    connectionStatus = status
+                    if status  == .Authenticated {
+                        print("Authenticated connection!")
+                        finishSuccessfully()
+                    }
+                }
+            }
+        } else {
+            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        }
     }
     
     func connectionStatusChanged(notification: NSNotification) {
@@ -33,18 +54,16 @@ public class MMXPersistentConnectionCall: MMXCall {
         if MMXClient.sharedClient().connectionStatus == .Authenticated {
             finishSuccessfully()
         } else {
-            connected = false
             print("No authenticated TCP connection, will wait...")
-            registerForNotifications()
+            register()
         }
     }
     
     func finishSuccessfully() {
-        connected = true
         finish()
     }
     
     public override func successObject() -> AnyObject? {
-        return connected
+        return connectionStatus.rawValue
     }
 }

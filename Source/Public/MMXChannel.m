@@ -464,63 +464,61 @@
                                             }];
 }
 
-+ (void)createWithName:(NSString *)name
-               summary:(NSString *)summary
-              isPublic:(BOOL)isPublic
-    publishPermissions:(MMXPublishPermissions)publishPermissions
-               success:(void (^)(MMXChannel *channel))success
-               failure:(void (^)(NSError *))failure {
++ (MMXCall *)createWithName:(NSString *)name
+                    summary:(NSString *)summary
+                   isPublic:(BOOL)isPublic
+         publishPermissions:(MMXPublishPermissions)publishPermissions
+                    success:(void (^)(MMXChannel *channel))success
+                    failure:(void (^)(NSError *))failure {
     
-    [self createWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions subscribers:nil pushConfigName:nil success:success failure:failure];
+    return [self createWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions subscribers:nil pushConfigName:nil success:success failure:failure];
 }
 
-+ (void)createWithName:(NSString *)name
-               summary:(nullable NSString *)summary
-              isPublic:(BOOL)isPublic
-    publishPermissions:(MMXPublishPermissions)publishPermissions
-           subscribers:(NSSet <MMUser *>*)subscribers
-               success:(nullable void (^)(MMXChannel *channel))success
-               failure:(nullable void (^)(NSError *error))failure {
++ (MMXCall *)createWithName:(NSString *)name
+                    summary:(nullable NSString *)summary
+                   isPublic:(BOOL)isPublic
+         publishPermissions:(MMXPublishPermissions)publishPermissions
+                subscribers:(NSSet <MMUser *>*)subscribers
+                    success:(nullable void (^)(MMXChannel *channel))success
+                    failure:(nullable void (^)(NSError *error))failure {
     
-    [self createWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions subscribers:subscribers pushConfigName:nil success:success failure:failure];
+    return [self createWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions subscribers:subscribers pushConfigName:nil success:success failure:failure];
     
 }
 
-+ (void)createWithName:(NSString *)name
-               summary:(nullable NSString *)summary
-              isPublic:(BOOL)isPublic
-    publishPermissions:(MMXPublishPermissions)publishPermissions
-           subscribers:(NSSet <MMUser *>*)subscribers
-        pushConfigName:(nullable NSString *)pushConfigName
-               success:(nullable void (^)(MMXChannel *channel))success
-               failure:(nullable void (^)(NSError *error))failure {
++ (MMXCall *)createWithName:(NSString *)name
+                    summary:(nullable NSString *)summary
+                   isPublic:(BOOL)isPublic
+         publishPermissions:(MMXPublishPermissions)publishPermissions
+                subscribers:(NSSet <MMUser *>*)subscribers
+             pushConfigName:(nullable NSString *)pushConfigName
+                    success:(nullable void (^)(MMXChannel *channel))success
+                    failure:(nullable void (^)(NSError *error))failure {
     
-    if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-        if (failure) {
-            failure([MagnetDelegate notLoggedInError]);
-        }
-        
-        return;
-    }
-    
-    MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions];
-    channel.ownerUserID = [MMUser currentUser].userID;
-    channel.subscribers = [[subscribers valueForKey:@"userID"] allObjects];
-    channel.pushConfigName = pushConfigName;
-    MMCall *call = [channel.pubSubService createChannel:channel success:^(MMXChannelResponse *response) {
-        NSMutableArray *subscribers = [channel.subscribers mutableCopy];
-        [subscribers addObject:[MMUser currentUser].userID];
-        channel.subscribers = subscribers;
-        channel.isSubscribed = YES;
-        if (success) {
-            success(channel);
-        }
-    } failure:^(NSError *error) {
-        if (failure) {
-            failure(error);
-        }
+    MMXCall *loginCall = [[MMXLogInCall alloc] init];
+    MMXCall *connectionCall = [[MMXPersistentConnectionCall alloc] init];
+    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[loginCall, connectionCall] block:^(MMXBlockCall *blockCall) {
+        MMXChannel *channel = [MMXChannel channelWithName:name summary:summary isPublic:isPublic publishPermissions:publishPermissions];
+        channel.ownerUserID = [MMUser currentUser].userID;
+        channel.subscribers = [[subscribers valueForKey:@"userID"] allObjects];
+        channel.pushConfigName = pushConfigName;
+        MMCall *call = [channel.pubSubService createChannel:channel success:^(MMXChannelResponse *response) {
+            NSMutableArray *subscribers = [channel.subscribers mutableCopy];
+            [subscribers addObject:[MMUser currentUser].userID];
+            channel.subscribers = subscribers;
+            channel.isSubscribed = YES;
+            if (success) {
+                success(channel);
+            }
+            [blockCall finish];
+        } failure:^(NSError *error) {
+            if (failure) {
+                failure(error);
+            }
+            [blockCall finish];
+        }];
+        [call executeInBackground:nil];
     }];
-    [call executeInBackground:nil];
 }
 
 - (void)deleteWithSuccess:(void (^)(void))success
@@ -544,48 +542,49 @@
     }];
 }
 
-- (void)subscribeWithSuccess:(void (^)(void))success
-                     failure:(void (^)(NSError *))failure {
+- (MMXCall *)subscribeWithSuccess:(void (^)(void))success
+                          failure:(void (^)(NSError *))failure {
     
-    if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-        if (failure) {
-            failure([MagnetDelegate notLoggedInError]);
-        }
-        
-        return;
-    }
-    [[MMXClient sharedClient].pubsubManager subscribeToTopic:[self asTopic] device:nil success:^(MMXTopicSubscription *subscription) {
-        self.isSubscribed = YES;
-        if (success) {
-            success();
-        }
-    } failure:^(NSError *error) {
-        if (failure) {
-            failure(error);
-        }
+    MMXCall *loginCall = [[MMXLogInCall alloc] init];
+    MMXCall *connectionCall = [[MMXPersistentConnectionCall alloc] init];
+    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[loginCall, connectionCall] block:^(MMXBlockCall *call) {
+        [[MMXClient sharedClient].pubsubManager subscribeToTopic:[self asTopic] device:nil success:^(MMXTopicSubscription *subscription) {
+            self.isSubscribed = YES;
+            if (success) {
+                success();
+            }
+            [call finish];
+        } failure:^(NSError *error) {
+            if (failure) {
+                failure(error);
+            }
+            [call finish];
+        }];
     }];
+    
+    return operation;
 }
 
-- (void)unSubscribeWithSuccess:(void (^)(void))success
-                       failure:(void (^)(NSError *))failure {
-    
-    if ([MMXClient sharedClient].connectionStatus != MMXConnectionStatusAuthenticated) {
-        if (failure) {
-            failure([MagnetDelegate notLoggedInError]);
-        }
-        
-        return;
-    }
-    [[MMXClient sharedClient].pubsubManager unsubscribeFromTopic:[self asTopic] subscriptionID:nil success:^(BOOL successful) {
-        self.isSubscribed = NO;
-        if (success) {
-            success();
-        }
-    } failure:^(NSError *error) {
-        if (failure) {
-            failure(error);
-        }
+- (MMXCall *)unSubscribeWithSuccess:(void (^)(void))success
+                            failure:(void (^)(NSError *))failure {
+    MMXCall *loginCall = [[MMXLogInCall alloc] init];
+    MMXCall *connectionCall = [[MMXPersistentConnectionCall alloc] init];
+    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[loginCall, connectionCall] block:^(MMXBlockCall *call) {
+        [[MMXClient sharedClient].pubsubManager unsubscribeFromTopic:[self asTopic] subscriptionID:nil success:^(BOOL successful) {
+            self.isSubscribed = NO;
+            if (success) {
+                success();
+            }
+            [call finish];
+        } failure:^(NSError *error) {
+            if (failure) {
+                failure(error);
+            }
+            [call finish];
+        }];
     }];
+    
+    return operation;
 }
 
 + (void)subscribedChannelsWithSuccess:(void (^)(NSArray <MMXChannel *>*))success
