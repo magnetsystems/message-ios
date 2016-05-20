@@ -1135,14 +1135,16 @@ int const kReconnectionTimerInterval = 4;
 }
 
 - (void)updateConnectionStatus:(MMXConnectionStatus)status error:(NSError *)error {
-	if (error) {
-		[[MMXLogger sharedLogger] error:@"%@", error.localizedDescription];
-	}
+    if (error) {
+        [[MMXLogger sharedLogger] error:@"%@", error.localizedDescription];
+    }
+    [self willChangeValueForKey:NSStringFromSelector(@selector(connectionStatus))];
     self.connectionStatus = status;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(connectionStatus))];
     if ([self.delegate respondsToSelector:@selector(client:didReceiveConnectionStatusChange:error:)]) {
-		dispatch_async(self.callbackQueue, ^{
-			[self.delegate client:self didReceiveConnectionStatusChange:status error:error];
-		});
+        dispatch_async(self.callbackQueue, ^{
+            [self.delegate client:self didReceiveConnectionStatusChange:status error:error];
+        });
     }
 }
 
