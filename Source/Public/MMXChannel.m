@@ -101,9 +101,7 @@
                                   offset:(int)offset
                                  success:(void (^)(int totalCount, NSArray <MMXChannel *>*channels))success
                                  failure:(void (^)(NSError *))failure {
-    MMXCall *loginCall = [[MMXLogInCall alloc] init];
-    MMXCall *connectionCall = [[MMXPersistentConnectionCall alloc] init];
-    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[loginCall, connectionCall] block:^(MMXBlockCall *call) {
+    MMXCall *operation = [[MMXBlockCall alloc] initWithBlock:^(MMXBlockCall *call) {
         NSDictionary *queryDict = @{@"operator" : @"AND",
                                     @"limit" : @(limit),
                                     @"offset" : @(offset),
@@ -120,7 +118,15 @@
             [call finish];
         }];
     }];
-    return operation;
+    
+    MMXCall *loginCall = [[MMXLogInCall alloc] init];
+    MMXCall *connectionCall = [[MMXPersistentConnectionCall alloc] init];
+    
+    GroupOperation *group = [[GroupOperation alloc] initWithOperations:@[loginCall, connectionCall, operation]];
+    MMXCall *call = [[MMXCall alloc] init];
+    [call addDependency:group];
+    
+    return call;
 }
 
 
@@ -128,9 +134,7 @@
                    isPublic:(BOOL)isPublic
                     success:(void (^)(MMXChannel *))success
                     failure:(void (^)(NSError *))failure {
-    MMXCall *loginCall = [[MMXLogInCall alloc] init];
-    MMXCall *connectionCall = [[MMXPersistentConnectionCall alloc] init];
-    MMXCall *operation = [[MMXBlockCall alloc] initWithDependencies:@[loginCall, connectionCall] block:^(MMXBlockCall *call) {
+    MMXCall *operation = [[MMXBlockCall alloc] initWithBlock:^(MMXBlockCall *call) {
         if (channelName == nil || [channelName isEqualToString:@""]) {
             if (failure) {
                 failure([MMXClient errorWithTitle:@"Invalid Search Parameter"

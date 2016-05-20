@@ -37,8 +37,4 @@ public class MMXLogInCall: MMXCall {
         user = MMUser.currentUser()
         finish()
     }
-    
-    public override func successObject() -> AnyObject? {
-        return user
-    }
 }

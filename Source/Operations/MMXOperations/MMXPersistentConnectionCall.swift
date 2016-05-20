@@ -62,8 +62,4 @@ public class MMXPersistentConnectionCall: MMXCall {
     func finishSuccessfully() {
         finish()
     }
-    
-    public override func successObject() -> AnyObject? {
-        return connectionStatus.rawValue
-    }
 }
